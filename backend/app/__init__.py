@@ -102,3 +102,8 @@ def not_found(e):
 
 if __name__ == '__main__':
     sio.run(app)
+
+def app_run():
+    sio.run(app, debug=True, port=5000)
+
+app.app_run = app_run
