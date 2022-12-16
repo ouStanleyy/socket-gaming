@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import LoginForm from './components/auth/LoginForm';
-import SignUpForm from './components/auth/SignUpForm';
-import NavBar from './components/NavBar';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import UsersList from './components/UsersList';
-import User from './components/User';
-import { authenticate } from './store/session';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import SignUpForm from "./components/auth/SignUpForm";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import NavBar from "./components/NavBar/NavBar";
+import { authenticate } from "./store/session";
+import Splash from "./components/Splash/Splash";
+import { Messages } from "./components/Messages";
+import styles from "./App.module.css";
 
 function App() {
+  const user = useSelector((state) => state.session.user);
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    (async() => {
+    (async () => {
       await dispatch(authenticate());
       setLoaded(true);
     })();
@@ -26,23 +27,19 @@ function App() {
 
   return (
     <BrowserRouter>
-      <NavBar />
+      {user && <NavBar />}
       <Switch>
-        <Route path='/login' exact={true}>
-          <LoginForm />
+        <Route path="/" exact={true}>
+          {user ? <h1>Homepage</h1> : <Splash />}
         </Route>
-        <Route path='/sign-up' exact={true}>
+        <Route path="/sign-up" exact={true}>
           <SignUpForm />
         </Route>
-        <ProtectedRoute path='/users' exact={true} >
-          <UsersList/>
-        </ProtectedRoute>
-        <ProtectedRoute path='/users/:userId' exact={true} >
-          <User />
-        </ProtectedRoute>
-        <Route path='/' exact={true} >
-          <h1>My Home Page</h1>
-        </Route>
+        <div className={styles.innerBody}>
+          <ProtectedRoute path="/messages">
+            <Messages user={user} />
+          </ProtectedRoute>
+        </div>
       </Switch>
     </BrowserRouter>
   );

@@ -1,0 +1,127 @@
+.profilePicture {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  /* border: 1px solid red; */
+  overflow: hidden;
+}
+svg {
+  z-index: 11;
+}
+
+.profilePicture img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.navItem,
+.logo {
+  /* border: 1px solid green; */
+  font-size: 16px;
+  font-family: sans-serif;
+  color: #262626;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+  padding: 12px;
+  border-radius: 24px;
+  text-decoration: none;
+}
+
+.logo {
+  margin: 0 0 19px;
+  /* margin-bottom: 19px; */
+  padding: 25px 12px 16px;
+}
+
+.svgContainer {
+  display: flex;
+  place-content: center;
+  transition: 500ms;
+}
+
+/* when navItem is hovered, target svg*/
+.navItem:hover .svgContainer svg {
+  transform: scale(1.08);
+}
+
+.navItem:active .svgContainer svg {
+  transform: scale(1);
+}
+
+.navItem:hover {
+  background-color: #fafafa;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.navItem:active {
+  opacity: 0.6;
+}
+
+.logo:hover {
+  background-color: transparent;
+}
+
+.instagramLogo {
+  position: fixed;
+  scale: 0;
+  transition: 300ms;
+}
+
+@media screen and (max-width: 1264px) {
+  .profilePicture + span,
+  .svgContainer + span,
+  .logo {
+    display: none;
+  }
+
+  .instagramLogo {
+    display: inline-block;
+  }
+}
+
+.hideNavItem .logo,
+.hideNavItem .hideSvg {
+  /* display: none; */
+  opacity: 0;
+  width: 0;
+}
+
+.hideNavItem .svgContainer + span,
+.hideNavItem .profilePicture + span {
+  display: none;
+}
+
+.hideNavItem .instagramLogo {
+  position: static;
+  scale: 1;
+  transition: 300ms;
+}
+
+.hideNavItem.searchBorder {
+  border: 1px solid #dbdbdb;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+}
+
+.hideNavItem.notifBorder {
+  border: 1px solid #dbdbdb;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+}
+
+.redCircle {
+  background-color: red;
+  border: 1px solid white;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  z-index: 12;
+  position: absolute;
+  margin-bottom: 12px;
+  margin-left: 15px;
+}

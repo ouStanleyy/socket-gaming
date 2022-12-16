@@ -1,0 +1,54 @@
+.navBar {
+  /* border: 1px solid blue; */
+  border-right: 1px solid #dbdbdb;
+  display: flex;
+  position: fixed;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: space-between;
+  padding: 8px 12px 20px;
+  width: 244px;
+  background-color: white;
+  transition: 300ms;
+  z-index: 10;
+}
+
+.navLink {
+  text-decoration: none;
+}
+
+.active {
+  font-weight: bold;
+}
+
+/* Position relative for z-index of children to be in front */
+.moreLink {
+  z-index: 1;
+  position: relative;
+}
+
+.hideDropDown {
+  display: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.moreDropDown {
+  visibility: visible;
+  border-radius: 6px;
+  width: 238px;
+  z-index: 2;
+  background-color: #ffffff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.0975);
+}
+
+@media screen and (max-width: 1264px) {
+  .navBar {
+    width: 72px;
+  }
+}
+
+.miniNavBar {
+  width: 72px;
+}

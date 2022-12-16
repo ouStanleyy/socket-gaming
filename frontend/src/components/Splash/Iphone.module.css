@@ -1,0 +1,33 @@
+.iphoneContainer {
+  position: relative;
+  /* border: 1px solid red; */
+}
+
+.iphoneContainer img {
+  height: 538px;
+  width: 388px;
+}
+
+.screenshotContainer img {
+  height: 460px;
+  width: 210px;
+  /* transition: opacity 1.5s ease-out; */
+  animation: fadeIn 2s;
+}
+
+.screenshotContainer {
+  position: absolute;
+  /* top: 50px;
+  left: 310px; */
+  top: 4%;
+  left: 33%;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

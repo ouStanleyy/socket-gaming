@@ -1,0 +1,106 @@
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #dbdbdb;
+  box-shadow: 12px 0 20px -8px #dbdbdb;
+  border-radius: 16px;
+  position: fixed;
+  height: 100vh;
+  padding-left: 72px;
+  width: 472px;
+  background-color: white;
+  animation: slideIn 300ms ease-out;
+  z-index: 4;
+}
+
+.hideSearch {
+  animation: slideOut 300ms ease-out;
+}
+
+.searchHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+  height: 154px;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.searchHeader > h2 {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 25px;
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  height: 40px;
+  width: 360px;
+  padding: 14px;
+  font-size: 16px;
+  margin-left: -4px;
+  background-color: #efefef;
+}
+
+.searchInput::placeholder {
+  color: #8e8e8e;
+  opacity: 0.9;
+}
+
+.cancelButton {
+  position: absolute;
+  right: 14px;
+  font-size: 20px;
+  color: #c7c7c7;
+  cursor: pointer;
+  user-select: none;
+}
+
+.loadingCancelSpinner {
+  position: absolute;
+  right: -16px;
+  user-select: none;
+}
+
+.searchResults {
+  max-height: 100%;
+  margin-bottom: auto;
+  padding: 24px 0;
+}
+
+.loadingSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 65vh;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-110%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-110%);
+  }
+}
