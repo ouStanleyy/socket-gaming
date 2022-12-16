@@ -64,11 +64,11 @@ function App() {
         <Route path="/sign-up" exact={true}>
           <SignUpForm />
         </Route>
-        <div className={styles.innerBody}>
-          <ProtectedRoute path="/messages">
+        <ProtectedRoute path="/messages">
+          <div className={styles.innerBody}>
             <Messages user={user} />
-          </ProtectedRoute>
-        </div>
+          </div>
+        </ProtectedRoute>
       </Switch>
     </BrowserRouter>
   );

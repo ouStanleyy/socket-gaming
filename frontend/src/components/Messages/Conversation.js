@@ -103,7 +103,12 @@ const Conversation = ({ sessionUser, rooms, setRoomId }) => {
               <ProfilePicture user={room.user} size={"xsmall"} />
             </div>
             <div className={styles.userDetails}>
-              <p className={styles.fullName}>{room.user?.full_name}</p>
+              <p className={styles.username}>{room.user?.username}</p>
+              <div
+                className={`${styles.status} ${
+                  room.user?.is_online && styles.online
+                }`}
+              ></div>
             </div>
           </Link>
         </div>

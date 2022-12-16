@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     hashed_password = db.Column(db.String(255), nullable=False)
     profile_picture = db.Column(db.String)
     is_online = db.Column(db.Boolean, nullable=False, default=False)
+    sid = db.Column(db.String)
     # gender = db.Column(db.Enum("Male", "Female", "Non-binary", "Prefer not to say",
     #                    name='gender'), nullable=False, default="Prefer not to say")
 

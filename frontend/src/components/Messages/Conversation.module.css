@@ -21,9 +21,20 @@
   line-height: 24px;
 }
 
-.fullName {
+.username {
   font-weight: 500;
   width: max-content;
+}
+
+.status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: red;
+}
+
+.online {
+  background-color: greenyellow;
 }
 
 .conversationWrapper {

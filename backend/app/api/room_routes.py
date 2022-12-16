@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, redirect, url_for
 from flask_login import login_required, current_user
+from app.sockets import sio
 from app.models import db, User, Room
 
 room_routes = Blueprint('rooms', __name__)
@@ -29,5 +30,7 @@ def create_room():
 
         db.session.add(room)
         db.session.commit()
+
+        sio.server.enter_room(current_user.sid, str(room.id))
 
     return room.to_dict()

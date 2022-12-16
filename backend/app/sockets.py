@@ -26,6 +26,7 @@ def connected():
     # print("client has connected")
     # print(request.sid)
     current_user.is_online = True
+    current_user.sid = request.sid
     db.session.commit()
     for room in current_user.rooms:
         join_room(str(room.id))
@@ -46,6 +47,7 @@ def disconnected():
     """event listener when client disconnects to the server"""
     # print("user disconnected")
     current_user.is_online = False
+    current_user.sid = None
     db.session.commit()
     for room in current_user.rooms:
         leave_room(str(room.id))
