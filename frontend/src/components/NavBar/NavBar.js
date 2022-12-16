@@ -26,7 +26,7 @@ const NavBar = () => {
     // { icon: "Explore", path: "/explore" },
     { icon: "Messages", path: "/messages" },
     // { icon: "Notifications", path: "/notifications" },
-    // { icon: "Create", path: "/create" },
+    { icon: "Games", path: "/games" },
     { icon: "Profile", path: `/users/${user.id}` },
     { icon: "More", path: "#" },
   ];

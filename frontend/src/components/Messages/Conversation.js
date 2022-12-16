@@ -1,4 +1,3 @@
-// import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useParams, Link } from "react-router-dom";
@@ -11,13 +10,8 @@ const Conversation = ({ sessionUser, rooms, setRoomId }) => {
   const sio = useSelector((state) => state.socket.socket);
   const { roomId } = useParams();
   const room = rooms.find((room) => room.id === parseInt(roomId));
-  const oldMessages = room?.messages;
+  const messages = room?.messages;
   const [message, setMessage] = useState("");
-  // const [messages, setMessages] = useState([]);
-  // const [sio, setSio] = useState("");
-  // const [sid, setSid] = useState("");
-  // const [loading, setLoading] = useState(true);
-  // console.log(sio);
 
   const isToday = (date) =>
     new Date().toDateString() === new Date(date).toDateString();
@@ -35,48 +29,9 @@ const Conversation = ({ sessionUser, rooms, setRoomId }) => {
 
   useEffect(() => {
     if (sio) {
-      sio?.once("message", () => {
-        // if (data) {
-        // if (sid) console.log("compare", sid === data?.sid);
-        dispatch(getRooms());
-        // setMessages([...messages, data]);
-        // }
-      });
+      sio?.once("message", () => dispatch(getRooms()));
     }
-  }, [sio, oldMessages]);
-
-  // useEffect(() => {
-  //   // const socket = io("http://127.0.0.1:5000/", {
-  //   //   transports: ["websocket"],
-  //   //   cors: {
-  //   //     origin: "http://localhost:3000/",
-  //   //   },
-  //   //   query: `room=${roomId}`,
-  //   // });
-
-  //   const socket = io({ query: `room=${roomId}` });
-
-  //   setSio(socket);
-
-  //   socket.on("connect", (data) => {
-  //     if (data) {
-  //       // console.log("sid", data);
-  //       setSid(data?.sid);
-  //     }
-  //   });
-
-  //   // setLoading(false);
-
-  //   // socket.on("disconnect", (data) => {
-  //   //   console.log(data);
-  //   // });
-
-  //   return () => {
-  //     socket.disconnect();
-  //     setSid("");
-  //     // setMessages([]);
-  //   };
-  // }, [roomId]);
+  }, [sio, messages]);
 
   useEffect(() => {
     (async () => {
@@ -114,9 +69,9 @@ const Conversation = ({ sessionUser, rooms, setRoomId }) => {
         </div>
         <div className={styles.conversationWrapper}>
           <div className={styles.conversation}>
-            {oldMessages.map(({ id, message, user_id, time_sent }, idx) => (
+            {messages.map(({ id, message, user_id, time_sent }, idx) => (
               <div className={styles.messageWrapper} key={id}>
-                {(isOverHour(time_sent, oldMessages[idx - 1]?.time_sent) ||
+                {(isOverHour(time_sent, messages[idx - 1]?.time_sent) ||
                   !idx) && (
                   <h4 className={styles.timestamp}>
                     {!isToday(time_sent) &&
@@ -134,7 +89,7 @@ const Conversation = ({ sessionUser, rooms, setRoomId }) => {
                 <div className={styles.messageBubbles}>
                   <div className={styles.profilePic}>
                     {user_id !== sessionUser.id &&
-                      user_id !== oldMessages[idx + 1]?.user_id && (
+                      user_id !== messages[idx + 1]?.user_id && (
                         <ProfilePicture user={room.user} size="xsmall" />
                       )}
                   </div>
@@ -150,16 +105,6 @@ const Conversation = ({ sessionUser, rooms, setRoomId }) => {
                 </div>
               </div>
             ))}
-            {/* {messages.map((data, idx) => (
-              <p
-                key={idx}
-                className={`${styles.message} ${
-                  data.sid === sid ? styles.outgoing : styles.incoming
-                }`}
-              >
-                {data.message}
-              </p>
-            ))} */}
             <div id={styles.anchor}></div>
           </div>
         </div>

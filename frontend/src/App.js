@@ -10,6 +10,7 @@ import { setSocket } from "./store/socket";
 import Splash from "./components/Splash/Splash";
 import { Messages } from "./components/Messages";
 import styles from "./App.module.css";
+import { GameDisplay } from "./components/Games";
 
 function App() {
   const dispatch = useDispatch();
@@ -29,24 +30,14 @@ function App() {
 
       dispatch(setSocket(socket));
 
-      socket.on("connect", (data) => {
-        if (data) {
-          // console.log("sid", data);
-          // setSid(data?.sid);
-        }
-      });
-
-      // setLoading(false);
-
-      // socket.on("disconnect", (data) => {
-      //   console.log(data);
+      // socket.on("connect", (data) => {
+      //   if (data) {
+      //     // console.log("sid", data);
+      //     // setSid(data?.sid);
+      //   }
       // });
 
-      return () => {
-        socket.disconnect();
-        // setSid("");
-        // setMessages([]);
-      };
+      return () => socket.disconnect();
     }
   }, [user]);
 
@@ -67,6 +58,11 @@ function App() {
         <ProtectedRoute path="/messages">
           <div className={styles.innerBody}>
             <Messages user={user} />
+          </div>
+        </ProtectedRoute>
+        <ProtectedRoute path="/games">
+          <div className={styles.innerBody}>
+            <GameDisplay />
           </div>
         </ProtectedRoute>
       </Switch>
