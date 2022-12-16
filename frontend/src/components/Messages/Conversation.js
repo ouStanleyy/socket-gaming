@@ -1,6 +1,6 @@
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useParams, Link } from "react-router-dom";
 import { getRooms } from "../../store/rooms";
 import { ProfilePicture } from "../Elements";
@@ -8,14 +8,16 @@ import styles from "./Conversation.module.css";
 
 const Conversation = ({ sessionUser, rooms, setRoomId }) => {
   const dispatch = useDispatch();
+  const sio = useSelector((state) => state.socket.socket);
   const { roomId } = useParams();
   const room = rooms.find((room) => room.id === parseInt(roomId));
   const oldMessages = room?.messages;
   const [message, setMessage] = useState("");
   // const [messages, setMessages] = useState([]);
-  const [sio, setSio] = useState("");
-  const [sid, setSid] = useState("");
+  // const [sio, setSio] = useState("");
+  // const [sid, setSid] = useState("");
   // const [loading, setLoading] = useState(true);
+  // console.log(sio);
 
   const isToday = (date) =>
     new Date().toDateString() === new Date(date).toDateString();
@@ -26,64 +28,63 @@ const Conversation = ({ sessionUser, rooms, setRoomId }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (message) {
-      sio.emit("message", { message, room: roomId, uid: sessionUser.id });
+      sio?.emit("message", { message, room: roomId, uid: sessionUser.id });
       setMessage("");
     }
   };
 
   useEffect(() => {
     if (sio) {
-      sio.once("message", (data) => {
-        if (data) {
-          // if (sid) console.log("compare", sid === data?.sid);
-          dispatch(getRooms());
-          // setMessages([...messages, data]);
-        }
+      sio?.once("message", () => {
+        // if (data) {
+        // if (sid) console.log("compare", sid === data?.sid);
+        dispatch(getRooms());
+        // setMessages([...messages, data]);
+        // }
       });
     }
-  }, [sid, dispatch, oldMessages]);
+  }, [sio, oldMessages]);
 
-  useEffect(() => {
-    // const socket = io("http://127.0.0.1:5000/", {
-    //   transports: ["websocket"],
-    //   cors: {
-    //     origin: "http://localhost:3000/",
-    //   },
-    //   query: `room=${roomId}`,
-    // });
+  // useEffect(() => {
+  //   // const socket = io("http://127.0.0.1:5000/", {
+  //   //   transports: ["websocket"],
+  //   //   cors: {
+  //   //     origin: "http://localhost:3000/",
+  //   //   },
+  //   //   query: `room=${roomId}`,
+  //   // });
 
-    const socket = io({ query: `room=${roomId}` });
+  //   const socket = io({ query: `room=${roomId}` });
 
-    setSio(socket);
+  //   setSio(socket);
 
-    socket.on("connect", (data) => {
-      if (data) {
-        // console.log("sid", data);
-        setSid(data?.sid);
-      }
-    });
+  //   socket.on("connect", (data) => {
+  //     if (data) {
+  //       // console.log("sid", data);
+  //       setSid(data?.sid);
+  //     }
+  //   });
 
-    // setLoading(false);
+  //   // setLoading(false);
 
-    // socket.on("disconnect", (data) => {
-    //   console.log(data);
-    // });
+  //   // socket.on("disconnect", (data) => {
+  //   //   console.log(data);
+  //   // });
 
-    return () => {
-      socket.disconnect();
-      setSid("");
-      // setMessages([]);
-    };
-  }, [roomId]);
+  //   return () => {
+  //     socket.disconnect();
+  //     setSid("");
+  //     // setMessages([]);
+  //   };
+  // }, [roomId]);
 
   useEffect(() => {
     (async () => {
       try {
         await dispatch(getRooms());
-        // setLoaded(true);
       } catch (err) {}
     })();
-  }, [dispatch, roomId]);
+  }, [roomId]);
 
   useEffect(() => {
     setRoomId(roomId);

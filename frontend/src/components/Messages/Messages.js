@@ -11,6 +11,7 @@ import styles from "./Messages.module.css";
 const Messages = () => {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
+  const sio = useSelector((state) => state.socket.socket);
   const rooms = useSelector((state) => Object.values(state.rooms)).sort(
     (a, b) =>
       a.messages.length && b.messages.length
@@ -31,10 +32,16 @@ const Messages = () => {
     (async () => {
       try {
         await dispatch(getRooms());
-        // setLoaded(true);
       } catch (err) {}
     })();
-  }, [dispatch]);
+  }, []);
+
+  useEffect(() => {
+    if (sio) {
+      sio?.on("connected", (data) => dispatch(getRooms()));
+      sio?.on("disconnected", (data) => dispatch(getRooms()));
+    }
+  }, [sio]);
 
   return (
     <div className={styles.messagesContainer}>
@@ -102,7 +109,11 @@ const Messages = () => {
               </div>
               <div className={styles.userDetails}>
                 <p className={styles.username}>{room.user?.username}</p>
-                <p className={styles.fullName}>{room.user?.full_name}</p>
+                <div
+                  className={`${styles.status} ${
+                    room.user?.is_online && styles.online
+                  }`}
+                ></div>
               </div>
             </div>
           </Link>

@@ -79,9 +79,15 @@
   cursor: pointer;
 }
 
-.fullName {
-  color: #8e8e8e;
-  width: max-content;
+.status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: red;
+}
+
+.online {
+  background-color: greenyellow;
 }
 
 .noConvo {

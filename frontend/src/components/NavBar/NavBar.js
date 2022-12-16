@@ -20,13 +20,13 @@ const NavBar = () => {
   const user = useSelector((state) => state.session.user);
   const links = [
     // { icon: "Logo", path: "/" },
-    { icon: "Instagram", path: "/" },
+    // { icon: "Instagram", path: "/" },
     { icon: "Home", path: "/" },
     { icon: "Search", path: "/search" },
-    { icon: "Explore", path: "/explore" },
+    // { icon: "Explore", path: "/explore" },
     { icon: "Messages", path: "/messages" },
-    { icon: "Notifications", path: "/notifications" },
-    { icon: "Create", path: "/create" },
+    // { icon: "Notifications", path: "/notifications" },
+    // { icon: "Create", path: "/create" },
     { icon: "Profile", path: `/users/${user.id}` },
     { icon: "More", path: "#" },
   ];

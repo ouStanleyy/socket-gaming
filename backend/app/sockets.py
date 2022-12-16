@@ -25,21 +25,29 @@ def connected():
     # print(request.args.get('room'))
     # print("client has connected")
     # print(request.sid)
-    sio.server.enter_room(request.sid, request.args.get('room'))
-    emit("connect",{"sid": request.sid})
+    current_user.is_online = True
+    db.session.commit()
+    for room in current_user.rooms:
+        join_room(str(room.id))
+    # sio.server.enter_room(request.sid, request.args.get('room'))
+    emit("connected", {"sid": request.sid}, broadcast=True, include_self=False)
 
 @sio.on('message')
 def handle_message(data):
     """event listener when client types a message"""
-    # print("data from the front end: ",data['message'], data['room'])
+    print("data from the front end: ",data['message'], data['room'])
     db.session.add(Message(user_id=data['uid'], room_id=data['room'], message=data['message']))
     db.session.commit()
-    emit('message',{'message':data['message'],'sid':request.sid},room=data['room'])
+    emit('message',{'message':data['message'],'sid':request.sid},to=data['room'])
     # emit(event,{'data':data,'id':request.sid},broadcast=True)
 
 @sio.on("disconnect")
 def disconnected():
     """event listener when client disconnects to the server"""
     # print("user disconnected")
-    sio.server.leave_room(request.sid, request.args.get('room'))
-    emit("disconnect",f"user {request.sid} disconnected",broadcast=True)
+    current_user.is_online = False
+    db.session.commit()
+    for room in current_user.rooms:
+        leave_room(str(room.id))
+    # sio.server.leave_room(request.sid, request.args.get('room'))
+    emit("disconnected", f"user {request.sid} disconnected", broadcast=True, include_self=False)

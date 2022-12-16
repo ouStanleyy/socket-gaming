@@ -40,7 +40,7 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'profile_picture': self.profile_picture,
-            'is_onlinr': self.is_online
+            'is_online': self.is_online
         }
 
     # def to_dict_all(self):
