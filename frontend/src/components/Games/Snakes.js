@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import useInterval from "./useInterval";
 import {
   CANVAS_SIZE,
@@ -10,13 +11,16 @@ import {
 } from "./constants";
 
 const Snakes = () => {
+  const sio = useSelector((state) => state.socket.socket);
   const canvasRef = useRef();
   const [snake, setSnake] = useState(null);
+  const [snake2, setSnake2] = useState(null);
   const [apple, setApple] = useState(null);
   const [dir, setDir] = useState([0, -1]);
   const [oppDir, setOppDir] = useState([0, 1]);
   const [speed, setSpeed] = useState(null);
   const [gameOver, setGameOver] = useState(true);
+  // const savedCallback = useRef();
 
   const endGame = () => {
     setSpeed(null);
@@ -84,16 +88,43 @@ const Snakes = () => {
     snakeCopy.unshift(newSnakeHead);
     if (checkCollision(newSnakeHead)) endGame();
     if (!checkAppleCollision(snakeCopy)) snakeCopy.pop();
-    setSnake(snakeCopy);
+    sio?.emit("active_game", { snake: snakeCopy });
+    // setTimeout(() => sio?.emit("active_game", { snake: snakeCopy }), 1000);
+    // setSnake(snakeCopy);
   };
 
   const startGame = () => {
     setSnake(createSnake());
     setApple(createApple());
     setDir([0, -1]);
-    setSpeed(SPEED);
+    setSpeed(500);
     setGameOver(false);
+    // savedCallback.current();
   };
+
+  const readyUp = () => {
+    sio?.emit("game_connect");
+  };
+
+  useEffect(() => {
+    if (sio) {
+      sio?.once("update_game", (data) => {
+        setSnake(data[sio.id]);
+        // savedCallback.current();
+        // setSnake2(data[1]);
+      });
+    }
+  }, [snake]);
+
+  useEffect(() => {
+    if (sio) {
+      sio?.once("start_game", () => startGame());
+    }
+  });
+
+  // useEffect(() => {
+  //   savedCallback.current = gameLoop;
+  // }, [gameLoop]);
 
   //   useEffect(() => {
   //     if (speed !== null) {
@@ -115,6 +146,13 @@ const Snakes = () => {
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
+    // snake2?.forEach(([x, y], idx) => {
+    //   idx === 0 ? (ctx.fillStyle = "gray") : (ctx.fillStyle = "lightgray");
+    //   ctx.rect(x, y, 1, 1);
+    //   ctx.fillRect(x, y, 1, 1);
+    //   ctx.lineWidth = 0.05;
+    // });
+    // ctx.stroke();
     if (apple) {
       ctx.fillStyle = "lightgreen";
       ctx.rect(apple[0], apple[1], 1, 1);
@@ -134,7 +172,8 @@ const Snakes = () => {
         width={`${CANVAS_SIZE[0]}px`}
         height={`${CANVAS_SIZE[1]}px`}
       />
-      <button onClick={startGame}>Start Game</button>
+      {/* <button onClick={startGame}>Start Game</button> */}
+      <button onClick={readyUp}>Ready Up</button>
       {gameOver && <div>GAME OVER!</div>}
     </div>
   );

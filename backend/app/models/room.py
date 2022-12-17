@@ -25,6 +25,7 @@ class Room(db.Model):
 
     users = db.relationship("User", secondary=Occupant, back_populates="rooms")
     messages = db.relationship("Message", back_populates="room", cascade="all, delete-orphan")
+    games = db.relationship("Game", back_populates="room", cascade="all, delete-orphan")
 
 
     def to_dict(self):

@@ -23,6 +23,7 @@ class User(db.Model, UserMixin):
     #                    name='gender'), nullable=False, default="Prefer not to say")
 
     rooms = db.relationship("Room", secondary="occupants", back_populates="users")
+    games = db.relationship("Game", secondary="players", back_populates="users")
     messages = db.relationship("Message", back_populates="user", cascade="all, delete-orphan")
 
     @property
@@ -41,7 +42,8 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'profile_picture': self.profile_picture,
-            'is_online': self.is_online
+            'is_online': self.is_online,
+            'sid': self.sid
         }
 
     # def to_dict_all(self):
