@@ -1,7 +1,7 @@
 // Custom Hook by Dan Abramov
 import { useEffect, useRef } from "react";
 
-const useInterval = (callback, delay) => {
+const useInterval = (callback, delay, gameOver) => {
   const savedCallback = useRef();
 
   useEffect(() => {
@@ -9,11 +9,11 @@ const useInterval = (callback, delay) => {
   }, [callback]);
 
   useEffect(() => {
-    if (delay) {
+    if (!gameOver) {
       const interval = setInterval(() => savedCallback.current(), delay);
       return () => clearInterval(interval);
     }
-  }, [delay]);
+  }, [gameOver]);
 };
 
 export default useInterval;

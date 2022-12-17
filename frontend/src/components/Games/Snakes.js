@@ -11,12 +11,12 @@ import {
 
 const Snakes = () => {
   const canvasRef = useRef();
-  const [snake, setSnake] = useState(SNAKE_START);
-  const [apple, setApple] = useState([-1, -1]);
+  const [snake, setSnake] = useState(null);
+  const [apple, setApple] = useState(null);
   const [dir, setDir] = useState([0, -1]);
   const [oppDir, setOppDir] = useState([0, 1]);
   const [speed, setSpeed] = useState(null);
-  const [gameOver, setGameOver] = useState(false);
+  const [gameOver, setGameOver] = useState(true);
 
   const endGame = () => {
     setSpeed(null);
@@ -38,19 +38,26 @@ const Snakes = () => {
   };
 
   const createApple = () =>
-    apple.map((_a, i) => Math.floor(Math.random() * (CANVAS_SIZE[i] / SCALE)));
+    APPLE_START.map((_, idx) =>
+      Math.floor(Math.random() * (CANVAS_SIZE[idx] / SCALE))
+    );
+
+  const createSnake = () => {
+    let pos;
+    const startPos = SNAKE_START.map((cell, idx) => {
+      if (idx === 0) {
+        pos = cell.map((_, idx) =>
+          Math.floor(Math.random() * (CANVAS_SIZE[idx] / SCALE))
+        );
+      }
+      return pos;
+    });
+    return startPos;
+  };
 
   const checkCollision = (piece, snk = snake) => {
-    // if (
-    //   piece[0] * SCALE >= CANVAS_SIZE[0] ||
-    //   piece[0] < 0 ||
-    //   piece[1] * SCALE >= CANVAS_SIZE[1] ||
-    //   piece[1] < 0
-    // )
-    //   return true;
-
-    for (const segment of snk) {
-      if (piece[0] === segment[0] && piece[1] === segment[1]) return true;
+    for (const cell of snk) {
+      if (piece[0] === cell[0] && piece[1] === cell[1]) return true;
     }
     return false;
   };
@@ -81,7 +88,7 @@ const Snakes = () => {
   };
 
   const startGame = () => {
-    setSnake(SNAKE_START);
+    setSnake(createSnake());
     setApple(createApple());
     setDir([0, -1]);
     setSpeed(SPEED);
@@ -101,7 +108,7 @@ const Snakes = () => {
     ctx.setTransform(SCALE, 0, 0, SCALE, 0, 0);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.beginPath();
-    snake.forEach(([x, y], idx) => {
+    snake?.forEach(([x, y], idx) => {
       idx === 0 ? (ctx.fillStyle = "gray") : (ctx.fillStyle = "lightgray");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
@@ -117,18 +124,18 @@ const Snakes = () => {
     }
   }, [snake, apple, gameOver]);
 
-  useInterval(gameLoop, speed);
+  useInterval(gameLoop, speed, gameOver);
 
   return (
     <div onKeyDown={moveSnake}>
       <canvas
-        style={{ border: "1px solid" }}
+        style={{ border: "1px solid", backgroundColor: "#ffffff" }}
         ref={canvasRef}
         width={`${CANVAS_SIZE[0]}px`}
         height={`${CANVAS_SIZE[1]}px`}
       />
-      {gameOver && <div>GAME OVER!</div>}
       <button onClick={startGame}>Start Game</button>
+      {gameOver && <div>GAME OVER!</div>}
     </div>
   );
 };
