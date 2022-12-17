@@ -16,6 +16,12 @@ class Snakes:
     def update_ready(self):
         return len(self.player_1_snake) and len(self.player_2_snake)
 
+    def player_1_snake_ready(self):
+        return len(self.player_1_snake)
+
+    def player_2_snake_ready(self):
+        return len(self.player_2_snake)
+
     def reset_snakes(self):
         self.player_1_snake = []
         self.player_2_snake = []

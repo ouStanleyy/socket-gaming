@@ -61,17 +61,19 @@ def disconnected():
 snakes_game = None
 
 @sio.on('game_connect')
-def game_connection():
+def game_connection(data):
     global snakes_game
     # player = Player(request.sid)
-    # print("hi", player)
+    print("hi", data['snake'])
     if not snakes_game:
         snakes_game = Snakes(request.sid)
+        snakes_game.player_1_snake = data['snake']
         print("hi2", snakes_game)
     elif not snakes_game.player_2:
         snakes_game.player_2 = request.sid
-        print("hi3", snakes_game)
-        emit('start_game', {'start_game': True}, broadcast=True)
+        snakes_game.player_2_snake = data['snake']
+        print("hi3", snakes_game.get_player_snakes())
+        emit('start_game', [snakes_game.get_players(), snakes_game.get_player_snakes()], broadcast=True)
 
 
 @sio.on('active_game')
@@ -79,7 +81,7 @@ def active_game(data):
     print("data", data['snake'])
     if request.sid == snakes_game.player_1:
         snakes_game.player_1_snake = data['snake']
-    else:
+    elif request.sid == snakes_game.player_2:
         snakes_game.player_2_snake = data['snake']
 
     print("update ready", snakes_game.get_player_snakes())

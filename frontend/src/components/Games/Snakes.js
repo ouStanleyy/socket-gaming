@@ -20,6 +20,7 @@ const Snakes = () => {
   const [oppDir, setOppDir] = useState([0, 1]);
   const [speed, setSpeed] = useState(null);
   const [gameOver, setGameOver] = useState(true);
+  const [otherPlayer, setOtherPlayer] = useState("");
   // const savedCallback = useRef();
 
   const endGame = () => {
@@ -94,22 +95,24 @@ const Snakes = () => {
   };
 
   const startGame = () => {
-    setSnake(createSnake());
+    // setSnake(createSnake());
+    // setSnake2(createSnake());
     setApple(createApple());
     setDir([0, -1]);
-    setSpeed(500);
+    setSpeed(15);
     setGameOver(false);
     // savedCallback.current();
   };
 
   const readyUp = () => {
-    sio?.emit("game_connect");
+    sio?.emit("game_connect", { snake: createSnake() });
   };
 
   useEffect(() => {
     if (sio) {
       sio?.once("update_game", (data) => {
-        setSnake(data[sio.id]);
+        setTimeout(() => setSnake(data[sio.id]), 3);
+        setSnake2(data[otherPlayer]);
         // savedCallback.current();
         // setSnake2(data[1]);
       });
@@ -118,7 +121,12 @@ const Snakes = () => {
 
   useEffect(() => {
     if (sio) {
-      sio?.once("start_game", () => startGame());
+      sio?.once("start_game", (data) => {
+        setOtherPlayer(data[0][0] === sio.id ? data[0][1] : data[0][0]);
+        setSnake(data[1][sio.id]);
+        setSnake2(data[1][otherPlayer]);
+        startGame();
+      });
     }
   });
 
@@ -146,13 +154,13 @@ const Snakes = () => {
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
-    // snake2?.forEach(([x, y], idx) => {
-    //   idx === 0 ? (ctx.fillStyle = "gray") : (ctx.fillStyle = "lightgray");
-    //   ctx.rect(x, y, 1, 1);
-    //   ctx.fillRect(x, y, 1, 1);
-    //   ctx.lineWidth = 0.05;
-    // });
-    // ctx.stroke();
+    snake2?.forEach(([x, y], idx) => {
+      idx === 0 ? (ctx.fillStyle = "gray") : (ctx.fillStyle = "lightgray");
+      ctx.rect(x, y, 1, 1);
+      ctx.fillRect(x, y, 1, 1);
+      ctx.lineWidth = 0.05;
+    });
+    ctx.stroke();
     if (apple) {
       ctx.fillStyle = "lightgreen";
       ctx.rect(apple[0], apple[1], 1, 1);
