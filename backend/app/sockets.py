@@ -89,3 +89,8 @@ def active_game(data):
         print("snakes", snakes_game.get_player_snakes())
         emit('update_game', snakes_game.get_player_snakes(), broadcast=True)
         snakes_game.reset_snakes()
+
+
+@sio.on('end_game')
+def active_game():
+    emit('end_game', broadcast=True)

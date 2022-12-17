@@ -60,9 +60,12 @@ const Snakes = () => {
     return startPos;
   };
 
-  const checkCollision = (piece, snk = snake) => {
+  const checkCollision = (head, snk = snake, snk2 = snake2) => {
     for (const cell of snk) {
-      if (piece[0] === cell[0] && piece[1] === cell[1]) return true;
+      if (head[0] === cell[0] && head[1] === cell[1]) return true;
+    }
+    for (const cell of snk2) {
+      if (head[0] === cell[0] && head[1] === cell[1]) return true;
     }
     return false;
   };
@@ -87,7 +90,7 @@ const Snakes = () => {
     else if (newSnakeHead[1] * SCALE >= CANVAS_SIZE[1]) newSnakeHead[1] = 0;
     else if (newSnakeHead[1] < 0) newSnakeHead[1] = CANVAS_SIZE[1] / SCALE;
     snakeCopy.unshift(newSnakeHead);
-    if (checkCollision(newSnakeHead)) endGame();
+    if (checkCollision(newSnakeHead)) sio?.emit("end_game");
     if (!checkAppleCollision(snakeCopy)) snakeCopy.pop();
     sio?.emit("active_game", { snake: snakeCopy });
     // setTimeout(() => sio?.emit("active_game", { snake: snakeCopy }), 1000);
@@ -99,7 +102,7 @@ const Snakes = () => {
     // setSnake2(createSnake());
     setApple(createApple());
     setDir([0, -1]);
-    setSpeed(15);
+    setSpeed(100);
     setGameOver(false);
     // savedCallback.current();
   };
@@ -111,8 +114,9 @@ const Snakes = () => {
   useEffect(() => {
     if (sio) {
       sio?.once("update_game", (data) => {
-        setTimeout(() => setSnake(data[sio.id]), 3);
+        // setTimeout(() => setSnake(data[sio.id]), 3);
         setSnake2(data[otherPlayer]);
+        setSnake(data[sio.id]);
         // savedCallback.current();
         // setSnake2(data[1]);
       });
@@ -123,11 +127,15 @@ const Snakes = () => {
     if (sio) {
       sio?.once("start_game", (data) => {
         setOtherPlayer(data[0][0] === sio.id ? data[0][1] : data[0][0]);
+        setSnake2(data[1][data[0][0] === sio.id ? data[0][1] : data[0][0]]);
         setSnake(data[1][sio.id]);
-        setSnake2(data[1][otherPlayer]);
-        startGame();
+        setTimeout(() => startGame(), 2000);
       });
     }
+  });
+
+  useEffect(() => {
+    if (sio) sio?.once("end_game", () => endGame());
   });
 
   // useEffect(() => {
