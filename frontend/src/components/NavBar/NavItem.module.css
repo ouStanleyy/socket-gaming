@@ -3,7 +3,7 @@
   height: 24px;
   border-radius: 50%;
   /* border: 1px solid red; */
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 svg {
   z-index: 11;
@@ -38,15 +38,15 @@ svg {
 .svgContainer {
   display: flex;
   place-content: center;
-  transition: 500ms;
+  transition: 100ms;
 }
 
 /* when navItem is hovered, target svg*/
-.navItem:hover .svgContainer svg {
+.navItem:hover .svgContainer {
   transform: scale(1.08);
 }
 
-.navItem:active .svgContainer svg {
+.navItem:active .svgContainer {
   transform: scale(1);
 }
 
@@ -91,7 +91,7 @@ svg {
 
 .hideNavItem .svgContainer + span,
 .hideNavItem .profilePicture + span {
-  display: none;
+  visibility: hidden;
 }
 
 .hideNavItem .instagramLogo {
