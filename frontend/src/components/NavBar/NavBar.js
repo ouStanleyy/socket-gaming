@@ -146,7 +146,7 @@ const NavBar = () => {
               >
                 <MoreItem type="Settings" />
               </NavLink>
-              <NavLink to="/saved" exact={true} className={styles.navLink}>
+              {/* <NavLink to="/saved" exact={true} className={styles.navLink}>
                 <MoreItem type="Saved" />
               </NavLink>
               <NavLink to="/report" exact={true} className={styles.navLink}>
@@ -154,7 +154,7 @@ const NavBar = () => {
               </NavLink>
               <NavLink to="#" exact={true} className={styles.navLink}>
                 <MoreItem type="Switch accounts" />
-              </NavLink>
+              </NavLink> */}
               <NavLink to="#" exact={true} className={styles.navLink}>
                 <MoreItem type="Log Out" onClick={handleLogout} />
               </NavLink>

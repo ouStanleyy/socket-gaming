@@ -52,7 +52,8 @@ const Messages = () => {
             className={styles.newConvoButton}
             onClick={toggleNewMessageModal}
           >
-            <svg
+            <i className="fa-regular fa-share-from-square fa-lg" />
+            {/* <svg
               aria-label="New message"
               // class="_ab6-"
               color="#262626"
@@ -89,7 +90,7 @@ const Messages = () => {
                 y1="3.924"
                 y2="7.153"
               ></line>
-            </svg>
+            </svg> */}
           </div>
         </div>
         <h3 className={styles.title}>Messages</h3>
@@ -130,7 +131,9 @@ const Messages = () => {
           </Route>
           <Route path="/messages">
             <div className={styles.noConvo}>
-              <svg
+              {/* <i className="fa-regular fa-comments fa-5x" /> */}
+              <i className="fa-solid fa-paper-plane fa-5x" />
+              {/* <svg
                 aria-label="Direct"
                 // class="_ab6-"
                 color="#262626"
@@ -167,7 +170,7 @@ const Messages = () => {
                   strokeLinejoin="round"
                   strokeWidth="2"
                 ></polygon>
-              </svg>
+              </svg> */}
               <h3>Your Messages</h3>
               <p>Send private messages to a friend.</p>
               <button onClick={toggleNewMessageModal}>Send Message</button>
