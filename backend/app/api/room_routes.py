@@ -17,9 +17,9 @@ def rooms():
 
 @room_routes.route('/', methods=['POST'])
 @login_required
-def create_room():
+def join_room():
     """
-    Creates a new room for current user and user specified by id
+    Joins an existing or newly created room for current user and user specified by id
     """
     user = User.query.get_or_404(request.json['user_id'])
     room = Room.query.filter(Room.users.any(User.id == user.id)).filter(Room.users.any(User.id == current_user.id)).first()

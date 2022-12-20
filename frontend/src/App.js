@@ -10,7 +10,7 @@ import { setSocket } from "./store/socket";
 import Splash from "./components/Splash/Splash";
 import { Messages } from "./components/Messages";
 import styles from "./App.module.css";
-import { GameDisplay } from "./components/Games";
+import { GameDisplay, GamesList, GameLobby } from "./components/Games";
 
 function App() {
   const dispatch = useDispatch();
@@ -49,10 +49,10 @@ function App() {
     <BrowserRouter>
       {user && <NavBar />}
       <Switch>
-        <Route path="/" exact={true}>
+        <Route exact path="/">
           {user ? <h1>Homepage</h1> : <Splash />}
         </Route>
-        <Route path="/sign-up" exact={true}>
+        <Route exact path="/sign-up">
           <SignUpForm />
         </Route>
         <ProtectedRoute path="/messages">
@@ -60,9 +60,14 @@ function App() {
             <Messages user={user} />
           </div>
         </ProtectedRoute>
-        <ProtectedRoute path="/games">
+        <ProtectedRoute exact path="/games">
           <div className={styles.innerBody}>
-            <GameDisplay />
+            <GamesList />
+          </div>
+        </ProtectedRoute>
+        <ProtectedRoute path="/games/:gameId">
+          <div className={styles.innerBody}>
+            <GameLobby />
           </div>
         </ProtectedRoute>
       </Switch>

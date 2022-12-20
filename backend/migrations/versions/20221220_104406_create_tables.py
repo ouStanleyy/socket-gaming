@@ -1,8 +1,8 @@
-"""create_tables
+"""create tables
 
-Revision ID: 3d2b6a1b8ddc
+Revision ID: 500b3f660d21
 Revises:
-Create Date: 2022-12-17 13:23:03.046263
+Create Date: 2022-12-20 10:44:06.168319
 
 """
 from alembic import op
@@ -14,7 +14,7 @@ SCHEMA = os.environ.get("SCHEMA")
 
 
 # revision identifiers, used by Alembic.
-revision = '3d2b6a1b8ddc'
+revision = '500b3f660d21'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -38,10 +38,12 @@ def upgrade():
     )
     op.create_table('games',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('room_id', sa.Integer(), nullable=True),
+    sa.Column('host_id', sa.Integer(), nullable=False),
     sa.Column('game_data', sa.Text(), nullable=True),
-    sa.Column('game_type', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.ForeignKeyConstraint(['room_id'], ['rooms.id'], ),
+    sa.Column('game_type', sa.Enum('snakes', 'pong', 'connect4', name='game_type'), nullable=False),
+    sa.Column('max_players', sa.Integer(), nullable=False),
+    sa.Column('is_private', sa.Boolean(), nullable=False),
+    sa.ForeignKeyConstraint(['host_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('messages',

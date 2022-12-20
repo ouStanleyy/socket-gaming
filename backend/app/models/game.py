@@ -1,5 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
-from sqlalchemy import func
+import json
 
 
 Player = db.Table('players',
@@ -22,19 +22,23 @@ class Game(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    room_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('rooms.id')))
+    host_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    # room_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('rooms.id')))
     game_data = db.Column(db.Text)
-    game_type = db.Column(db.DateTime(timezone=True),
-                          server_default=func.now())
+    game_type = db.Column(db.Enum("snakes", "pong", "connect4", name='game_type'), nullable=False)
+    max_players = db.Column(db.Integer, nullable=False, default=2)
+    is_private = db.Column(db.Boolean, nullable=False, default=False)
 
     users = db.relationship("User", secondary=Player, back_populates="games")
-    room = db.relationship("Room", back_populates="games")
+    # room = db.relationship("Room", back_populates="games")
 
     def to_dict(self):
         return {
             'id': self.id,
-            'user_id': self.user_id,
-            'room_id': self.room_id,
-            'message': self.message,
-            'time_sent': self.time_sent
+            'host_id': self.host_id,
+            'game_data': json.loads(self.game_data),
+            'game_type': self.game_type,
+            'max_players': self.max_players,
+            'is_private': self.is_private,
+            'users': [user.to_dict() for user in self.users]
         }
