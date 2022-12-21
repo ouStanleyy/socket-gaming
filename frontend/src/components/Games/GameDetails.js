@@ -1,12 +1,19 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { getGameById, joinGame, leaveGame } from "../../store/games";
+import { useHistory, useParams } from "react-router-dom";
+import {
+  getGameById,
+  joinGame,
+  leaveGame,
+  deleteGame,
+} from "../../store/games";
 import styles from "./GameDetails.module.css";
 
 const GameDetails = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const { gameId } = useParams();
+  const sio = useSelector((state) => state.socket.socket);
   const game = useSelector((state) => state.games[gameId]);
   const sessionId = useSelector((state) => state.session.user.id);
 
@@ -18,6 +25,11 @@ const GameDetails = () => {
     await dispatch(leaveGame(gameId));
   };
 
+  const closeLobby = async () => {
+    await dispatch(deleteGame(gameId));
+    history.push("/games");
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -25,6 +37,15 @@ const GameDetails = () => {
       } catch (err) {}
     })();
   }, []);
+
+  useEffect(() => {
+    if (sio)
+      sio?.once("update_game_lobby", () => dispatch(getGameById(gameId)));
+  }, [sio, game]);
+
+  useEffect(() => {
+    if (sio) sio?.once("close_game_lobby", () => history.push("/games"));
+  }, [sio, game]);
 
   return (
     <div className={styles.gameDetails}>
@@ -40,6 +61,9 @@ const GameDetails = () => {
         )}
         {game?.users.find((user) => user.id === sessionId) &&
           game.host_id !== sessionId && <button onClick={leave}>Leave</button>}
+        {game?.host_id === sessionId && (
+          <button onClick={closeLobby}>Close Lobby</button>
+        )}
       </div>
     </div>
   );

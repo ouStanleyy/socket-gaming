@@ -8,6 +8,7 @@ import styles from "./GamesList.module.css";
 
 const GamesList = () => {
   const dispatch = useDispatch();
+  const sio = useSelector((state) => state.socket.socket);
   const games = useSelector((state) => Object.values(state.games));
   const [newGameModal, setNewGameModal] = useState(false);
 
@@ -22,6 +23,10 @@ const GamesList = () => {
       } catch (err) {}
     })();
   }, []);
+
+  useEffect(() => {
+    sio.once("update_game_list", () => dispatch(getGames()));
+  }, [sio, games]);
 
   return (
     <div className={styles.gamesListContainer}>

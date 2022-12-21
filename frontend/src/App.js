@@ -30,11 +30,8 @@ function App() {
 
       dispatch(setSocket(socket));
 
-      // socket.on("connect", (data) => {
-      //   if (data) {
-      //     // console.log("sid", data);
-      //     // setSid(data?.sid);
-      //   }
+      // socket.on("connect", () => {
+      //   dispatch();
       // });
 
       return () => socket.disconnect();

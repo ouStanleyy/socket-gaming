@@ -25,6 +25,8 @@ def game(game_id):
     Query for a game by id and returns that game in a dictionary
     """
     game = Game.query.get_or_404(game_id)
+    if not current_user in game.users:
+        sio.server.enter_room(current_user.sid, f'{game.game_type}-{game.id}')
     return game.to_dict()
 
 
@@ -45,6 +47,7 @@ def create_game():
     db.session.commit()
 
     sio.server.enter_room(current_user.sid, f'{game.game_type}-{game.id}')
+    sio.emit('update_game_list', broadcast=True)
 
     return game.to_dict()
 
@@ -65,6 +68,7 @@ def join_game(game_id):
     db.session.commit()
 
     sio.server.enter_room(current_user.sid, f'{game.game_type}-{game.id}')
+    sio.emit('update_game_lobby', room=f'{game.game_type}-{game.id}')
 
     return game.to_dict()
 
@@ -85,5 +89,23 @@ def leave_game(game_id):
     db.session.commit()
 
     sio.server.leave_room(current_user.sid, f'{game.game_type}-{game.id}')
+    sio.emit('update_game_lobby', room=f'{game.game_type}-{game.id}')
 
     return game.to_dict()
+
+
+@game_routes.route('/<int:game_id>', methods=['DELETE'])
+@login_required
+def delete_game(game_id):
+    """
+    Deletes game specified by id
+    """
+    game = Game.query.get_or_404(game_id)
+
+    sio.server.leave_room(current_user.sid, f'{game.game_type}-{game.id}')
+    sio.emit('close_game_lobby', room=f'{game.game_type}-{game.id}')
+
+    db.session.delete(game)
+    db.session.commit()
+
+    return {'message': 'Successfully deleted game'}

@@ -31,6 +31,8 @@ def connected():
     db.session.commit()
     for room in current_user.rooms:
         join_room(str(room.id))
+    for game in current_user.games:
+        join_room(f'{game.game_type}-{game.id}')
     # sio.server.enter_room(request.sid, request.args.get('room'))
     emit("connected", {"sid": request.sid}, broadcast=True, include_self=False)
 
@@ -54,6 +56,8 @@ def disconnected():
     db.session.commit()
     for room in current_user.rooms:
         leave_room(str(room.id))
+    for game in current_user.games:
+        leave_room(f'{game.game_type}-{game.id}')
     # sio.server.leave_room(request.sid, request.args.get('room'))
     emit("disconnected", f"user {request.sid} disconnected", broadcast=True, include_self=False)
 
@@ -66,7 +70,7 @@ def game_connection(data):
     # player = Player(request.sid)
     print("hi", data['snake'])
     if not snakes_game:
-        snakes_game = Snakes(request.sid)
+        snakes_game = Snakes(player_1=request.sid)
         snakes_game.player_1_snake = data['snake']
         print("hi2", snakes_game)
     elif not snakes_game.player_2:

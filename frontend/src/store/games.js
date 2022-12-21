@@ -2,6 +2,7 @@
 const LOAD_GAMES = "games/LOAD_GAMES";
 const LOAD_GAME_DETAILS = "games/LOAD_GAME_DETAILS";
 const ADD_GAME = "games/ADD_GAME";
+const REMOVE_GAME = "games/REMOVE_GAME";
 
 // actions
 const loadGames = (games) => ({
@@ -17,6 +18,11 @@ const loadGameDetails = (game) => ({
 const addGame = (game) => ({
   type: ADD_GAME,
   game,
+});
+
+const removeGame = (gameId) => ({
+  type: REMOVE_GAME,
+  gameId,
 });
 
 // thunks
@@ -82,6 +88,17 @@ export const leaveGame = (gameId) => async (dispatch) => {
   }
 };
 
+export const deleteGame = (gameId) => async (dispatch) => {
+  const res = await fetch(`/api/games/${gameId}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (res.ok) {
+    dispatch(removeGame(gameId));
+  }
+};
+
 // reducer
 const gamesReducer = (state = {}, action) => {
   switch (action.type) {
@@ -94,6 +111,10 @@ const gamesReducer = (state = {}, action) => {
       };
     case ADD_GAME:
       return { ...state, [action.game.id]: action.game };
+    case REMOVE_GAME:
+      const newState = { ...state };
+      delete newState[action.gameId];
+      return newState;
     default:
       return state;
   }
