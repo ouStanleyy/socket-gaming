@@ -10,7 +10,7 @@ const loadGames = (games) => ({
   games,
 });
 
-const loadGameDetails = (game) => ({
+export const loadGameDetails = (game) => ({
   type: LOAD_GAME_DETAILS,
   game,
 });
@@ -96,6 +96,20 @@ export const deleteGame = (gameId) => async (dispatch) => {
 
   if (res.ok) {
     dispatch(removeGame(gameId));
+  }
+};
+
+export const updateReadyState = (gameId, ready_state) => async (dispatch) => {
+  const res = await fetch(`/api/games/${gameId}/ready`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ready_state }),
+  });
+  const game = await res.json();
+
+  if (res.ok) {
+    dispatch(loadGameDetails(game));
+    return game;
   }
 };
 

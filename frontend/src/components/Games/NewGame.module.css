@@ -119,6 +119,7 @@
 
 .gameContainer:hover {
   background-color: #fafafa;
+  cursor: pointer;
 }
 
 .gameDetails {
