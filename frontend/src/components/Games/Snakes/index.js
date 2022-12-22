@@ -1,3 +1,3 @@
-import Snakes from "./Snakes";
+import SnakesGame from "./Snakes";
 
-export { Snakes };
+export { SnakesGame };

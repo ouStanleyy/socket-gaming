@@ -113,6 +113,20 @@ export const updateReadyState = (gameId, ready_state) => async (dispatch) => {
   }
 };
 
+export const startGame = (gameId, snakePositions) => async (dispatch) => {
+  const res = await fetch(`/api/games/${gameId}/start`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(snakePositions),
+  });
+  const game = await res.json();
+
+  if (res.ok) {
+    dispatch(loadGameDetails(game));
+    return game;
+  }
+};
+
 // reducer
 const gamesReducer = (state = {}, action) => {
   switch (action.type) {

@@ -1,7 +1,7 @@
-import { Snakes } from "./Snakes";
+import { SnakesGame } from "./Snakes";
 
 const GameDisplay = () => {
-  return <Snakes />;
+  return <SnakesGame />;
 };
 
 export default GameDisplay;

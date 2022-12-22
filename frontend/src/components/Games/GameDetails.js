@@ -8,6 +8,7 @@ import {
   deleteGame,
   loadGameDetails,
   updateReadyState,
+  startGame,
 } from "../../store/games";
 import styles from "./GameDetails.module.css";
 
@@ -35,6 +36,10 @@ const GameDetails = () => {
   const closeLobby = async () => {
     await dispatch(deleteGame(gameId));
     history.push("/games");
+  };
+
+  const start = () => {
+    dispatch(startGame(gameId));
   };
 
   useEffect(() => {
@@ -87,6 +92,9 @@ const GameDetails = () => {
           )}
         {game?.host_id === sessionId && (
           <button onClick={closeLobby}>Close Lobby</button>
+        )}
+        {game?.host_id === sessionId && game.game_data.player_2_ready && (
+          <button onClick={start}>Start Game</button>
         )}
       </div>
     </div>

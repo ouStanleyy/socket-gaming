@@ -9,89 +9,103 @@ import {
   SPEED,
   DIRECTIONS,
 } from "./constants";
+import Snakes from "./snakes-class";
 
-const Snakes = () => {
+const SnakesGame = () => {
   const sio = useSelector((state) => state.socket.socket);
   const canvasRef = useRef();
-  const [snake, setSnake] = useState(null);
-  const [snake2, setSnake2] = useState(null);
-  const [apple, setApple] = useState(null);
-  const [dir, setDir] = useState([0, -1]);
-  const [oppDir, setOppDir] = useState([0, 1]);
-  const [speed, setSpeed] = useState(null);
+  // const [snake, setSnake] = useState(null);
+  // const [snake2, setSnake2] = useState(null);
+  // const [apple, setApple] = useState(null);
+  // const [dir, setDir] = useState([0, -1]);
+  // const [oppDir, setOppDir] = useState([0, 1]);
+  // const [speed, setSpeed] = useState(null);
   const [gameOver, setGameOver] = useState(true);
   const [otherPlayer, setOtherPlayer] = useState("");
+  const [gameInstance, setGameInstance] = useState({ game: null });
   // const savedCallback = useRef();
 
   const endGame = () => {
-    setSpeed(null);
+    // setSpeed(null);
     setGameOver(true);
   };
 
-  const moveSnake = ({ keyCode }) => {
-    if (
-      keyCode >= 37 &&
-      keyCode <= 40 &&
-      JSON.stringify(DIRECTIONS[keyCode]) !== JSON.stringify(oppDir)
-    ) {
-      setDir(DIRECTIONS[keyCode]);
-      if (keyCode === 38) setOppDir(DIRECTIONS[40]);
-      else if (keyCode === 40) setOppDir(DIRECTIONS[38]);
-      else if (keyCode === 37) setOppDir(DIRECTIONS[39]);
-      else if (keyCode === 39) setOppDir(DIRECTIONS[37]);
-    }
-  };
+  // const moveSnake = ({ keyCode }) => {
+  //   if (
+  //     keyCode >= 37 &&
+  //     keyCode <= 40 &&
+  //     JSON.stringify(DIRECTIONS[keyCode]) !== JSON.stringify(oppDir)
+  //   ) {
+  //     setDir(DIRECTIONS[keyCode]);
+  //     if (keyCode === 38) setOppDir(DIRECTIONS[40]);
+  //     else if (keyCode === 40) setOppDir(DIRECTIONS[38]);
+  //     else if (keyCode === 37) setOppDir(DIRECTIONS[39]);
+  //     else if (keyCode === 39) setOppDir(DIRECTIONS[37]);
+  //   }
+  // };
 
-  const createApple = () =>
-    APPLE_START.map((_, idx) =>
-      Math.floor(Math.random() * (CANVAS_SIZE[idx] / SCALE))
-    );
+  // const createApple = () =>
+  //   [0, 0].map((_, idx) =>
+  //     Math.floor(Math.random() * (CANVAS_SIZE[idx] / SCALE))
+  //   );
 
   const createSnake = () => {
     let pos;
-    const startPos = SNAKE_START.map((cell, idx) => {
+    const startPos = [
+      [0, 0],
+      [0, 0],
+    ].map((cell, idx) => {
       if (idx === 0) {
         pos = cell.map((_, idx) =>
           Math.floor(Math.random() * (CANVAS_SIZE[idx] / SCALE))
         );
+        return pos;
+      } else {
+        return [pos[0], pos[1] + 1];
       }
-      return pos;
     });
     return startPos;
   };
 
-  const checkCollision = (head, snk = snake, snk2 = snake2) => {
-    for (const cell of snk) {
-      if (head[0] === cell[0] && head[1] === cell[1]) return true;
-    }
-    for (const cell of snk2) {
-      if (head[0] === cell[0] && head[1] === cell[1]) return true;
-    }
-    return false;
-  };
+  // const checkCollision = (head, snk = snake, snk2 = snake2) => {
+  //   for (const cell of snk) {
+  //     if (head[0] === cell[0] && head[1] === cell[1]) return true;
+  //   }
+  //   for (const cell of snk2) {
+  //     if (head[0] === cell[0] && head[1] === cell[1]) return true;
+  //   }
+  //   return false;
+  // };
 
-  const checkAppleCollision = (newSnake) => {
-    if (newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
-      let newApple = createApple();
-      while (checkCollision(newApple, newSnake)) {
-        newApple = createApple();
-      }
-      setApple(newApple);
-      return true;
-    }
-    return false;
-  };
+  // const checkAppleCollision = (newSnake) => {
+  //   if (newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
+  //     let newApple = createApple();
+  //     while (checkCollision(newApple, newSnake)) {
+  //       newApple = createApple();
+  //     }
+  //     setApple(newApple);
+  //     return true;
+  //   }
+  //   return false;
+  // };
 
   const gameLoop = () => {
-    const snakeCopy = [...snake];
-    const newSnakeHead = [snakeCopy[0][0] + dir[0], snakeCopy[0][1] + dir[1]];
-    if (newSnakeHead[0] * SCALE >= CANVAS_SIZE[0]) newSnakeHead[0] = 0;
-    else if (newSnakeHead[0] < 0) newSnakeHead[0] = CANVAS_SIZE[0] / SCALE;
-    else if (newSnakeHead[1] * SCALE >= CANVAS_SIZE[1]) newSnakeHead[1] = 0;
-    else if (newSnakeHead[1] < 0) newSnakeHead[1] = CANVAS_SIZE[1] / SCALE;
+    const snakeCopy = [...gameInstance.game.snakeOne];
+    const newSnakeHead = [
+      snakeCopy[0][0] + gameInstance.game.dir[0],
+      snakeCopy[0][1] + gameInstance.game.dir[1],
+    ];
+    if (newSnakeHead[0] * Snakes.SCALE >= Snakes.CANVAS_SIZE[0])
+      newSnakeHead[0] = 0;
+    else if (newSnakeHead[0] < 0)
+      newSnakeHead[0] = Snakes.CANVAS_SIZE[0] / Snakes.SCALE;
+    else if (newSnakeHead[1] * Snakes.SCALE >= Snakes.CANVAS_SIZE[1])
+      newSnakeHead[1] = 0;
+    else if (newSnakeHead[1] < 0)
+      newSnakeHead[1] = Snakes.CANVAS_SIZE[1] / Snakes.SCALE;
+    if (gameInstance.game.checkCollision(newSnakeHead)) sio?.emit("end_game");
     snakeCopy.unshift(newSnakeHead);
-    if (checkCollision(newSnakeHead)) sio?.emit("end_game");
-    if (!checkAppleCollision(snakeCopy)) snakeCopy.pop();
+    if (!gameInstance.game.checkAppleCollision(snakeCopy)) snakeCopy.pop();
     sio?.emit("active_game", { snake: snakeCopy });
     // setTimeout(() => sio?.emit("active_game", { snake: snakeCopy }), 1000);
     // setSnake(snakeCopy);
@@ -100,9 +114,10 @@ const Snakes = () => {
   const startGame = () => {
     // setSnake(createSnake());
     // setSnake2(createSnake());
-    setApple(createApple());
-    setDir([0, -1]);
-    setSpeed(100);
+    // setApple(createApple());
+    // gameInstance.apple = gameInstance.createApple();
+    // setDir([0, -1]);
+    // setSpeed(100);
     setGameOver(false);
     // savedCallback.current();
   };
@@ -112,27 +127,54 @@ const Snakes = () => {
   };
 
   useEffect(() => {
-    if (sio) {
+    if (gameInstance.game) {
       sio?.once("update_game", (data) => {
         // setTimeout(() => setSnake(data[sio.id]), 3);
-        setSnake2(data[otherPlayer]);
-        setSnake(data[sio.id]);
+        // console.log("hello", gameInstance);
+        gameInstance.game.snakeTwo = data[otherPlayer];
+        gameInstance.game.snakeOne = data[sio.id];
+        setGameInstance({ game: gameInstance.game });
         // savedCallback.current();
         // setSnake2(data[1]);
       });
     }
-  }, [snake]);
+  }, [gameInstance]);
+  // useEffect(() => {
+  //   if (sio) {
+  //     sio?.once("update_game", (data) => {
+  //       // setTimeout(() => setSnake(data[sio.id]), 3);
+  //       setSnake2(data[otherPlayer]);
+  //       setSnake(data[sio.id]);
+  //       // savedCallback.current();
+  //       // setSnake2(data[1]);
+  //     });
+  //   }
+  // }, [snake]);
 
   useEffect(() => {
     if (sio) {
       sio?.once("start_game", (data) => {
+        const snakesGame = new Snakes();
         setOtherPlayer(data[0][0] === sio.id ? data[0][1] : data[0][0]);
-        setSnake2(data[1][data[0][0] === sio.id ? data[0][1] : data[0][0]]);
-        setSnake(data[1][sio.id]);
+        snakesGame.snakeTwo =
+          data[1][data[0][0] === sio.id ? data[0][1] : data[0][0]];
+        snakesGame.snakeOne = data[1][sio.id];
+        setGameInstance({ game: snakesGame });
         setTimeout(() => startGame(), 2000);
       });
     }
   });
+
+  // useEffect(() => {
+  //   if (sio) {
+  //     sio?.once("start_game", (data) => {
+  //       setOtherPlayer(data[0][0] === sio.id ? data[0][1] : data[0][0]);
+  //       setSnake2(data[1][data[0][0] === sio.id ? data[0][1] : data[0][0]]);
+  //       setSnake(data[1][sio.id]);
+  //       setTimeout(() => startGame(), 2000);
+  //     });
+  //   }
+  // });
 
   useEffect(() => {
     if (sio) sio?.once("end_game", () => endGame());
@@ -152,41 +194,49 @@ const Snakes = () => {
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext("2d");
-    ctx.setTransform(SCALE, 0, 0, SCALE, 0, 0);
+    ctx.setTransform(Snakes.SCALE, 0, 0, Snakes.SCALE, 0, 0);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.beginPath();
-    snake?.forEach(([x, y], idx) => {
+    gameInstance.game?.snakeOne.forEach(([x, y], idx) => {
       idx === 0 ? (ctx.fillStyle = "gray") : (ctx.fillStyle = "lightgray");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
-    snake2?.forEach(([x, y], idx) => {
+    gameInstance.game?.snakeTwo.forEach(([x, y], idx) => {
       idx === 0 ? (ctx.fillStyle = "gray") : (ctx.fillStyle = "lightgray");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
-    if (apple) {
+    if (gameInstance.game?.apple) {
       ctx.fillStyle = "lightgreen";
-      ctx.rect(apple[0], apple[1], 1, 1);
-      ctx.fillRect(apple[0], apple[1], 1, 1);
+      ctx.rect(gameInstance.game.apple[0], gameInstance.game.apple[1], 1, 1);
+      ctx.fillRect(
+        gameInstance.game.apple[0],
+        gameInstance.game.apple[1],
+        1,
+        1
+      );
       ctx.lineWidth = 0.05;
       ctx.stroke();
     }
-  }, [snake, apple, gameOver]);
+  }, [gameInstance, gameOver]);
 
-  useInterval(gameLoop, speed, gameOver);
+  useInterval(gameLoop, Snakes.SPEED, gameOver);
+  // console.log("here", gameInstance);
 
   return (
-    <div onKeyDown={moveSnake}>
+    <div onKeyDown={gameInstance.game?.moveSnake}>
       <canvas
         style={{ border: "1px solid", backgroundColor: "#ffffff" }}
         ref={canvasRef}
-        width={`${CANVAS_SIZE[0]}px`}
-        height={`${CANVAS_SIZE[1]}px`}
+        width={`${Snakes.CANVAS_SIZE[0]}px`}
+        height={`${Snakes.CANVAS_SIZE[1]}px`}
+        // width={`${CANVAS_SIZE[0]}px`}
+        // height={`${CANVAS_SIZE[1]}px`}
       />
       {/* <button onClick={startGame}>Start Game</button> */}
       <button onClick={readyUp}>Ready Up</button>
@@ -195,4 +245,4 @@ const Snakes = () => {
   );
 };
 
-export default Snakes;
+export default SnakesGame;
