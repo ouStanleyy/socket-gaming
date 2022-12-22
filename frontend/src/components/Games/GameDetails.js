@@ -10,6 +10,7 @@ import {
   updateReadyState,
   startGame,
 } from "../../store/games";
+import Snakes from "./Snakes/snakes-class";
 import styles from "./GameDetails.module.css";
 
 const GameDetails = () => {
@@ -39,7 +40,12 @@ const GameDetails = () => {
   };
 
   const start = () => {
-    dispatch(startGame(gameId));
+    dispatch(
+      startGame(gameId, {
+        player_1_snake: Snakes.createSnake(),
+        player_2_snake: Snakes.createSnake(),
+      })
+    );
   };
 
   useEffect(() => {

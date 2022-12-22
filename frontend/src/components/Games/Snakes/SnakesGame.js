@@ -10,9 +10,12 @@ import {
   DIRECTIONS,
 } from "./constants";
 import Snakes from "./snakes-class";
+import { useParams } from "react-router-dom";
 
 const SnakesGame = () => {
+  const { gameId } = useParams();
   const sio = useSelector((state) => state.socket.socket);
+  const sessionId = useSelector((state) => state.session.user.id);
   const canvasRef = useRef();
   // const [snake, setSnake] = useState(null);
   // const [snake2, setSnake2] = useState(null);
@@ -106,7 +109,7 @@ const SnakesGame = () => {
     if (gameInstance.game.checkCollision(newSnakeHead)) sio?.emit("end_game");
     snakeCopy.unshift(newSnakeHead);
     if (!gameInstance.game.checkAppleCollision(snakeCopy)) snakeCopy.pop();
-    sio?.emit("active_game", { snake: snakeCopy });
+    sio?.emit("active_game", { gameId, snake: snakeCopy });
     // setTimeout(() => sio?.emit("active_game", { snake: snakeCopy }), 1000);
     // setSnake(snakeCopy);
   };
@@ -130,15 +133,29 @@ const SnakesGame = () => {
     if (gameInstance.game) {
       sio?.once("update_game", (data) => {
         // setTimeout(() => setSnake(data[sio.id]), 3);
-        // console.log("hello", gameInstance);
+        console.log("other player", data[otherPlayer]);
+        console.log("player", data[sessionId]);
         gameInstance.game.snakeTwo = data[otherPlayer];
-        gameInstance.game.snakeOne = data[sio.id];
+        gameInstance.game.snakeOne = data[sessionId];
         setGameInstance({ game: gameInstance.game });
         // savedCallback.current();
         // setSnake2(data[1]);
       });
     }
   }, [gameInstance]);
+  // useEffect(() => {
+  //   if (gameInstance.game) {
+  //     sio?.once("update_game", (data) => {
+  //       // setTimeout(() => setSnake(data[sio.id]), 3);
+  //       // console.log("hello", gameInstance);
+  //       gameInstance.game.snakeTwo = data[otherPlayer];
+  //       gameInstance.game.snakeOne = data[sio.id];
+  //       setGameInstance({ game: gameInstance.game });
+  //       // savedCallback.current();
+  //       // setSnake2(data[1]);
+  //     });
+  //   }
+  // }, [gameInstance]);
   // useEffect(() => {
   //   if (sio) {
   //     sio?.once("update_game", (data) => {
@@ -154,16 +171,29 @@ const SnakesGame = () => {
   useEffect(() => {
     if (sio) {
       sio?.once("start_game", (data) => {
+        console.log("HEYYYYYYY");
         const snakesGame = new Snakes();
-        setOtherPlayer(data[0][0] === sio.id ? data[0][1] : data[0][0]);
-        snakesGame.snakeTwo =
-          data[1][data[0][0] === sio.id ? data[0][1] : data[0][0]];
-        snakesGame.snakeOne = data[1][sio.id];
+        setOtherPlayer(data[sessionId].opponent);
+        snakesGame.snakeTwo = data[data[sessionId].opponent].snake;
+        snakesGame.snakeOne = data[sessionId].snake;
         setGameInstance({ game: snakesGame });
         setTimeout(() => startGame(), 2000);
       });
     }
   });
+  // useEffect(() => {
+  //   if (sio) {
+  //     sio?.once("start_game", (data) => {
+  //       const snakesGame = new Snakes();
+  //       setOtherPlayer(data[0][0] === sio.id ? data[0][1] : data[0][0]);
+  //       snakesGame.snakeTwo =
+  //         data[1][data[0][0] === sio.id ? data[0][1] : data[0][0]];
+  //       snakesGame.snakeOne = data[1][sio.id];
+  //       setGameInstance({ game: snakesGame });
+  //       setTimeout(() => startGame(), 2000);
+  //     });
+  //   }
+  // });
 
   // useEffect(() => {
   //   if (sio) {

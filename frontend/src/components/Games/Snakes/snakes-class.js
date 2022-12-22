@@ -17,12 +17,12 @@ export default class Snakes {
     this.oppDir = [0, 1];
   }
 
-  createApple = () =>
+  static createApple = () =>
     [0, 0].map((_, idx) =>
       Math.floor(Math.random() * (Snakes.CANVAS_SIZE[idx] / Snakes.SCALE))
     );
 
-  createSnake = () => {
+  static createSnake = () => {
     let pos;
     const startPos = [
       [0, 0],
@@ -54,9 +54,9 @@ export default class Snakes {
 
   checkAppleCollision = (newSnake) => {
     if (newSnake[0][0] === this.apple[0] && newSnake[0][1] === this.apple[1]) {
-      let newApple = this.createApple();
+      let newApple = Snakes.createApple();
       while (this.checkCollision(newApple, newSnake)) {
-        newApple = this.createApple();
+        newApple = Snakes.createApple();
       }
       this.apple = newApple;
       return true;

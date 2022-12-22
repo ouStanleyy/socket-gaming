@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
+from flask_socketio import emit
 from app.sockets import sio
 from app.models import db, User, Room, Game
 from app.games import Player, Snakes
@@ -150,3 +151,21 @@ def start_game(game_id):
         sio.emit('start_game', game_instance.get_game_start_data(), room=f'{game.game_type}-{game.id}')
 
     return game.to_dict()
+
+
+@sio.on('active_game')
+def active_game(data):
+    game = Game.query.get_or_404(data['gameId'])
+    game_instance = Snakes(game_data=json.loads(game.game_data))
+
+    if current_user.id == game_instance.player_1:
+        game_instance.player_1_snake = data['snake']
+    elif current_user.id == game_instance.player_2:
+        game_instance.player_2_snake = data['snake']
+
+    if game_instance.update_ready():
+        emit('update_game', game_instance.get_player_snakes(), to=f'{game.game_type}-{game.id}')
+        game_instance.reset_snakes()
+
+    game.game_data = json.dumps(game_instance.get_data())
+    db.session.commit()

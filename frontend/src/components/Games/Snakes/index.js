@@ -1,3 +1,3 @@
-import SnakesGame from "./Snakes";
+import SnakesGame from "./SnakesGame";
 
 export { SnakesGame };

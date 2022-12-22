@@ -119,12 +119,12 @@ export const startGame = (gameId, snakePositions) => async (dispatch) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(snakePositions),
   });
-  const game = await res.json();
+  // const game = await res.json();
 
-  if (res.ok) {
-    dispatch(loadGameDetails(game));
-    return game;
-  }
+  // if (res.ok) {
+  //   dispatch(loadGameDetails(game));
+  //   return game;
+  // }
 };
 
 // reducer
