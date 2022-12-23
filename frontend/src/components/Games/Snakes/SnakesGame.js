@@ -14,10 +14,6 @@ const SnakesGame = () => {
   const [otherPlayer, setOtherPlayer] = useState(null);
   const [gameInstance, setGameInstance] = useState({ game: null });
 
-  const endGame = () => {
-    setGameOver(true);
-  };
-
   const gameLoop = () => {
     const snake = [...gameInstance.game.snakeOne];
     let apples;
@@ -45,11 +41,6 @@ const SnakesGame = () => {
     });
   };
 
-  const startGame = () => {
-    // gameInstance.apple = gameInstance.createApple();
-    setGameOver(false);
-  };
-
   useEffect(() => {
     if (gameInstance.game) {
       sio.once("update_game", (data) => {
@@ -69,14 +60,14 @@ const SnakesGame = () => {
       snakesGame.snakeTwo = data[data[sessionId].opponent].snake;
       snakesGame.apples = data.apples;
       setGameInstance({ game: snakesGame });
-      setTimeout(() => startGame(), 2000);
+      setTimeout(() => setGameOver(false), 2000);
       gameRef?.current?.focus();
     });
   }, [sio, gameRef]);
 
   useEffect(() => {
     sio.on("end_game", () => {
-      endGame();
+      setGameOver(true);
       setGameInstance({ game: null });
     });
   }, [sio]);

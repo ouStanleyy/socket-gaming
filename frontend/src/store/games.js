@@ -119,12 +119,9 @@ export const startGame = (gameId, initPositions) => async (dispatch) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(initPositions),
   });
-  // const game = await res.json();
+  const game = await res.json();
 
-  // if (res.ok) {
-  //   dispatch(loadGameDetails(game));
-  //   return game;
-  // }
+  if (res.ok) return game;
 };
 
 // reducer

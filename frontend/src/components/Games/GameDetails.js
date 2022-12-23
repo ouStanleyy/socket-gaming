@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
+import { Modal } from "../../context/Modal";
 import {
   getGameById,
   joinGame,
@@ -20,7 +21,16 @@ const GameDetails = () => {
   const sio = useSelector((state) => state.socket.socket);
   const game = useSelector((state) => state.games[gameId]);
   const sessionId = useSelector((state) => state.session.user.id);
+  const players = game?.users.sort(({ id }) => (id === game.host_id ? -1 : 0));
+  const openSeats = game
+    ? Array(game?.max_players - game?.users.length).fill()
+    : null;
   const [ready, setReady] = useState(game?.game_data.player_2_ready);
+  const [closeLobbyModal, setCloseLobbyModal] = useState(false);
+
+  const toggleCloseLobbyModal = () => {
+    setCloseLobbyModal((state) => !state);
+  };
 
   const join = () => {
     setReady(false);
@@ -36,6 +46,7 @@ const GameDetails = () => {
 
   const closeLobby = async () => {
     await dispatch(deleteGame(gameId));
+    toggleCloseLobbyModal();
     history.push("/games");
   };
 
@@ -82,34 +93,58 @@ const GameDetails = () => {
 
   return (
     <div className={styles.gameDetails}>
+      <div className={styles.header}>
+        <h3 className={styles.title}>{game?.game_type}</h3>
+        <div className={styles.closeLobbyBtn} onClick={toggleCloseLobbyModal}>
+          {game?.host_id === sessionId && (
+            <i className="fa-solid fa-arrow-right-from-bracket fa-lg" />
+          )}
+        </div>
+        {closeLobbyModal && (
+          <Modal onClose={toggleCloseLobbyModal}>
+            <div>
+              <h3>Close game lobby?</h3>
+              <button onClick={closeLobby}>Yes</button>
+              <button onClick={toggleCloseLobbyModal}>No</button>
+            </div>
+          </Modal>
+        )}
+      </div>
       <div className={styles.playersContainer}>
         <h3>Players</h3>
         <div className={styles.playersList}>
-          {game?.users.map((user) => (
-            <div key={user.id}>
+          {players?.map((user) => (
+            <div key={user.id} className={styles.openSeat}>
               <span>{user.username}</span>{" "}
-              <span>{game.game_data.winner === user.id && "Winner"}</span>
+              {user.id === sessionId && game.host_id !== sessionId && (
+                <button className={styles.seatBtn} onClick={leave}>
+                  <i className="fa-solid fa-user-minus fa-lg" />
+                </button>
+              )}
+              {/* <span>{game.game_data.winner === user.id && "Winner"}</span> */}
+            </div>
+          ))}
+          {openSeats?.map((_, idx) => (
+            <div key={idx} className={styles.openSeat}>
+              <button
+                className={styles.seatBtn}
+                onClick={join}
+                disabled={game?.users.find((user) => user.id === sessionId)}
+              >
+                <i className="fa-solid fa-user-plus fa-lg" />
+              </button>
             </div>
           ))}
         </div>
         <div>
           Player 2 is {game?.game_data.player_2_ready ? "ready" : "not ready"}
         </div>
-        {!game?.users.find((user) => user.id === sessionId) && (
-          <button onClick={join}>Join</button>
-        )}
         {game?.users.find((user) => user.id === sessionId) &&
           game.host_id !== sessionId && (
-            <>
-              <button onClick={leave}>Leave</button>
-              <button onClick={toggleReady}>
-                {!ready ? "Ready Up" : "Unready"}
-              </button>
-            </>
+            <button onClick={toggleReady}>
+              {!ready ? "Ready Up" : "Unready"}
+            </button>
           )}
-        {game?.host_id === sessionId && (
-          <button onClick={closeLobby}>Close Lobby</button>
-        )}
         {game?.host_id === sessionId && game.game_data.player_2_ready && (
           <button onClick={start}>Start Game</button>
         )}
