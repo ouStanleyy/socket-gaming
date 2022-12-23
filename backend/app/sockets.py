@@ -95,6 +95,6 @@ def disconnected():
 #         snakes_game.reset_snakes()
 
 
-@sio.on('end_game')
-def end_game():
-    emit('end_game', broadcast=True)
+# @sio.on('end_game')
+# def end_game():
+#     emit('end_game', broadcast=True)

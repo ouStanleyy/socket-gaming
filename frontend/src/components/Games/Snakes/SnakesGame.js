@@ -17,6 +17,7 @@ const SnakesGame = () => {
   const sio = useSelector((state) => state.socket.socket);
   const sessionId = useSelector((state) => state.session.user.id);
   const canvasRef = useRef();
+  const gameRef = useRef();
   // const [snake, setSnake] = useState(null);
   // const [snake2, setSnake2] = useState(null);
   // const [apple, setApple] = useState(null);
@@ -24,7 +25,7 @@ const SnakesGame = () => {
   // const [oppDir, setOppDir] = useState([0, 1]);
   // const [speed, setSpeed] = useState(null);
   const [gameOver, setGameOver] = useState(true);
-  const [otherPlayer, setOtherPlayer] = useState("");
+  const [otherPlayer, setOtherPlayer] = useState(null);
   const [gameInstance, setGameInstance] = useState({ game: null });
   // const savedCallback = useRef();
 
@@ -52,23 +53,23 @@ const SnakesGame = () => {
   //     Math.floor(Math.random() * (CANVAS_SIZE[idx] / SCALE))
   //   );
 
-  const createSnake = () => {
-    let pos;
-    const startPos = [
-      [0, 0],
-      [0, 0],
-    ].map((cell, idx) => {
-      if (idx === 0) {
-        pos = cell.map((_, idx) =>
-          Math.floor(Math.random() * (CANVAS_SIZE[idx] / SCALE))
-        );
-        return pos;
-      } else {
-        return [pos[0], pos[1] + 1];
-      }
-    });
-    return startPos;
-  };
+  // const createSnake = () => {
+  //   let pos;
+  //   const startPos = [
+  //     [0, 0],
+  //     [0, 0],
+  //   ].map((cell, idx) => {
+  //     if (idx === 0) {
+  //       pos = cell.map((_, idx) =>
+  //         Math.floor(Math.random() * (CANVAS_SIZE[idx] / SCALE))
+  //       );
+  //       return pos;
+  //     } else {
+  //       return [pos[0], pos[1] + 1];
+  //     }
+  //   });
+  //   return startPos;
+  // };
 
   // const checkCollision = (head, snk = snake, snk2 = snake2) => {
   //   for (const cell of snk) {
@@ -106,10 +107,11 @@ const SnakesGame = () => {
       newSnakeHead[1] = 0;
     else if (newSnakeHead[1] < 0)
       newSnakeHead[1] = Snakes.CANVAS_SIZE[1] / Snakes.SCALE;
-    if (gameInstance.game.checkCollision(newSnakeHead)) sio?.emit("end_game");
+    if (gameInstance.game.checkCollision(newSnakeHead))
+      sio?.emit("end_game", { gameId });
     snakeCopy.unshift(newSnakeHead);
     if (!gameInstance.game.checkAppleCollision(snakeCopy)) snakeCopy.pop();
-    sio?.emit("active_game", { gameId, snake: snakeCopy });
+    sio?.emit("update_game", { gameId, snake: snakeCopy });
     // setTimeout(() => sio?.emit("active_game", { snake: snakeCopy }), 1000);
     // setSnake(snakeCopy);
   };
@@ -125,16 +127,16 @@ const SnakesGame = () => {
     // savedCallback.current();
   };
 
-  const readyUp = () => {
-    sio?.emit("game_connect", { snake: createSnake() });
-  };
+  // const readyUp = () => {
+  //   sio?.emit("game_connect", { snake: createSnake() });
+  // };
 
   useEffect(() => {
     if (gameInstance.game) {
-      sio?.once("update_game", (data) => {
+      sio.once("update_game", (data) => {
         // setTimeout(() => setSnake(data[sio.id]), 3);
-        console.log("other player", data[otherPlayer]);
-        console.log("player", data[sessionId]);
+        // console.log("other player", data[otherPlayer]);
+        // console.log("player", data[sessionId]);
         gameInstance.game.snakeTwo = data[otherPlayer];
         gameInstance.game.snakeOne = data[sessionId];
         setGameInstance({ game: gameInstance.game });
@@ -169,18 +171,16 @@ const SnakesGame = () => {
   // }, [snake]);
 
   useEffect(() => {
-    if (sio) {
-      sio?.once("start_game", (data) => {
-        console.log("HEYYYYYYY");
-        const snakesGame = new Snakes();
-        setOtherPlayer(data[sessionId].opponent);
-        snakesGame.snakeTwo = data[data[sessionId].opponent].snake;
-        snakesGame.snakeOne = data[sessionId].snake;
-        setGameInstance({ game: snakesGame });
-        setTimeout(() => startGame(), 2000);
-      });
-    }
-  });
+    sio.on("start_game", (data) => {
+      const snakesGame = new Snakes();
+      setOtherPlayer(data[sessionId].opponent);
+      snakesGame.snakeTwo = data[data[sessionId].opponent].snake;
+      snakesGame.snakeOne = data[sessionId].snake;
+      setGameInstance({ game: snakesGame });
+      setTimeout(() => startGame(), 2000);
+      gameRef.current.focus();
+    });
+  }, [sio]);
   // useEffect(() => {
   //   if (sio) {
   //     sio?.once("start_game", (data) => {
@@ -207,8 +207,12 @@ const SnakesGame = () => {
   // });
 
   useEffect(() => {
-    if (sio) sio?.once("end_game", () => endGame());
-  });
+    sio.on("end_game", () => {
+      endGame();
+      setGameInstance({ game: null });
+      // setOtherPlayer(null);
+    });
+  }, [sio]);
 
   // useEffect(() => {
   //   savedCallback.current = gameLoop;
@@ -242,24 +246,20 @@ const SnakesGame = () => {
     });
     ctx.stroke();
     if (gameInstance.game?.apple) {
+      const [x, y] = gameInstance.game.apple;
       ctx.fillStyle = "lightgreen";
-      ctx.rect(gameInstance.game.apple[0], gameInstance.game.apple[1], 1, 1);
-      ctx.fillRect(
-        gameInstance.game.apple[0],
-        gameInstance.game.apple[1],
-        1,
-        1
-      );
+      ctx.rect(x, y, 1, 1);
+      ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
       ctx.stroke();
     }
-  }, [gameInstance, gameOver]);
+  }, [gameInstance]);
 
   useInterval(gameLoop, Snakes.SPEED, gameOver);
   // console.log("here", gameInstance);
 
   return (
-    <div onKeyDown={gameInstance.game?.moveSnake}>
+    <div ref={gameRef} tabIndex="0" onKeyDown={gameInstance.game?.moveSnake}>
       <canvas
         style={{ border: "1px solid", backgroundColor: "#ffffff" }}
         ref={canvasRef}
@@ -269,8 +269,8 @@ const SnakesGame = () => {
         // height={`${CANVAS_SIZE[1]}px`}
       />
       {/* <button onClick={startGame}>Start Game</button> */}
-      <button onClick={readyUp}>Ready Up</button>
-      {gameOver && <div>GAME OVER!</div>}
+      {/* <button onClick={readyUp}>Ready Up</button>
+      {gameOver && <div>GAME OVER!</div>} */}
     </div>
   );
 };

@@ -153,8 +153,8 @@ def start_game(game_id):
     return game.to_dict()
 
 
-@sio.on('active_game')
-def active_game(data):
+@sio.on('update_game')
+def update_game(data):
     game = Game.query.get_or_404(data['gameId'])
     game_instance = Snakes(game_data=json.loads(game.game_data))
 
@@ -169,3 +169,18 @@ def active_game(data):
 
     game.game_data = json.dumps(game_instance.get_data())
     db.session.commit()
+
+
+@sio.on('end_game')
+def end_game(data):
+    game = Game.query.get_or_404(data['gameId'])
+    game_instance = Snakes(game_data=json.loads(game.game_data))
+    game_instance.game_over = True
+    game_instance.winner = (game_instance.player_1 if current_user.id == game_instance.player_2 else game_instance.player_2)
+    game_instance.player_2_ready = False
+
+    game.game_data = json.dumps(game_instance.get_data())
+
+    db.session.commit()
+
+    emit('end_game', game.to_dict(), to=f'{game.game_type}-{game.id}')

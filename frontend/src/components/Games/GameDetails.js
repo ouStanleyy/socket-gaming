@@ -65,12 +65,19 @@ const GameDetails = () => {
   }, []);
 
   useEffect(() => {
-    sio.once("update_game_lobby", (data) => dispatch(loadGameDetails(data)));
-  }, [sio, game]);
+    sio.on("update_game_lobby", (data) => dispatch(loadGameDetails(data)));
+  }, [sio]);
 
   useEffect(() => {
-    if (sio) sio?.once("close_game_lobby", () => history.push("/games"));
-  }, [sio, game]);
+    sio.on("close_game_lobby", () => history.push("/games"));
+  }, [sio]);
+
+  useEffect(() => {
+    sio.on("end_game", (data) => {
+      dispatch(loadGameDetails(data));
+      setReady(false);
+    });
+  }, [sio]);
 
   return (
     <div className={styles.gameDetails}>
@@ -80,9 +87,12 @@ const GameDetails = () => {
           {game?.users.map((user) => (
             <div key={user.id}>
               <span>{user.username}</span>{" "}
-              <span>{`${game.game_data.player_2_ready}`}</span>
+              <span>{game.game_data.winner === user.id && "Winner"}</span>
             </div>
           ))}
+        </div>
+        <div>
+          Player 2 is {game?.game_data.player_2_ready ? "ready" : "not ready"}
         </div>
         {!game?.users.find((user) => user.id === sessionId) && (
           <button onClick={join}>Join</button>
