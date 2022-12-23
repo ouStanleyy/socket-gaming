@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 from flask_socketio import emit
 from app.sockets import sio
-from app.models import db, User, Room, Game
+from app.models import db, Game
 from app.games import Player, Snakes
 import json
 
@@ -144,6 +144,7 @@ def start_game(game_id):
     if current_user.id == game_instance.player_1 and game_instance.player_2_ready:
         game_instance.player_1_snake = request.json['player_1_snake']
         game_instance.player_2_snake = request.json['player_2_snake']
+        game_instance.apples = request.json['apples']
         game.game_data = json.dumps(game_instance.get_data())
 
         db.session.commit()
@@ -163,8 +164,11 @@ def update_game(data):
     elif current_user.id == game_instance.player_2:
         game_instance.player_2_snake = data['snake']
 
+    if data.get('apples') is not None:
+        game_instance.apples = data['apples']
+
     if game_instance.update_ready():
-        emit('update_game', game_instance.get_player_snakes(), to=f'{game.game_type}-{game.id}')
+        emit('update_game', game_instance.get_snakes_and_apples(), to=f'{game.game_type}-{game.id}')
         game_instance.reset_snakes()
 
     game.game_data = json.dumps(game_instance.get_data())

@@ -113,11 +113,11 @@ export const updateReadyState = (gameId, ready_state) => async (dispatch) => {
   }
 };
 
-export const startGame = (gameId, snakePositions) => async (dispatch) => {
+export const startGame = (gameId, initPositions) => async (dispatch) => {
   const res = await fetch(`/api/games/${gameId}/start`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(snakePositions),
+    body: JSON.stringify(initPositions),
   });
   // const game = await res.json();
 

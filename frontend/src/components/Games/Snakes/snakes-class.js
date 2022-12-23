@@ -12,7 +12,7 @@ export default class Snakes {
   constructor() {
     this.snakeOne = [];
     this.snakeTwo = [];
-    this.apple = [6, 6];
+    this.apples = [];
     this.dir = [0, -1];
     this.oppDir = [0, 1];
   }
@@ -53,15 +53,18 @@ export default class Snakes {
   };
 
   checkAppleCollision = (newSnake) => {
-    if (newSnake[0][0] === this.apple[0] && newSnake[0][1] === this.apple[1]) {
-      let newApple = Snakes.createApple();
-      while (this.checkCollision(newApple, newSnake)) {
-        newApple = Snakes.createApple();
+    let result = false;
+    this.apples.forEach((apple, idx) => {
+      if (newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
+        let newApple = Snakes.createApple();
+        while (this.checkCollision(newApple, newSnake)) {
+          newApple = Snakes.createApple();
+        }
+        this.apples[idx] = newApple;
+        result = true;
       }
-      this.apple = newApple;
-      return true;
-    }
-    return false;
+    });
+    return result;
   };
 
   moveSnake = ({ keyCode }) => {
