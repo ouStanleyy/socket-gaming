@@ -56,6 +56,7 @@
   align-items: center;
   width: 100%;
   padding: 4px 24px;
+  height: 80px;
 }
 
 .userContainer:hover {
@@ -64,6 +65,16 @@
 
 .userContainer.activeUser {
   background-color: #efefef;
+}
+
+.status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: red;
 }
 
 .userDetails {
@@ -79,15 +90,31 @@
   cursor: pointer;
 }
 
-.status {
+/* .status {
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background-color: red;
-}
+} */
 
 .online {
   background-color: greenyellow;
+}
+
+/* .msgPreview {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+} */
+
+.msgPreview {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-width: 240px;
+  height: 36px;
 }
 
 .noConvo {

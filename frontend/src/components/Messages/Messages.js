@@ -102,19 +102,24 @@ const Messages = () => {
               }`}
             >
               <div className={styles.profilePicture}>
-                <ProfilePicture
-                  path={`/messages/${room.id}`}
-                  user={room.user}
-                  size={"large"}
-                />
-              </div>
-              <div className={styles.userDetails}>
-                <p className={styles.username}>{room.user?.username}</p>
                 <div
                   className={`${styles.status} ${
                     room.user?.is_online && styles.online
                   }`}
-                ></div>
+                >
+                  <ProfilePicture
+                    path={`/messages/${room.id}`}
+                    user={room.user}
+                    size={"large"}
+                  />
+                </div>
+              </div>
+              <div className={styles.userDetails}>
+                <p className={styles.username}>{room.user?.username}</p>
+
+                <p className={styles.msgPreview}>
+                  {room.messages[room.messages.length - 1]?.message}
+                </p>
               </div>
             </div>
           </Link>

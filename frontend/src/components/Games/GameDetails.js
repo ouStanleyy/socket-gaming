@@ -114,7 +114,7 @@ const GameDetails = () => {
         <h3>Players</h3>
         <div className={styles.playersList}>
           {players?.map((user) => (
-            <div key={user.id} className={styles.openSeat}>
+            <div key={user.id} className={styles.seat}>
               <span>{user.username}</span>{" "}
               {user.id === sessionId && game.host_id !== sessionId && (
                 <button className={styles.seatBtn} onClick={leave}>
@@ -125,7 +125,7 @@ const GameDetails = () => {
             </div>
           ))}
           {openSeats?.map((_, idx) => (
-            <div key={idx} className={styles.openSeat}>
+            <div key={idx} className={styles.seat}>
               <button
                 className={styles.seatBtn}
                 onClick={join}
