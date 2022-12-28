@@ -13,8 +13,10 @@ const PongGame = () => {
   const [gameOver, setGameOver] = useState(true);
   const [otherPlayer, setOtherPlayer] = useState(null);
   const [gameInstance, setGameInstance] = useState({ game: null });
+  const [keyCode, setKeyCode] = useState(null);
 
   const gameLoop = () => {
+    gameInstance.game?.movePaddle({ keyCode });
     gameInstance.game?.moveBall();
     setGameInstance({ game: gameInstance.game });
   };
@@ -42,6 +44,19 @@ const PongGame = () => {
     // ctx.setTransform(Pong.SCALE, 0, 0, Pong.SCALE, 0, 0);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.beginPath();
+    // Ball
+    ctx.fillStyle = "lightblue";
+    ctx.arc(
+      gameInstance.game?.ballX,
+      gameInstance.game?.ballY,
+      Pong.BALL_SIZE,
+      0,
+      2 * Math.PI
+    );
+    ctx.fill();
+    // ctx.lineWidth = 0;
+    // ctx.strokeStyle = "#fff";
+    ctx.stroke();
     // Player 1
     ctx.fillStyle = "lightgray";
     ctx.rect(
@@ -56,7 +71,7 @@ const PongGame = () => {
       Pong.PADDLE_WIDTH,
       Pong.PADDLE_HEIGHT
     );
-    // ctx.lineWidth = 0.05;
+    // ctx.lineWidth = 1;
     ctx.stroke();
     // Player 2
     ctx.fillStyle = "lightgray";
@@ -74,24 +89,17 @@ const PongGame = () => {
     );
     // ctx.lineWidth = 0.05;
     ctx.stroke();
-    // Ball
-    ctx.arc(
-      gameInstance.game?.ballX,
-      gameInstance.game?.ballY,
-      Pong.BALL_SIZE,
-      0,
-      2 * Math.PI
-    );
-    ctx.fill();
-    ctx.lineWidth = 0;
-    ctx.strokeStyle = "#fff";
-    ctx.stroke();
   }, [gameInstance]);
 
   useInterval(gameLoop, Pong.SPEED, gameOver);
 
   return (
-    <div ref={gameRef} tabIndex="0" onKeyDown={gameInstance.game?.movePaddle}>
+    <div
+      ref={gameRef}
+      tabIndex="0"
+      onKeyDown={({ keyCode }) => setKeyCode(keyCode)}
+      onKeyUp={() => setKeyCode(null)}
+    >
       <canvas
         style={{ border: "1px solid", backgroundColor: "#ffffff" }}
         ref={canvasRef}

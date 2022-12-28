@@ -4,17 +4,17 @@ import _ from "lodash";
 export default class Pong {
   static CANVAS_SIZE = [700, 600];
   // static SCALE = 25;
-  static SPEED = 10;
+  static SPEED = 1;
   // static DIRECTIONS = {
   //   38: [0, -1], // up
   //   40: [0, 1], // down
   // };
   static PADDLE_HEIGHT = 100;
   static PADDLE_WIDTH = 20;
-  static PADDLE_SPEED = 5;
+  static PADDLE_SPEED = 3;
   static BALL_SIZE = 10;
-  static PI = Math.PI;
-  static RAND = Math.random();
+  // static PI = Math.PI;
+  // static RAND = Math.random();
 
   constructor() {
     this.ballX = 100;
@@ -102,21 +102,21 @@ export default class Pong {
       this.velY = vY * -1;
     }
 
-    const pdle = this.velX < 0 ? [this.p1X, this.p1Y] : [this.p2X, this.p2Y];
+    const paddle = this.velX < 0 ? [this.p1X, this.p1Y] : [this.p2X, this.p2Y];
 
     if (
-      pdle[0] < this.ballX + Pong.BALL_SIZE &&
-      pdle[1] < this.ballY + Pong.BALL_SIZE &&
-      this.ballX < pdle[0] + Pong.PADDLE_WIDTH &&
-      this.ballY < pdle[1] + Pong.PADDLE_HEIGHT
+      paddle[0] < this.ballX + Pong.BALL_SIZE &&
+      paddle[1] < this.ballY + Pong.BALL_SIZE &&
+      this.ballX < paddle[0] + Pong.PADDLE_WIDTH &&
+      this.ballY < paddle[1] + Pong.PADDLE_HEIGHT
     ) {
       const dir = this.velX < 0 ? 1 : -1;
       const n =
-        (this.ballY + Pong.BALL_SIZE - pdle[1]) /
+        (this.ballY + Pong.BALL_SIZE - paddle[1]) /
         (Pong.PADDLE_HEIGHT + Pong.BALL_SIZE);
       const yDir = (n > 0.5 ? -1 : 1) * dir;
-      const phi = 0.25 * Pong.PI * (2 * n + dir) + Pong.RAND;
-      const smash = Math.abs(phi) > 0.2 * Pong.PI ? 1.1 : 1;
+      const phi = 0.25 * Math.PI * (2 * n + dir) + Math.random();
+      const smash = Math.abs(phi) > 0.2 * Math.PI ? 1.1 : 1;
 
       this.ballX =
         this.velX < 0
@@ -126,10 +126,10 @@ export default class Pong {
       this.velY = smash * yDir * this.velX * Math.sin(phi);
     }
 
-    // if (0 > this.ballX + Pong.BALL_SIZE || this.ballX > Pong.CANVAS_SIZE[0]) {
-    //   score(pdle.name());
-    //   this.serve(pdle.name() === player.name() ? 1 : -1);
-    // }
+    if (0 > this.ballX + Pong.BALL_SIZE || this.ballX > Pong.CANVAS_SIZE[0]) {
+      // score(pdle.name());
+      this.serve(this.velX < 0 ? 1 : -1);
+    }
   };
 
   serve = (side) => {
