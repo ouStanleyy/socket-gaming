@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from flask_socketio import emit
 from app.sockets import sio
 from app.models import db, Game
-from app.games import Player, Snakes
+from app.games import Player, Snakes, Pong
 import json
 
 game_routes = Blueprint('games', __name__)
@@ -37,8 +37,9 @@ def create_game():
     """
     Creates a new game based on game type
     """
-    if request.json['game_type'] == 'snakes':
-        new_game = Snakes(player_1=current_user.id)
+    # if request.json['game_type'] == 'snakes':
+    #     new_game = Snakes(player_1=current_user.id)
+    new_game = globals()[request.json['game_type'].capitalize()](player_1=current_user.id)
     game = Game(host_id=current_user.id, game_data=json.dumps(new_game.get_data()), game_type=request.json['game_type'])
     game.users.append(current_user)
 
@@ -58,7 +59,9 @@ def join_game(game_id):
     Joins game specified by id
     """
     game = Game.query.get_or_404(game_id)
-    game_instance = Snakes(game_data=json.loads(game.game_data))
+    # game_instance = Snakes(game_data=json.loads(game.game_data))
+    game_instance = globals()[game.game_type.capitalize()](game_data=json.loads(game.game_data))
+
     if game_instance.player_2 is None:
         game_instance.player_2 = current_user.id
         game_instance.player_2_ready = False
@@ -80,7 +83,9 @@ def leave_game(game_id):
     Leaves game specified by id
     """
     game = Game.query.get_or_404(game_id)
-    game_instance = Snakes(game_data=json.loads(game.game_data))
+    # game_instance = Snakes(game_data=json.loads(game.game_data))
+    game_instance = globals()[game.game_type.capitalize()](game_data=json.loads(game.game_data))
+
     if current_user.id == game_instance.player_2:
         game_instance.player_2 = None
         game_instance.player_2_ready = False
@@ -119,7 +124,8 @@ def update_ready_state(game_id):
     Updates ready state of game specified by id
     """
     game = Game.query.get_or_404(game_id)
-    game_instance = Snakes(game_data=json.loads(game.game_data))
+    # game_instance = Snakes(game_data=json.loads(game.game_data))
+    game_instance = globals()[game.game_type.capitalize()](game_data=json.loads(game.game_data))
 
     if current_user.id == game_instance.player_2:
         game_instance.player_2_ready = request.json['ready_state']
@@ -139,12 +145,20 @@ def start_game(game_id):
     Starts game specified by id
     """
     game = Game.query.get_or_404(game_id)
-    game_instance = Snakes(game_data=json.loads(game.game_data))
+    # game_instance = Snakes(game_data=json.loads(game.game_data))
+    game_instance = globals()[game.game_type.capitalize()](game_data=json.loads(game.game_data))
 
     if current_user.id == game_instance.player_1 and game_instance.player_2_ready:
-        game_instance.player_1_snake = request.json['player_1_snake']
-        game_instance.player_2_snake = request.json['player_2_snake']
-        game_instance.apples = request.json['apples']
+        if game.game_type == "snakes":
+            game_instance.player_1_snake = request.json['player_1_snake']
+            game_instance.player_2_snake = request.json['player_2_snake']
+            game_instance.apples = request.json['apples']
+
+        elif game.game_type == "pong":
+            game_instance.player_1_paddle = request.json['player_1_paddle']
+            game_instance.player_2_paddle = request.json['player_2_paddle']
+            game_instance.ball = request.json['ball']
+
         game.game_data = json.dumps(game_instance.get_data())
 
         db.session.commit()
@@ -157,21 +171,24 @@ def start_game(game_id):
 @sio.on('update_game')
 def update_game(data):
     game = Game.query.get_or_404(data['gameId'])
-    game_instance = Snakes(game_data=json.loads(game.game_data))
+    # game_instance = Snakes(game_data=json.loads(game.game_data))
+    game_instance = globals()[game.game_type.capitalize()](game_data=json.loads(game.game_data))
 
-    if current_user.id == game_instance.player_1:
-        game_instance.player_1_snake = data['snake']
-    elif current_user.id == game_instance.player_2:
-        game_instance.player_2_snake = data['snake']
+    if game.game_type == "snakes":
+        if current_user.id == game_instance.player_1:
+            game_instance.player_1_snake = data['snake']
+        elif current_user.id == game_instance.player_2:
+            game_instance.player_2_snake = data['snake']
 
-    if data.get('apples') is not None:
-        game_instance.apples = data['apples']
+        if data.get('apples') is not None:
+            game_instance.apples = data['apples']
 
-    if game_instance.update_ready():
-        emit('update_game', game_instance.get_snakes_and_apples(), to=f'{game.game_type}-{game.id}')
-        game_instance.reset_snakes()
+        if game_instance.update_ready():
+            emit('update_game', game_instance.get_snakes_and_apples(), to=f'{game.game_type}-{game.id}')
+            game_instance.reset_snakes()
 
     game.game_data = json.dumps(game_instance.get_data())
+
     db.session.commit()
 
 

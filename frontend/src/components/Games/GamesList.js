@@ -6,6 +6,16 @@ import NewGame from "./NewGame";
 import { Modal } from "../../context/Modal";
 import styles from "./GamesList.module.css";
 
+const gamePics = {
+  snakes: <img src="https://illustoon.com/photo/2317.png" alt="snake" />,
+  pong: (
+    <img
+      src="https://cdn.pixabay.com/photo/2012/04/02/16/25/pong-24876_1280.png"
+      alt="pong"
+    />
+  ),
+};
+
 const GamesList = () => {
   const dispatch = useDispatch();
   const sio = useSelector((state) => state.socket.socket);
@@ -41,7 +51,8 @@ const GamesList = () => {
           <Link key={game.id} to={`/games/${game.id}`}>
             <div className={styles.gameContainer}>
               <div className={styles.gamePicture}>
-                <img src="https://illustoon.com/photo/2317.png" alt="snake" />
+                {/* <img src="https://illustoon.com/photo/2317.png" alt="snake" /> */}
+                {gamePics[game.game_type]}
               </div>
               <div className={styles.gameDetails}>
                 <p className={styles.host}>
