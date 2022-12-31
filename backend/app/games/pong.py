@@ -22,11 +22,12 @@ class Pong:
         }
 
     def update_ready(self):
-        return len(self.player_1_paddle) and len(self.player_2_paddle)
+        return len(self.player_1_paddle) and len(self.player_2_paddle) and len(self.ball)
 
-    def reset_paddles(self):
+    def reset_paddles_and_ball(self):
         self.player_1_paddle = []
         self.player_2_paddle = []
+        self.ball = []
 
     def get_game_start_data(self):
         return {

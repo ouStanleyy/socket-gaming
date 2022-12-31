@@ -8,6 +8,8 @@ const PongGame = () => {
   const { gameId } = useParams();
   const sio = useSelector((state) => state.socket.socket);
   const sessionId = useSelector((state) => state.session.user.id);
+  const hostId = useSelector((state) => state.games[gameId]?.host_id);
+  const isHost = sessionId === hostId;
   const canvasRef = useRef();
   const gameRef = useRef();
   const [gameOver, setGameOver] = useState(true);
@@ -16,20 +18,31 @@ const PongGame = () => {
   const [keyCode, setKeyCode] = useState(null);
 
   const gameLoop = () => {
-    gameInstance.game?.movePaddle({ keyCode });
+    gameInstance.game?.movePaddle({ keyCode, isHost });
     gameInstance.game?.moveBall();
-    setGameInstance({ game: gameInstance.game });
+    const paddle = isHost
+      ? [gameInstance.game?.p1X, gameInstance.game?.p1Y]
+      : [gameInstance.game?.p2X, gameInstance.game?.p2Y];
+    const ball = isHost
+      ? [gameInstance.game?.ballX, gameInstance.game?.ballY]
+      : undefined;
+    sio?.emit("update_game", {
+      gameId,
+      paddle,
+      ball,
+    });
+    // setGameInstance({ game: gameInstance.game });
   };
 
-  const startGame = () => {
-    const pongGame = new Pong();
-    setGameInstance({ game: pongGame });
-    setTimeout(() => {
-      setGameOver(false);
-      pongGame.serve(1);
-    }, 2000);
-    gameRef?.current?.focus();
-  };
+  // const startGame = () => {
+  //   const pongGame = new Pong();
+  //   setGameInstance({ game: pongGame });
+  //   setTimeout(() => {
+  //     setGameOver(false);
+  //     pongGame.serve(1);
+  //   }, 2000);
+  //   gameRef?.current?.focus();
+  // };
 
   // const stopGame = () => {
   //   clearInterval(this._loop);
@@ -38,6 +51,48 @@ const PongGame = () => {
   //     this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
   //   }, 0);
   // };
+
+  useEffect(() => {
+    if (gameInstance.game) {
+      sio.once("update_game", (data) => {
+        gameInstance.game.p1X = isHost
+          ? data[sessionId][0]
+          : data[otherPlayer][0];
+        gameInstance.game.p1Y = isHost
+          ? data[sessionId][1]
+          : data[otherPlayer][1];
+        gameInstance.game.p2X = !isHost
+          ? data[sessionId][0]
+          : data[otherPlayer][0];
+        gameInstance.game.p2Y = !isHost
+          ? data[sessionId][1]
+          : data[otherPlayer][1];
+        gameInstance.game.ballX = data.ball[0];
+        gameInstance.game.ballY = data.ball[1];
+        setGameInstance({ game: gameInstance.game });
+      });
+    }
+  }, [gameInstance]);
+
+  useEffect(() => {
+    sio.on("start_game", (data) => {
+      const pongGame = new Pong();
+      setOtherPlayer(data[sessionId].opponent);
+      setGameInstance({ game: pongGame });
+      setTimeout(() => {
+        setGameOver(false);
+        pongGame.serve(1);
+      }, 2000);
+      gameRef?.current?.focus();
+    });
+  }, [sio, gameRef]);
+
+  useEffect(() => {
+    sio.on("end_game", () => {
+      setGameOver(true);
+      setGameInstance({ game: null });
+    });
+  }, [sio]);
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext("2d");
@@ -106,7 +161,7 @@ const PongGame = () => {
         width={`${Pong.CANVAS_SIZE[0]}px`}
         height={`${Pong.CANVAS_SIZE[1]}px`}
       />
-      <button onClick={startGame}>Start</button>
+      {/* <button onClick={startGame}>Start</button> */}
     </div>
   );
 };

@@ -154,10 +154,10 @@ def start_game(game_id):
             game_instance.player_2_snake = request.json['player_2_snake']
             game_instance.apples = request.json['apples']
 
-        elif game.game_type == "pong":
-            game_instance.player_1_paddle = request.json['player_1_paddle']
-            game_instance.player_2_paddle = request.json['player_2_paddle']
-            game_instance.ball = request.json['ball']
+        # elif game.game_type == "pong":
+        #     game_instance.player_1_paddle = request.json['player_1_paddle']
+        #     game_instance.player_2_paddle = request.json['player_2_paddle']
+        #     game_instance.ball = request.json['ball']
 
         game.game_data = json.dumps(game_instance.get_data())
 
@@ -186,6 +186,19 @@ def update_game(data):
         if game_instance.update_ready():
             emit('update_game', game_instance.get_snakes_and_apples(), to=f'{game.game_type}-{game.id}')
             game_instance.reset_snakes()
+
+    elif game.game_type == "pong":
+        if current_user.id == game_instance.player_1:
+            game_instance.player_1_paddle = data['paddle']
+        elif current_user.id == game_instance.player_2:
+            game_instance.player_2_paddle = data['paddle']
+
+        if data.get('ball') is not None:
+            game_instance.ball = data['ball']
+
+        if game_instance.update_ready():
+            emit('update_game', game_instance.get_paddles_and_ball(), to=f'{game.game_type}-{game.id}')
+            game_instance.reset_paddles_and_ball()
 
     game.game_data = json.dumps(game_instance.get_data())
 

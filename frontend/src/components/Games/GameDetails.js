@@ -25,7 +25,7 @@ const GameDetails = () => {
   const openSeats = game
     ? Array(game?.max_players - game?.users.length).fill()
     : null;
-  const [ready, setReady] = useState(game?.game_data.player_2_ready);
+  const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
   const [closeLobbyModal, setCloseLobbyModal] = useState(false);
 
   const toggleCloseLobbyModal = () => {

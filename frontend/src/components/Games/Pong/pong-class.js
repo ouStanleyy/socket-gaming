@@ -1,17 +1,16 @@
-import React from "react";
 import _ from "lodash";
 
 export default class Pong {
-  static CANVAS_SIZE = [700, 600];
+  static CANVAS_SIZE = [700, 400];
   // static SCALE = 25;
-  static SPEED = 1;
+  static SPEED = 25;
   // static DIRECTIONS = {
   //   38: [0, -1], // up
   //   40: [0, 1], // down
   // };
-  static PADDLE_HEIGHT = 100;
+  static PADDLE_HEIGHT = 80;
   static PADDLE_WIDTH = 20;
-  static PADDLE_SPEED = 3;
+  static PADDLE_SPEED = 15;
   static BALL_SIZE = 10;
   // static PI = Math.PI;
   // static RAND = Math.random();
@@ -19,7 +18,7 @@ export default class Pong {
   constructor() {
     this.ballX = 100;
     this.ballY = 100;
-    this.ballSpeed = 2;
+    this.ballSpeed = 10;
     this.velX = 0;
     this.velY = 0;
     this.p1X = 10;
@@ -144,13 +143,15 @@ export default class Pong {
     this.velY = this.ballSpeed * Math.sin(phi);
   };
 
-  movePaddle = ({ keyCode }) => {
+  movePaddle = ({ keyCode, isHost }) => {
     if (keyCode === 38) {
-      this.p1Y -= Pong.PADDLE_SPEED;
-      this.p2Y -= Pong.PADDLE_SPEED;
+      isHost
+        ? (this.p1Y -= Pong.PADDLE_SPEED)
+        : (this.p2Y -= Pong.PADDLE_SPEED);
     } else if (keyCode === 40) {
-      this.p1Y += Pong.PADDLE_SPEED;
-      this.p2Y += Pong.PADDLE_SPEED;
+      isHost
+        ? (this.p1Y += Pong.PADDLE_SPEED)
+        : (this.p2Y += Pong.PADDLE_SPEED);
     }
 
     // keep the paddle inside of the canvas
@@ -159,7 +160,7 @@ export default class Pong {
       0
     );
     this.p2Y = Math.max(
-      Math.min(this.p1Y, Pong.CANVAS_SIZE[1] - Pong.PADDLE_HEIGHT),
+      Math.min(this.p2Y, Pong.CANVAS_SIZE[1] - Pong.PADDLE_HEIGHT),
       0
     );
   };
