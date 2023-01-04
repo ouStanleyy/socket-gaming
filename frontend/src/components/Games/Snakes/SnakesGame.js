@@ -38,6 +38,7 @@ const SnakesGame = () => {
       gameId,
       snake,
       apples,
+      payloadId: gameInstance.game.payloadId,
     });
   };
 
@@ -47,6 +48,7 @@ const SnakesGame = () => {
         gameInstance.game.snakeTwo = data[otherPlayer];
         gameInstance.game.snakeOne = data[sessionId];
         gameInstance.game.apples = data.apples;
+        gameInstance.game.payloadId++;
         setGameInstance({ game: gameInstance.game });
       });
     }

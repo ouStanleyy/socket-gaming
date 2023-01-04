@@ -30,6 +30,7 @@ const PongGame = () => {
       gameId,
       paddle,
       ball,
+      payloadId: gameInstance.game.payloadId,
     });
     // setGameInstance({ game: gameInstance.game });
   };
@@ -69,6 +70,7 @@ const PongGame = () => {
           : data[otherPlayer][1];
         gameInstance.game.ballX = data.ball[0];
         gameInstance.game.ballY = data.ball[1];
+        gameInstance.game.payloadId++;
         setGameInstance({ game: gameInstance.game });
       });
     }

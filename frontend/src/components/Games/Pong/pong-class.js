@@ -27,6 +27,7 @@ export default class Pong {
     this.p2Y = 100;
     this.p1Score = 0;
     this.p2Score = 0;
+    this.payloadId = 0;
   }
 
   // _score(name) {

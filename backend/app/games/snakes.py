@@ -8,6 +8,7 @@ class Snakes:
         self.apples = game_data.get('apples', [])
         self.game_over = game_data.get('game_over', False)
         self.winner = game_data.get('winner', None)
+        self.payload_id = game_data.get('payload_id', 0)
 
     def get_players(self):
         return [self.player_1, self.player_2]
@@ -32,6 +33,9 @@ class Snakes:
         self.player_1_snake = []
         self.player_2_snake = []
 
+    def inc_payload_id(self):
+        self.payload_id+=1
+
     def get_game_start_data(self):
         return {
             self.player_1: {
@@ -54,5 +58,6 @@ class Snakes:
             'player_2_snake': self.player_2_snake,
             'apples': self.apples,
             'game_over': self.game_over,
-            'winner': self.winner
+            'winner': self.winner,
+            'payload_id': self.payload_id
         }
