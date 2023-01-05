@@ -35,7 +35,8 @@ export default class Pong {
 
   score = (player) => {
     this.paused = true;
-    this.scorer = { p1: "p2", p2: "p1" }[player];
+    this.scorer = { p1: "Player 2", p2: "Player 1" }[player];
+    this.scorer === "Player 1" ? this.p1Score++ : this.p2Score++;
     // this._stopGame();
     // setTimeout(() => {
     //   this.ctx.font = "30px Arial";
@@ -54,7 +55,10 @@ export default class Pong {
     //   Pong.CANVAS_SIZE[1] / 2
     // );
     // this.ctx.restore();
-    setTimeout(() => (this.paused = false), 2000);
+    setTimeout(() => {
+      this.paused = false;
+      this.scorer = null;
+    }, 2000);
     // setTimeout(() => {
     //   this._setupCanvas();
     //   this._startGame();

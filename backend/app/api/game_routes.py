@@ -201,6 +201,10 @@ def update_game(data):
             if data.get('scorer') is not None:
                 game_instance.scorer = data['scorer']
 
+            if data.get('scores') is not None:
+                game_instance.player_1_score = data['scores']['p1Score']
+                game_instance.player_2_score = data['scores']['p2Score']
+
             if data.get('paused') is not None:
                 game_instance.paused = data['paused']
 

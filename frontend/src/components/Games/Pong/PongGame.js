@@ -19,31 +19,36 @@ const PongGame = () => {
   const [keyCode, setKeyCode] = useState(null);
 
   const gameLoop = () => {
-    // if (!gameInstance.game?.paused) {
-    let ball, scorer, paused;
-    gameInstance.game?.movePaddle({ keyCode, isHost });
-    if (isHost) {
-      gameInstance.game?.moveBall();
-      ball = [gameInstance.game?.ballX, gameInstance.game?.ballY];
-      scorer = gameInstance.game.scorer;
-      paused = gameInstance.game.paused;
+    if (!gameInstance.game?.paused || !isHost) {
+      let ball, scorer, paused, scores;
+      gameInstance.game?.movePaddle({ keyCode, isHost });
+      if (isHost) {
+        gameInstance.game?.moveBall();
+        ball = [gameInstance.game?.ballX, gameInstance.game?.ballY];
+        scorer = gameInstance.game.scorer;
+        scores = {
+          p1Score: gameInstance.game.p1Score,
+          p2Score: gameInstance.game.p2Score,
+        };
+        paused = gameInstance.game.paused;
+      }
+      const paddle = isHost
+        ? [gameInstance.game?.p1X, gameInstance.game?.p1Y]
+        : [gameInstance.game?.p2X, gameInstance.game?.p2Y];
+      // const ball = isHost
+      //   ? [gameInstance.game?.ballX, gameInstance.game?.ballY]
+      //   : undefined;
+      console.log("gameloop", gameInstance.game.paused);
+      sio?.emit("update_game", {
+        gameId,
+        paddle,
+        ball,
+        scorer,
+        scores,
+        paused,
+        payloadId: gameInstance.game.payloadId,
+      });
     }
-    const paddle = isHost
-      ? [gameInstance.game?.p1X, gameInstance.game?.p1Y]
-      : [gameInstance.game?.p2X, gameInstance.game?.p2Y];
-    // const ball = isHost
-    //   ? [gameInstance.game?.ballX, gameInstance.game?.ballY]
-    //   : undefined;
-    console.log("gameloop", gameInstance.game.paused);
-    sio?.emit("update_game", {
-      gameId,
-      paddle,
-      ball,
-      scorer,
-      paused,
-      payloadId: gameInstance.game.payloadId,
-    });
-    // }
     // setGameInstance({ game: gameInstance.game });
   };
 

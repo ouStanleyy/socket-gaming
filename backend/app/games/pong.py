@@ -23,6 +23,8 @@ class Pong:
             self.player_2: self.player_2_paddle,
             'ball': self.ball,
             'scorer': self.scorer,
+            'player_1_score': self.player_1_score,
+            'player_2_score': self.player_2_score,
             'paused': self.paused
         }
 

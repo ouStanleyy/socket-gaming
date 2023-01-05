@@ -10,6 +10,7 @@ import {
   loadGameDetails,
   updateReadyState,
   startGame,
+  updateGameScores,
 } from "../../store/games";
 import Snakes from "./Snakes/snakes-class";
 import styles from "./GameDetails.module.css";
@@ -91,6 +92,21 @@ const GameDetails = () => {
     });
   }, [sio]);
 
+  useEffect(() => {
+    sio.on("update_game", (data) => {
+      if (data.scorer && data.paused)
+        dispatch(
+          updateGameScores({
+            gameId,
+            scores: {
+              player_1_score: data.player_1_score,
+              player_2_score: data.player_2_score,
+            },
+          })
+        );
+    });
+  }, [sio]);
+
   return (
     <div className={styles.gameDetails}>
       <div className={styles.header}>
@@ -148,6 +164,14 @@ const GameDetails = () => {
         {game?.host_id === sessionId && game.game_data.player_2_ready && (
           <button onClick={start}>Start Game</button>
         )}
+      </div>
+      <div className={styles.scoreboard}>
+        <div>
+          <p>Player 1: {game?.game_data.player_1_score}</p>
+        </div>
+        <div>
+          <p>Player 2: {game?.game_data.player_2_score}</p>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 // constants
 const LOAD_GAMES = "games/LOAD_GAMES";
 const LOAD_GAME_DETAILS = "games/LOAD_GAME_DETAILS";
+const UPDATE_GAME_SCORES = "games/UPDATE_GAME_SCORES";
 const ADD_GAME = "games/ADD_GAME";
 const REMOVE_GAME = "games/REMOVE_GAME";
 
@@ -12,6 +13,11 @@ const loadGames = (games) => ({
 
 export const loadGameDetails = (game) => ({
   type: LOAD_GAME_DETAILS,
+  game,
+});
+
+export const updateGameScores = (game) => ({
+  type: UPDATE_GAME_SCORES,
   game,
 });
 
@@ -133,6 +139,17 @@ const gamesReducer = (state = {}, action) => {
       return {
         ...state,
         [action.game.id]: { ...state[action.game.id], ...action.game },
+      };
+    case UPDATE_GAME_SCORES:
+      return {
+        ...state,
+        [action.game.gameId]: {
+          ...state[action.game.gameId],
+          game_data: {
+            ...state[action.game.gameId].game_data,
+            ...action.game.scores,
+          },
+        },
       };
     case ADD_GAME:
       return { ...state, [action.game.id]: action.game };
