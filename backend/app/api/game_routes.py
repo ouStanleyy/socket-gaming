@@ -198,6 +198,12 @@ def update_game(data):
             if data.get('ball') is not None and not game_instance.ball:
                 game_instance.ball = data['ball']
 
+            if data.get('scorer') is not None:
+                game_instance.scorer = data['scorer']
+
+            if data.get('paused') is not None:
+                game_instance.paused = data['paused']
+
             if game_instance.update_ready():
                 emit('update_game', game_instance.get_paddles_and_ball(), to=f'{game.game_type}-{game.id}')
                 game_instance.reset_paddles_and_ball()

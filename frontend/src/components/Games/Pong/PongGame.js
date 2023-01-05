@@ -15,23 +15,35 @@ const PongGame = () => {
   const [gameOver, setGameOver] = useState(true);
   const [otherPlayer, setOtherPlayer] = useState(null);
   const [gameInstance, setGameInstance] = useState({ game: null });
+  const [ctx, setCtx] = useState(null);
   const [keyCode, setKeyCode] = useState(null);
 
   const gameLoop = () => {
+    // if (!gameInstance.game?.paused) {
+    let ball, scorer, paused;
     gameInstance.game?.movePaddle({ keyCode, isHost });
-    gameInstance.game?.moveBall();
+    if (isHost) {
+      gameInstance.game?.moveBall();
+      ball = [gameInstance.game?.ballX, gameInstance.game?.ballY];
+      scorer = gameInstance.game.scorer;
+      paused = gameInstance.game.paused;
+    }
     const paddle = isHost
       ? [gameInstance.game?.p1X, gameInstance.game?.p1Y]
       : [gameInstance.game?.p2X, gameInstance.game?.p2Y];
-    const ball = isHost
-      ? [gameInstance.game?.ballX, gameInstance.game?.ballY]
-      : undefined;
+    // const ball = isHost
+    //   ? [gameInstance.game?.ballX, gameInstance.game?.ballY]
+    //   : undefined;
+    console.log("gameloop", gameInstance.game.paused);
     sio?.emit("update_game", {
       gameId,
       paddle,
       ball,
+      scorer,
+      paused,
       payloadId: gameInstance.game.payloadId,
     });
+    // }
     // setGameInstance({ game: gameInstance.game });
   };
 
@@ -70,6 +82,11 @@ const PongGame = () => {
           : data[otherPlayer][1];
         gameInstance.game.ballX = data.ball[0];
         gameInstance.game.ballY = data.ball[1];
+        console.log("here", data.scorer, data.paused);
+        if (!isHost) {
+          gameInstance.game.scorer = data.scorer;
+          gameInstance.game.paused = data.paused;
+        }
         gameInstance.game.payloadId++;
         setGameInstance({ game: gameInstance.game });
       });
@@ -78,7 +95,8 @@ const PongGame = () => {
 
   useEffect(() => {
     sio.on("start_game", (data) => {
-      const pongGame = new Pong();
+      const pongGame = new Pong(canvasRef?.current?.getContext("2d"));
+      setCtx(canvasRef?.current?.getContext("2d"));
       setOtherPlayer(data[sessionId].opponent);
       setGameInstance({ game: pongGame });
       setTimeout(() => {
@@ -97,55 +115,58 @@ const PongGame = () => {
   }, [sio]);
 
   useEffect(() => {
-    const ctx = canvasRef.current.getContext("2d");
+    // const ctx = canvasRef.current.getContext("2d");
     // ctx.setTransform(Pong.SCALE, 0, 0, Pong.SCALE, 0, 0);
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.beginPath();
-    // Ball
-    ctx.fillStyle = "lightblue";
-    ctx.arc(
-      gameInstance.game?.ballX,
-      gameInstance.game?.ballY,
-      Pong.BALL_SIZE,
-      0,
-      2 * Math.PI
-    );
-    ctx.fill();
-    // ctx.lineWidth = 0;
-    // ctx.strokeStyle = "#fff";
-    ctx.stroke();
-    // Player 1
-    ctx.fillStyle = "lightgray";
-    ctx.rect(
-      gameInstance.game?.p1X,
-      gameInstance.game?.p1Y,
-      Pong.PADDLE_WIDTH,
-      Pong.PADDLE_HEIGHT
-    );
-    ctx.fillRect(
-      gameInstance.game?.p1X,
-      gameInstance.game?.p1Y,
-      Pong.PADDLE_WIDTH,
-      Pong.PADDLE_HEIGHT
-    );
-    // ctx.lineWidth = 1;
-    ctx.stroke();
-    // Player 2
-    ctx.fillStyle = "lightgray";
-    ctx.rect(
-      gameInstance.game?.p2X,
-      gameInstance.game?.p2Y,
-      Pong.PADDLE_WIDTH,
-      Pong.PADDLE_HEIGHT
-    );
-    ctx.fillRect(
-      gameInstance.game?.p2X,
-      gameInstance.game?.p2Y,
-      Pong.PADDLE_WIDTH,
-      Pong.PADDLE_HEIGHT
-    );
-    // ctx.lineWidth = 0.05;
-    ctx.stroke();
+    if (ctx) {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.beginPath();
+      // Ball
+      // ctx.lineWidth = 2;
+      ctx.fillStyle = "lightblue";
+      ctx.arc(
+        gameInstance.game?.ballX,
+        gameInstance.game?.ballY,
+        Pong.BALL_SIZE,
+        0,
+        2 * Math.PI
+      );
+      ctx.fill();
+      // ctx.strokeStyle = "#fff";
+      // ctx.stroke();
+      // Player 1
+      ctx.fillStyle = "lightgray";
+      ctx.rect(
+        gameInstance.game?.p1X,
+        gameInstance.game?.p1Y,
+        Pong.PADDLE_WIDTH,
+        Pong.PADDLE_HEIGHT
+      );
+      ctx.fillRect(
+        gameInstance.game?.p1X,
+        gameInstance.game?.p1Y,
+        Pong.PADDLE_WIDTH,
+        Pong.PADDLE_HEIGHT
+      );
+      // ctx.lineWidth = 1;
+      // ctx.stroke();
+      // Player 2
+      // ctx.fillStyle = "lightgray";
+      ctx.rect(
+        gameInstance.game?.p2X,
+        gameInstance.game?.p2Y,
+        Pong.PADDLE_WIDTH,
+        Pong.PADDLE_HEIGHT
+      );
+      ctx.fillRect(
+        gameInstance.game?.p2X,
+        gameInstance.game?.p2Y,
+        Pong.PADDLE_WIDTH,
+        Pong.PADDLE_HEIGHT
+      );
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      if (gameInstance.game?.paused) gameInstance.game.drawScore();
+    }
   }, [gameInstance]);
 
   useInterval(gameLoop, Pong.SPEED, gameOver);

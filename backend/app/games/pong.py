@@ -10,6 +10,8 @@ class Pong:
         self.player_2_score = game_data.get('player_2_score', 0)
         self.game_over = game_data.get('game_over', False)
         self.winner = game_data.get('winner', None)
+        self.scorer = game_data.get('scorer', None)
+        self.paused = game_data.get('paused', False)
         self.payload_id = game_data.get('payload_id', 0)
 
     def get_players(self):
@@ -19,7 +21,9 @@ class Pong:
         return {
             self.player_1: self.player_1_paddle,
             self.player_2: self.player_2_paddle,
-            'ball': self.ball
+            'ball': self.ball,
+            'scorer': self.scorer,
+            'paused': self.paused
         }
 
     def update_ready(self):
@@ -29,6 +33,7 @@ class Pong:
         self.player_1_paddle = []
         self.player_2_paddle = []
         self.ball = []
+        self.scorer = None
 
     def inc_payload_id(self):
         self.payload_id+=1
@@ -58,5 +63,7 @@ class Pong:
             'player_2_score': self.player_2_score,
             'game_over': self.game_over,
             'winner': self.winner,
+            'scorer': self.scorer,
+            'paused': self.paused,
             'payload_id': self.payload_id
         }
