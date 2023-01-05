@@ -71,13 +71,13 @@ export default class Pong {
     this.ctx.lineWidth = 6;
     this.ctx.strokeText(
       this.scorer + " score!",
-      Pong.CANVAS_SIZE[0] / 2 - 50,
+      Pong.CANVAS_SIZE[0] / 2 - 100,
       Pong.CANVAS_SIZE[1] / 2
     );
     this.ctx.fillStyle = "red";
     this.ctx.fillText(
       this.scorer + " score!",
-      Pong.CANVAS_SIZE[0] / 2 - 50,
+      Pong.CANVAS_SIZE[0] / 2 - 100,
       Pong.CANVAS_SIZE[1] / 2
     );
     // this.ctx.strokeStyle = "black";
@@ -116,25 +116,26 @@ export default class Pong {
 
   moveBall = () => {
     if (!this.paused) {
-      const bX = this.ballX;
-      const bY = this.ballY;
+      // const bX = this.ballX;
+      // const bY = this.ballY;
       const vX = this.velX;
       const vY = this.velY;
 
-      this.ballX = bX + vX;
-      this.ballY = bY + vY;
+      this.ballX += vX;
+      this.ballY += vY;
 
       if (
-        0 > bY - Pong.BALL_SIZE ||
-        bY + Pong.BALL_SIZE > Pong.CANVAS_SIZE[1]
+        0 > this.ballY - Pong.BALL_SIZE ||
+        this.ballY + Pong.BALL_SIZE > Pong.CANVAS_SIZE[1]
       ) {
-        const offset =
-          this.velY < 0
-            ? 0 - this.ballY
-            : Pong.CANVAS_SIZE[1] - (this.ballY + Pong.BALL_SIZE);
+        // const offset =
+        // this.velY < 0
+        //   ? 0 - this.ballY
+        //   : Pong.CANVAS_SIZE[1] - (this.ballY + Pong.BALL_SIZE);
 
-        this.ballY = bY + 2 * offset;
-        this.velY = vY * -1;
+        // this.ballY = bY + 2 * offset;
+        this.ballY -= vY;
+        this.velY *= -1;
       }
 
       const paddle =
@@ -164,11 +165,11 @@ export default class Pong {
 
       if (0 > this.ballX + Pong.BALL_SIZE || this.ballX > Pong.CANVAS_SIZE[0]) {
         this.score(this.velX < 0 ? "p1" : "p2");
+        this.serve(this.velX < 0 ? 1 : -1);
         // setTimeout(() => {
         //   this.serve(this.velX < 0 ? 1 : -1);
         //   this.paused = false;
         // }, 2000);
-        this.serve(this.velX < 0 ? 1 : -1);
       }
     }
   };

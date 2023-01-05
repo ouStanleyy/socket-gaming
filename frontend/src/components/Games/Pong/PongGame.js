@@ -38,7 +38,7 @@ const PongGame = () => {
       // const ball = isHost
       //   ? [gameInstance.game?.ballX, gameInstance.game?.ballY]
       //   : undefined;
-      console.log("gameloop", gameInstance.game.paused);
+      // console.log("gameloop", gameInstance.game.paused);
       sio?.emit("update_game", {
         gameId,
         paddle,
@@ -87,7 +87,7 @@ const PongGame = () => {
           : data[otherPlayer][1];
         gameInstance.game.ballX = data.ball[0];
         gameInstance.game.ballY = data.ball[1];
-        console.log("here", data.scorer, data.paused);
+        // console.log("here", data.scorer, data.paused);
         if (!isHost) {
           gameInstance.game.scorer = data.scorer;
           gameInstance.game.paused = data.paused;
