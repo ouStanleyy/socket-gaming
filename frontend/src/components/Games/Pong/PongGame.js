@@ -15,7 +15,7 @@ const PongGame = () => {
   const [gameOver, setGameOver] = useState(true);
   const [otherPlayer, setOtherPlayer] = useState(null);
   const [gameInstance, setGameInstance] = useState({ game: null });
-  const [ctx, setCtx] = useState(null);
+  // const [ctx, setCtx] = useState(null);
   const [keyCode, setKeyCode] = useState(null);
 
   const gameLoop = () => {
@@ -100,8 +100,9 @@ const PongGame = () => {
 
   useEffect(() => {
     sio.on("start_game", (data) => {
-      const pongGame = new Pong(canvasRef?.current?.getContext("2d"));
-      setCtx(canvasRef?.current?.getContext("2d"));
+      const pongGame = new Pong();
+      // const pongGame = new Pong(canvasRef?.current?.getContext("2d"));
+      // setCtx(canvasRef?.current?.getContext("2d"));
       setOtherPlayer(data[sessionId].opponent);
       setGameInstance({ game: pongGame });
       setTimeout(() => {
@@ -120,7 +121,7 @@ const PongGame = () => {
   }, [sio]);
 
   useEffect(() => {
-    // const ctx = canvasRef.current.getContext("2d");
+    const ctx = canvasRef.current.getContext("2d");
     // ctx.setTransform(Pong.SCALE, 0, 0, Pong.SCALE, 0, 0);
     if (ctx) {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -170,7 +171,22 @@ const PongGame = () => {
       );
       ctx.lineWidth = 2;
       ctx.stroke();
-      if (gameInstance.game?.paused) gameInstance.game.drawScore();
+      if (gameInstance.game?.paused) {
+        ctx.font = "30px Arial";
+        ctx.lineWidth = 6;
+        ctx.strokeText(
+          gameInstance.game.scorer + " score!",
+          Pong.CANVAS_SIZE[0] / 2 - 100,
+          Pong.CANVAS_SIZE[1] / 2
+        );
+        ctx.fillStyle = "red";
+        ctx.fillText(
+          gameInstance.game.scorer + " score!",
+          Pong.CANVAS_SIZE[0] / 2 - 100,
+          Pong.CANVAS_SIZE[1] / 2
+        );
+      }
+      // if (gameInstance.game?.paused) gameInstance.game.drawScore();
     }
   }, [gameInstance]);
 

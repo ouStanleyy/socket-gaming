@@ -15,7 +15,7 @@ export default class Pong {
   // static PI = Math.PI;
   // static RAND = Math.random();
 
-  constructor(ctx) {
+  constructor(ctx = null) {
     this.ballX = 40;
     this.ballY = 40;
     this.ballSpeed = 10;
