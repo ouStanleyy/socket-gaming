@@ -1,0 +1,51 @@
+.mainContainer {
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.logoContainer svg{
+  width: 175px;
+  height: 50px;
+}
+
+.topSection, .bottomSection {
+  border: 1px solid #DBDBDB;
+  background-color: #FFFFFF;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.topSection {
+  flex-direction: column;
+  width: 100%;
+}
+
+.bottomSection {
+  font-size: 14px;
+}
+
+.bottomSection span {
+  margin-left: 4px;
+  color: #0095F6;
+  font-weight: bold;
+}
+
+.bottomSection span:hover {
+  cursor: pointer;
+}
+
+.bottomSection span:active {
+  opacity: 0.7;
+  user-select: none;
+}

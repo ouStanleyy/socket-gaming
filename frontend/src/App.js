@@ -1,24 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import LoginForm from './components/auth/LoginForm';
-import SignUpForm from './components/auth/SignUpForm';
-import NavBar from './components/NavBar';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import UsersList from './components/UsersList';
-import User from './components/User';
-import { authenticate } from './store/session';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
+import SignUpForm from "./components/auth/SignUpForm";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import NavBar from "./components/NavBar/NavBar";
+import { authenticate } from "./store/session";
+import { setSocket } from "./store/socket";
+import Splash from "./components/Splash/Splash";
+import { Messages } from "./components/Messages";
+import styles from "./App.module.css";
+import { GameDisplay, GamesList, GameLobby } from "./components/Games";
 
 function App() {
-  const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.session.user);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    (async() => {
+    (async () => {
       await dispatch(authenticate());
       setLoaded(true);
     })();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      const socket = io();
+
+      dispatch(setSocket(socket));
+
+      // socket.on("connect", () => {
+      //   dispatch();
+      // });
+
+      return () => socket.disconnect();
+    }
+  }, [user]);
 
   if (!loaded) {
     return null;
@@ -26,23 +44,29 @@ function App() {
 
   return (
     <BrowserRouter>
-      <NavBar />
+      {user && <NavBar />}
       <Switch>
-        <Route path='/login' exact={true}>
-          <LoginForm />
+        <Route exact path="/">
+          {user ? <h1>Homepage</h1> : <Splash />}
         </Route>
-        <Route path='/sign-up' exact={true}>
+        <Route exact path="/sign-up">
           <SignUpForm />
         </Route>
-        <ProtectedRoute path='/users' exact={true} >
-          <UsersList/>
+        <ProtectedRoute path="/messages">
+          <div className={styles.innerBody}>
+            <Messages user={user} />
+          </div>
         </ProtectedRoute>
-        <ProtectedRoute path='/users/:userId' exact={true} >
-          <User />
+        <ProtectedRoute exact path="/games">
+          <div className={styles.innerBody}>
+            <GamesList />
+          </div>
         </ProtectedRoute>
-        <Route path='/' exact={true} >
-          <h1>My Home Page</h1>
-        </Route>
+        <ProtectedRoute path="/games/:gameId">
+          <div className={styles.innerBody}>
+            <GameLobby />
+          </div>
+        </ProtectedRoute>
       </Switch>
     </BrowserRouter>
   );

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, request, session, redirect
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect, generate_csrf
@@ -7,10 +7,13 @@ from flask_login import LoginManager
 from .models import db, User
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
+from .api.room_routes import room_routes
+from .api.game_routes import game_routes
 from .seeds import seed_commands
 from .config import Config
+from .sockets import sio
 
-app = Flask(__name__, static_folder='../react-app/build', static_url_path='/')
+app = Flask(__name__, static_folder='../../frontend/build', static_url_path='/')
 
 # Setup login manager
 login = LoginManager(app)
@@ -28,11 +31,16 @@ app.cli.add_command(seed_commands)
 app.config.from_object(Config)
 app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
+app.register_blueprint(room_routes, url_prefix='/api/rooms')
+app.register_blueprint(game_routes, url_prefix='/api/games')
 db.init_app(app)
 Migrate(app, db)
 
 # Application Security
 CORS(app)
+
+# Initializes app with SocketIO instance
+sio.init_app(app)
 
 
 # Since we are deploying with Docker and Flask,
@@ -61,18 +69,6 @@ def inject_csrf_token(response):
     return response
 
 
-@app.route("/api/docs")
-def api_help():
-    """
-    Returns all API routes and their doc strings
-    """
-    acceptable_methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
-    route_list = { rule.rule: [[ method for method in rule.methods if method in acceptable_methods ],
-                    app.view_functions[rule.endpoint].__doc__ ]
-                    for rule in app.url_map.iter_rules() if rule.endpoint != 'static' }
-    return route_list
-
-
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def react_root(path):
@@ -86,6 +82,30 @@ def react_root(path):
     return app.send_static_file('index.html')
 
 
+@app.route("/api/docs")
+def api_help():
+    """
+    Returns all API routes and their doc strings
+    """
+    acceptable_methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+    route_list = { rule.rule: [[ method for method in rule.methods if method in acceptable_methods ],
+                    app.view_functions[rule.endpoint].__doc__ ]
+                    for rule in app.url_map.iter_rules() if rule.endpoint != 'static' }
+    return route_list
+
+
 @app.errorhandler(404)
 def not_found(e):
+    """
+    Any unknown URLs that return a 404 error will return the page that bootstraps the React application
+    """
     return app.send_static_file('index.html')
+
+
+if __name__ == '__main__':
+    sio.run(app)
+
+def app_run():
+    sio.run(app, debug=True, port=5000)
+
+app.app_run = app_run

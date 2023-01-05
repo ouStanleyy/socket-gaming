@@ -1,0 +1,73 @@
+.gamesListContainer {
+  display: flex;
+  width: 936px;
+  height: 94vh;
+  background-color: #ffffff;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+}
+
+.realTimeContainer {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  border-right: 1px solid #dbdbdb;
+}
+
+.turnBasedContainer {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  border-left: 1px solid #dbdbdb;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  border-bottom: 1px solid #dbdbdb;
+  padding: 20px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  margin-left: auto;
+}
+
+.newGameButton {
+  height: fit-content;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.gameContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 4px 24px;
+}
+
+.gameContainer:hover {
+  background-color: #fafafa;
+}
+
+.gameDetails {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.gamePicture {
+  width: 100px;
+}
+
+.host,
+.numPlayers {
+  font-weight: 500;
+  width: max-content;
+}

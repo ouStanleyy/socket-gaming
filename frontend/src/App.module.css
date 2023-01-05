@@ -1,0 +1,17 @@
+.innerBody {
+  /* border: 1px solid red; */
+  /* width: 85%; */
+  padding: 30px 20px;
+  /* margin-left: auto; */
+  margin-left: 244px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 1265px) {
+  .innerBody {
+    margin-left: 72px;
+  }
+}

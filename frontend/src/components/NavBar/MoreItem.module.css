@@ -1,0 +1,22 @@
+.moreItemContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 16px;
+  border-bottom: 1px solid #E6E6E6;
+  color: #262626;
+}
+
+/* Placeholder for non SVG icons */
+.moreItemSVGContainer {
+  height: 24px;
+}
+
+.moreItemContainer:hover {
+  background-color: #FAFAFA;
+}
+
+.moreItemContainer:active {
+  opacity: 0.6;
+}
