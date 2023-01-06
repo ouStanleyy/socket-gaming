@@ -36,16 +36,23 @@ class Snakes:
     def inc_payload_id(self):
         self.payload_id+=1
 
+    # def get_game_start_data(self):
+    #     return {
+    #         self.player_1: {
+    #             'opponent': self.player_2,
+    #             'snake': self.player_1_snake
+    #         },
+    #         self.player_2: {
+    #             'opponent': self.player_1,
+    #             'snake': self.player_2_snake
+    #         },
+    #         'apples': self.apples
+    #     }
+
     def get_game_start_data(self):
         return {
-            self.player_1: {
-                'opponent': self.player_2,
-                'snake': self.player_1_snake
-            },
-            self.player_2: {
-                'opponent': self.player_1,
-                'snake': self.player_2_snake
-            },
+            'snake_one': self.player_1_snake,
+            'snake_two': self.player_2_snake,
             'apples': self.apples
         }
 
