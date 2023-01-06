@@ -13,7 +13,7 @@ const PongGame = () => {
   const canvasRef = useRef();
   const gameRef = useRef();
   const [gameOver, setGameOver] = useState(true);
-  const [otherPlayer, setOtherPlayer] = useState(null);
+  // const [otherPlayer, setOtherPlayer] = useState(null);
   const [gameInstance, setGameInstance] = useState({ game: null });
   // const [ctx, setCtx] = useState(null);
   const [keyCode, setKeyCode] = useState(null);
@@ -155,7 +155,7 @@ const PongGame = () => {
       const pongGame = new Pong();
       // const pongGame = new Pong(canvasRef?.current?.getContext("2d"));
       // setCtx(canvasRef?.current?.getContext("2d"));
-      setOtherPlayer(data[sessionId].opponent);
+      // setOtherPlayer(data[sessionId].opponent);
       setGameInstance({ game: pongGame });
       setTimeout(() => {
         setGameOver(false);
@@ -175,71 +175,71 @@ const PongGame = () => {
   useEffect(() => {
     const ctx = canvasRef.current.getContext("2d");
     // ctx.setTransform(Pong.SCALE, 0, 0, Pong.SCALE, 0, 0);
-    if (ctx) {
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      ctx.beginPath();
-      // Ball
-      // ctx.lineWidth = 2;
-      ctx.fillStyle = "lightblue";
-      ctx.arc(
-        gameInstance.game?.ballX,
-        gameInstance.game?.ballY,
-        Pong.BALL_SIZE,
-        0,
-        2 * Math.PI
+    // if (ctx) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.beginPath();
+    // Ball
+    // ctx.lineWidth = 2;
+    ctx.fillStyle = "lightblue";
+    ctx.arc(
+      gameInstance.game?.ballX,
+      gameInstance.game?.ballY,
+      Pong.BALL_SIZE,
+      0,
+      2 * Math.PI
+    );
+    ctx.fill();
+    // ctx.strokeStyle = "#fff";
+    // ctx.stroke();
+    // Player 1
+    ctx.fillStyle = "lightgray";
+    ctx.rect(
+      gameInstance.game?.p1X,
+      gameInstance.game?.p1Y,
+      Pong.PADDLE_WIDTH,
+      Pong.PADDLE_HEIGHT
+    );
+    ctx.fillRect(
+      gameInstance.game?.p1X,
+      gameInstance.game?.p1Y,
+      Pong.PADDLE_WIDTH,
+      Pong.PADDLE_HEIGHT
+    );
+    // ctx.lineWidth = 1;
+    // ctx.stroke();
+    // Player 2
+    // ctx.fillStyle = "lightgray";
+    ctx.rect(
+      gameInstance.game?.p2X,
+      gameInstance.game?.p2Y,
+      Pong.PADDLE_WIDTH,
+      Pong.PADDLE_HEIGHT
+    );
+    ctx.fillRect(
+      gameInstance.game?.p2X,
+      gameInstance.game?.p2Y,
+      Pong.PADDLE_WIDTH,
+      Pong.PADDLE_HEIGHT
+    );
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    if (gameInstance.game?.paused) {
+      ctx.font = "30px Arial";
+      ctx.lineWidth = 6;
+      ctx.strokeText(
+        gameInstance.game.scorer + " score!",
+        Pong.CANVAS_SIZE[0] / 2 - 100,
+        Pong.CANVAS_SIZE[1] / 2
       );
-      ctx.fill();
-      // ctx.strokeStyle = "#fff";
-      // ctx.stroke();
-      // Player 1
-      ctx.fillStyle = "lightgray";
-      ctx.rect(
-        gameInstance.game?.p1X,
-        gameInstance.game?.p1Y,
-        Pong.PADDLE_WIDTH,
-        Pong.PADDLE_HEIGHT
+      ctx.fillStyle = "red";
+      ctx.fillText(
+        gameInstance.game.scorer + " score!",
+        Pong.CANVAS_SIZE[0] / 2 - 100,
+        Pong.CANVAS_SIZE[1] / 2
       );
-      ctx.fillRect(
-        gameInstance.game?.p1X,
-        gameInstance.game?.p1Y,
-        Pong.PADDLE_WIDTH,
-        Pong.PADDLE_HEIGHT
-      );
-      // ctx.lineWidth = 1;
-      // ctx.stroke();
-      // Player 2
-      // ctx.fillStyle = "lightgray";
-      ctx.rect(
-        gameInstance.game?.p2X,
-        gameInstance.game?.p2Y,
-        Pong.PADDLE_WIDTH,
-        Pong.PADDLE_HEIGHT
-      );
-      ctx.fillRect(
-        gameInstance.game?.p2X,
-        gameInstance.game?.p2Y,
-        Pong.PADDLE_WIDTH,
-        Pong.PADDLE_HEIGHT
-      );
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      if (gameInstance.game?.paused) {
-        ctx.font = "30px Arial";
-        ctx.lineWidth = 6;
-        ctx.strokeText(
-          gameInstance.game.scorer + " score!",
-          Pong.CANVAS_SIZE[0] / 2 - 100,
-          Pong.CANVAS_SIZE[1] / 2
-        );
-        ctx.fillStyle = "red";
-        ctx.fillText(
-          gameInstance.game.scorer + " score!",
-          Pong.CANVAS_SIZE[0] / 2 - 100,
-          Pong.CANVAS_SIZE[1] / 2
-        );
-      }
-      // if (gameInstance.game?.paused) gameInstance.game.drawScore();
     }
+    // if (gameInstance.game?.paused) gameInstance.game.drawScore();
+    // }
   }, [gameInstance]);
 
   useInterval(gameLoop, Pong.SPEED, gameOver);
