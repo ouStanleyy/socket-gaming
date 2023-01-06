@@ -118,6 +118,8 @@ const GameDetails = () => {
           })
         );
     });
+
+    return () => sio.off("update_game");
   }, [sio]);
 
   return (
