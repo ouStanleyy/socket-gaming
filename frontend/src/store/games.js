@@ -61,7 +61,7 @@ export const createNewGame = (game_type) => async (dispatch) => {
     body: JSON.stringify({ game_type }),
   });
   const game = await res.json();
-
+  console.log("store", game);
   if (res.ok) {
     dispatch(addGame(game));
     return game.id;
