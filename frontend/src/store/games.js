@@ -141,6 +141,7 @@ const gamesReducer = (state = {}, action) => {
         [action.game.id]: { ...state[action.game.id], ...action.game },
       };
     case UPDATE_GAME_SCORES:
+      console.log("state", state);
       return {
         ...state,
         [action.game.gameId]: {
