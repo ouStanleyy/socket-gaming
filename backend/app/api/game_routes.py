@@ -158,7 +158,7 @@ def start_game(game_id):
         #     game_instance.player_1_paddle = request.json['player_1_paddle']
         #     game_instance.player_2_paddle = request.json['player_2_paddle']
         #     game_instance.ball = request.json['ball']
-        game_instance.payload_id = 0
+        # game_instance.payload_id = 0
         game.game_data = json.dumps(game_instance.get_data())
 
         db.session.commit()
@@ -174,44 +174,44 @@ def update_game(data):
     # game_instance = Snakes(game_data=json.loads(game.game_data))
     game_instance = globals()[game.game_type.capitalize()](game_data=json.loads(game.game_data))
 
-    if data['payloadId'] == game_instance.payload_id:
-        if game.game_type == "snakes":
-            if current_user.id == game_instance.player_1 and not game_instance.player_1_snake:
-                game_instance.player_1_snake = data['snake']
-            elif current_user.id == game_instance.player_2 and not game_instance.player_2_snake:
-                game_instance.player_2_snake = data['snake']
+    # if data['payloadId'] == game_instance.payload_id:
+    if game.game_type == "snakes":
+        if current_user.id == game_instance.player_1 and not game_instance.player_1_snake:
+            game_instance.player_1_snake = data['snake']
+        elif current_user.id == game_instance.player_2 and not game_instance.player_2_snake:
+            game_instance.player_2_snake = data['snake']
 
-            if data.get('apples') is not None:
-                game_instance.apples = data['apples']
+        if data.get('apples') is not None:
+            game_instance.apples = data['apples']
 
-            if game_instance.update_ready():
-                emit('update_game', game_instance.get_snakes_and_apples(), to=f'{game.game_type}-{game.id}')
-                game_instance.reset_snakes()
-                game_instance.inc_payload_id()
+        if game_instance.update_ready():
+            emit('update_game', game_instance.get_snakes_and_apples(), to=f'{game.game_type}-{game.id}')
+            game_instance.reset_snakes()
+            # game_instance.inc_payload_id()
 
-        elif game.game_type == "pong":
-            if current_user.id == game_instance.player_1 and not game_instance.player_1_paddle:
-                game_instance.player_1_paddle = data['paddle']
-            elif current_user.id == game_instance.player_2 and not game_instance.player_2_paddle:
-                game_instance.player_2_paddle = data['paddle']
+    elif game.game_type == "pong":
+        if current_user.id == game_instance.player_1 and not game_instance.player_1_paddle:
+            game_instance.player_1_paddle = data['paddle']
+        elif current_user.id == game_instance.player_2 and not game_instance.player_2_paddle:
+            game_instance.player_2_paddle = data['paddle']
 
-            if data.get('ball') is not None and not game_instance.ball:
-                game_instance.ball = data['ball']
+        if data.get('ball') is not None and not game_instance.ball:
+            game_instance.ball = data['ball']
 
-            if data.get('scorer') is not None:
-                game_instance.scorer = data['scorer']
+        if data.get('scorer') is not None:
+            game_instance.scorer = data['scorer']
 
-            if data.get('scores') is not None:
-                game_instance.player_1_score = data['scores']['p1Score']
-                game_instance.player_2_score = data['scores']['p2Score']
+        if data.get('scores') is not None:
+            game_instance.player_1_score = data['scores']['p1Score']
+            game_instance.player_2_score = data['scores']['p2Score']
 
-            if data.get('paused') is not None:
-                game_instance.paused = data['paused']
+        if data.get('paused') is not None:
+            game_instance.paused = data['paused']
 
-            if game_instance.update_ready():
-                emit('update_game', game_instance.get_paddles_and_ball(), to=f'{game.game_type}-{game.id}')
-                game_instance.reset_paddles_and_ball()
-                game_instance.inc_payload_id()
+        if game_instance.update_ready():
+            emit('update_game', game_instance.get_paddles_and_ball(), to=f'{game.game_type}-{game.id}')
+            game_instance.reset_paddles_and_ball()
+            # game_instance.inc_payload_id()
 
     game.game_data = json.dumps(game_instance.get_data())
 
