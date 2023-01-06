@@ -1,9 +1,9 @@
 import _ from "lodash";
 
 export default class Pong {
-  static CANVAS_SIZE = [700, 400];
+  static CANVAS_SIZE = [600, 300];
   // static SCALE = 25;
-  static SPEED = 25;
+  static SPEED = 50;
   // static DIRECTIONS = {
   //   38: [0, -1], // up
   //   40: [0, 1], // down
@@ -18,12 +18,12 @@ export default class Pong {
   constructor(ctx = null) {
     this.ballX = 40;
     this.ballY = 40;
-    this.ballSpeed = 10;
+    this.ballSpeed = 20;
     this.velX = 0;
     this.velY = 0;
     this.p1X = 10;
     this.p1Y = 100;
-    this.p2X = 670;
+    this.p2X = 570;
     this.p2Y = 100;
     this.p1Score = 0;
     this.p2Score = 0;

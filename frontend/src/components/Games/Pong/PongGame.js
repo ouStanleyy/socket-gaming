@@ -135,6 +135,8 @@ const PongGame = () => {
   useEffect(() => {
     if (gameInstance.game) {
       sio.once("update_game", (data) => {
+        // if (gameInstance.game.payloadId === data.payloadId) {
+        //   gameInstance.game.payloadId++;
         if (data.isHost) {
           gameInstance.game.p1Y = data.paddle;
           gameInstance.game.ballX = data.ball[0];
@@ -143,6 +145,7 @@ const PongGame = () => {
           gameInstance.game.paused = data.paused;
         } else gameInstance.game.p2Y = data.paddle;
         setGameInstance({ game: gameInstance.game });
+        // }
       });
     }
   }, [gameInstance]);
