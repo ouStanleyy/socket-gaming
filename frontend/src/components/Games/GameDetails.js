@@ -92,16 +92,28 @@ const GameDetails = () => {
     });
   }, [sio]);
 
+  // useEffect(() => {
+  //   sio.on("update_game", (data) => {
+  //     if (data.scorer && data.paused)
+  //       dispatch(
+  //         updateGameScores({
+  //           gameId,
+  //           scores: {
+  //             player_1_score: data.player_1_score,
+  //             player_2_score: data.player_2_score,
+  //           },
+  //         })
+  //       );
+  //   });
+  // }, [sio]);
+
   useEffect(() => {
     sio.on("update_game", (data) => {
       if (data.scorer && data.paused)
         dispatch(
           updateGameScores({
             gameId,
-            scores: {
-              player_1_score: data.player_1_score,
-              player_2_score: data.player_2_score,
-            },
+            scores: data.scores,
           })
         );
     });
