@@ -3,14 +3,14 @@ import _ from "lodash";
 export default class Pong {
   static CANVAS_SIZE = [700, 400];
   // static SCALE = 25;
-  static SPEED = 25;
+  static SPEED = 100;
   // static DIRECTIONS = {
   //   38: [0, -1], // up
   //   40: [0, 1], // down
   // };
   static PADDLE_HEIGHT = 80;
   static PADDLE_WIDTH = 20;
-  static PADDLE_SPEED = 15;
+  static PADDLE_SPEED = 40;
   static BALL_SIZE = 10;
   // static PI = Math.PI;
   // static RAND = Math.random();
@@ -18,7 +18,7 @@ export default class Pong {
   constructor(ctx = null) {
     this.ballX = 40;
     this.ballY = 40;
-    this.ballSpeed = 10;
+    this.ballSpeed = 30;
     this.velX = 0;
     this.velY = 0;
     this.p1X = 10;
