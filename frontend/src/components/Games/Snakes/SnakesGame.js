@@ -70,7 +70,9 @@ const SnakesGame = () => {
       gameType: "snakes",
       snake,
       apples,
-      // payloadId: gameInstance.game.payloadId,
+      payloadId: isHost
+        ? gameInstance.game.p1PayloadId
+        : gameInstance.game.p2PayloadId,
     });
   };
 
@@ -88,13 +90,23 @@ const SnakesGame = () => {
 
   useEffect(() => {
     if (gameInstance.game) {
-      sio.once("update_game", (data) => {
-        if (data.isHost) gameInstance.game.snakeOne = data.snake;
-        else gameInstance.game.snakeTwo = data.snake;
+      sio.on("update_game", (data) => {
+        if (data.isHost && data.payloadId === gameInstance.game.p1PayloadId) {
+          gameInstance.game.p1PayloadId++;
+          gameInstance.game.snakeOne = data.snake;
+        } else if (
+          !data.isHost &&
+          data.payloadId === gameInstance.game.p2PayloadId
+        ) {
+          gameInstance.game.p2PayloadId++;
+          gameInstance.game.snakeTwo = data.snake;
+        }
         if (data.apples) gameInstance.game.apples = data.apples;
         setGameInstance({ game: gameInstance.game });
       });
     }
+
+    return () => sio.off("update_game");
   }, [gameInstance]);
 
   // useEffect(() => {
@@ -113,7 +125,6 @@ const SnakesGame = () => {
   useEffect(() => {
     sio.on("start_game", (data) => {
       const snakesGame = new Snakes();
-      // setOtherPlayer(data[sessionId].opponent);
       snakesGame.snakeOne = data.snake_one;
       snakesGame.snakeTwo = data.snake_two;
       snakesGame.apples = data.apples;

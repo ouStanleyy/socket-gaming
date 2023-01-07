@@ -109,7 +109,6 @@ const GameDetails = () => {
 
   useEffect(() => {
     sio.on("update_game", (data) => {
-      console.log("heard", game);
       if (data.scorer && data.paused)
         dispatch(
           updateGameScores({

@@ -27,10 +27,11 @@ export default class Pong {
     this.p2Y = 100;
     this.p1Score = 0;
     this.p2Score = 0;
-    this.payloadId = 0;
     this.ctx = ctx;
     this.paused = false;
     this.scorer = null;
+    this.p1PayloadId = 0;
+    this.p2PayloadId = 0;
   }
 
   score = (player) => {

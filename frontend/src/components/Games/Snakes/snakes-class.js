@@ -15,7 +15,8 @@ export default class Snakes {
     this.apples = [];
     this.dir = [0, -1];
     this.oppDir = [0, 1];
-    this.payloadId = 0;
+    this.p1PayloadId = 0;
+    this.p2PayloadId = 0;
   }
 
   static createApple = () =>
