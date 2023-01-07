@@ -14,7 +14,8 @@ export default class Snakes {
     this.snakeTwo = [];
     this.apples = [];
     this.dir = [0, -1];
-    this.oppDir = [0, 1];
+    this.currOppDir = [0, 1];
+    this.newOppDir = [0, 1];
     this.p1PayloadId = 0;
     this.p2PayloadId = 0;
   }
@@ -73,13 +74,25 @@ export default class Snakes {
     if (
       keyCode >= 37 &&
       keyCode <= 40 &&
-      JSON.stringify(Snakes.DIRECTIONS[keyCode]) !== JSON.stringify(this.oppDir)
+      JSON.stringify(Snakes.DIRECTIONS[keyCode]) !==
+        JSON.stringify(this.currOppDir) &&
+      JSON.stringify(Snakes.DIRECTIONS[keyCode]) !==
+        JSON.stringify(this.newOppDir)
     ) {
       this.dir = Snakes.DIRECTIONS[keyCode];
-      if (keyCode === 38) this.oppDir = Snakes.DIRECTIONS[40];
-      else if (keyCode === 40) this.oppDir = Snakes.DIRECTIONS[38];
-      else if (keyCode === 37) this.oppDir = Snakes.DIRECTIONS[39];
-      else if (keyCode === 39) this.oppDir = Snakes.DIRECTIONS[37];
+      if (keyCode === 38) {
+        this.newOppDir = Snakes.DIRECTIONS[40];
+        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[40]), 100);
+      } else if (keyCode === 40) {
+        this.newOppDir = Snakes.DIRECTIONS[38];
+        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[38]), 100);
+      } else if (keyCode === 37) {
+        this.newOppDir = Snakes.DIRECTIONS[39];
+        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[39]), 100);
+      } else if (keyCode === 39) {
+        this.newOppDir = Snakes.DIRECTIONS[37];
+        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[37]), 100);
+      }
     }
   };
 }

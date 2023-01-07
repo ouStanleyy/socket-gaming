@@ -38,17 +38,17 @@ const GameDetails = () => {
     dispatch(joinGame(gameId));
   };
 
-  const leave = () => {
+  const leave = (unmount = false) => {
     setReady(false);
-    dispatch(leaveGame(gameId));
+    dispatch(leaveGame(gameId, unmount));
   };
 
   const toggleReady = () => setReady((state) => !state);
 
-  const closeLobby = async () => {
+  const closeLobby = async (push = true) => {
     await dispatch(deleteGame(gameId));
     toggleCloseLobbyModal();
-    history.push("/games");
+    if (push) history.push("/games");
   };
 
   const start = () => {
@@ -91,6 +91,11 @@ const GameDetails = () => {
       setReady(false);
     });
   }, [sio]);
+
+  useEffect(() => () => leave(true), []);
+  useEffect(() => {
+    if (game?.host_id === sessionId) return () => closeLobby(false);
+  }, []);
 
   // useEffect(() => {
   //   sio.on("update_game", (data) => {

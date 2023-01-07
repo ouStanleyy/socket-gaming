@@ -72,6 +72,7 @@ def join_game(game_id):
 
         # sio.server.enter_room(current_user.sid, f'{game.game_type}-{game.id}')
     sio.emit('update_game_lobby', game.to_dict(), room=f'{game.game_type}-{game.id}')
+    sio.emit('update_game_list', broadcast=True)
 
     return game.to_dict()
 
@@ -94,8 +95,10 @@ def leave_game(game_id):
 
         db.session.commit()
 
-        # sio.server.leave_room(current_user.sid, f'{game.game_type}-{game.id}')
     sio.emit('update_game_lobby', game.to_dict(), room=f'{game.game_type}-{game.id}')
+    sio.emit('update_game_list', broadcast=True)
+    if request.json['unmount']:
+        sio.server.leave_room(current_user.sid, f'{game.game_type}-{game.id}')
 
     return game.to_dict()
 
@@ -110,6 +113,7 @@ def delete_game(game_id):
 
     sio.emit('close_game_lobby', room=f'{game.game_type}-{game.id}')
     sio.server.close_room(f'{game.game_type}-{game.id}')
+    sio.emit('update_game_list', broadcast=True)
 
     db.session.delete(game)
     db.session.commit()
