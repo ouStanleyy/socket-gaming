@@ -74,6 +74,10 @@ const SnakesGame = () => {
         ? gameInstance.game.p1PayloadId
         : gameInstance.game.p2PayloadId,
     });
+    isHost
+      ? (gameInstance.game.snakeOne = snake)
+      : (gameInstance.game.snakeTwo = snake);
+    setGameInstance({ game: gameInstance.game });
   };
 
   // useEffect(() => {
@@ -88,25 +92,42 @@ const SnakesGame = () => {
   //   }
   // }, [gameInstance]);
 
+  // useEffect(() => {
+  //   if (gameInstance.game) {
+  //     sio.on("update_game", (data) => {
+  //       if (data.isHost && data.payloadId === gameInstance.game.p1PayloadId) {
+  //         gameInstance.game.p1PayloadId++;
+  //         gameInstance.game.snakeOne = data.snake;
+  //       } else if (
+  //         !data.isHost &&
+  //         data.payloadId === gameInstance.game.p2PayloadId
+  //       ) {
+  //         gameInstance.game.p2PayloadId++;
+  //         gameInstance.game.snakeTwo = data.snake;
+  //       }
+  //       if (data.apples) gameInstance.game.apples = data.apples;
+  //       setGameInstance({ game: gameInstance.game });
+  //     });
+  //   }
+
+  //   return () => sio.off("update_game");
+  // }, [gameInstance]);
+
   useEffect(() => {
     if (gameInstance.game) {
-      sio.on("update_game", (data) => {
-        if (data.isHost && data.payloadId === gameInstance.game.p1PayloadId) {
-          gameInstance.game.p1PayloadId++;
-          gameInstance.game.snakeOne = data.snake;
-        } else if (
-          !data.isHost &&
-          data.payloadId === gameInstance.game.p2PayloadId
-        ) {
-          gameInstance.game.p2PayloadId++;
-          gameInstance.game.snakeTwo = data.snake;
+      const update = (data) => {
+        if (data.isHost !== isHost) {
+          data.isHost
+            ? (gameInstance.game.snakeOne = data.snake)
+            : (gameInstance.game.snakeTwo = data.snake);
+          if (data.apples) gameInstance.game.apples = data.apples;
+          setGameInstance({ game: gameInstance.game });
         }
-        if (data.apples) gameInstance.game.apples = data.apples;
-        setGameInstance({ game: gameInstance.game });
-      });
-    }
+      };
 
-    return () => sio.off("update_game");
+      sio.on("update_game", update);
+      return () => sio.off("update_game", update);
+    }
   }, [gameInstance]);
 
   // useEffect(() => {
@@ -132,6 +153,8 @@ const SnakesGame = () => {
       setTimeout(() => setGameOver(false), 2000);
       gameRef?.current?.focus();
     });
+
+    return () => sio.off("start_game");
   }, [sio, gameRef]);
 
   useEffect(() => {
@@ -139,6 +162,8 @@ const SnakesGame = () => {
       setGameOver(true);
       setGameInstance({ game: null });
     });
+
+    return () => sio.off("end_game");
   }, [sio]);
 
   useEffect(() => {
@@ -147,7 +172,7 @@ const SnakesGame = () => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.beginPath();
     gameInstance.game?.snakeOne.forEach(([x, y], idx) => {
-      idx === 0 ? (ctx.fillStyle = "gray") : (ctx.fillStyle = "lightgray");
+      idx === 0 ? (ctx.fillStyle = "green") : (ctx.fillStyle = "lightgreen");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
@@ -161,7 +186,7 @@ const SnakesGame = () => {
     });
     ctx.stroke();
     gameInstance.game?.apples.forEach(([x, y]) => {
-      ctx.fillStyle = "lightgreen";
+      ctx.fillStyle = "red";
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
