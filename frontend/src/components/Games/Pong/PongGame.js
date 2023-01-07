@@ -80,7 +80,9 @@ const PongGame = () => {
         scorer,
         scores,
         paused,
-        // payloadId: gameInstance.game.payloadId,
+        payloadId: isHost
+          ? gameInstance.game.p1PayloadId
+          : gameInstance.game.p2PayloadId,
       });
     }
     // setGameInstance({ game: gameInstance.game });
@@ -135,19 +137,25 @@ const PongGame = () => {
   useEffect(() => {
     if (gameInstance.game) {
       sio.once("update_game", (data) => {
-        // if (gameInstance.game.payloadId === data.payloadId) {
-        //   gameInstance.game.payloadId++;
-        if (data.isHost) {
+        if (data.isHost && data.payloadId === gameInstance.game.p1PayloadId) {
+          gameInstance.game.p1PayloadId++;
           gameInstance.game.p1Y = data.paddle;
           gameInstance.game.ballX = data.ball[0];
           gameInstance.game.ballY = data.ball[1];
           gameInstance.game.scorer = data.scorer;
           gameInstance.game.paused = data.paused;
-        } else gameInstance.game.p2Y = data.paddle;
+        } else if (
+          !data.isHost &&
+          data.payloadId === gameInstance.game.p2PayloadId
+        ) {
+          gameInstance.game.p2PayloadId++;
+          gameInstance.game.p2Y = data.paddle;
+        }
         setGameInstance({ game: gameInstance.game });
-        // }
       });
     }
+
+    return () => sio.off("update_game");
   }, [gameInstance]);
 
   useEffect(() => {

@@ -61,7 +61,7 @@ export const createNewGame = (game_type) => async (dispatch) => {
     body: JSON.stringify({ game_type }),
   });
   const game = await res.json();
-  console.log("store", game);
+
   if (res.ok) {
     dispatch(addGame(game));
     return game.id;
@@ -141,8 +141,6 @@ const gamesReducer = (state = {}, action) => {
         [action.game.id]: { ...state[action.game.id], ...action.game },
       };
     case UPDATE_GAME_SCORES:
-      console.log("action", action.game);
-      console.log("state", state[action.game.gameId]);
       return {
         ...state,
         [action.game.gameId]: {
