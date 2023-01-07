@@ -80,12 +80,12 @@ const PongGame = () => {
         scorer,
         scores,
         paused,
-        payloadId: isHost
-          ? gameInstance.game.p1PayloadId
-          : gameInstance.game.p2PayloadId,
+        // payloadId: isHost
+        //   ? gameInstance.game.p1PayloadId
+        //   : gameInstance.game.p2PayloadId,
       });
     }
-    // setGameInstance({ game: gameInstance.game });
+    setGameInstance({ game: gameInstance.game });
   };
 
   // const startGame = () => {
@@ -134,28 +134,48 @@ const PongGame = () => {
   //   }
   // }, [gameInstance]);
 
+  // useEffect(() => {
+  //   if (gameInstance.game) {
+  //     sio.on("update_game", (data) => {
+  //       if (data.isHost && data.payloadId === gameInstance.game.p1PayloadId) {
+  //         gameInstance.game.p1PayloadId++;
+  //         gameInstance.game.p1Y = data.paddle;
+  //         gameInstance.game.ballX = data.ball[0];
+  //         gameInstance.game.ballY = data.ball[1];
+  //         gameInstance.game.scorer = data.scorer;
+  //         gameInstance.game.paused = data.paused;
+  //       } else if (
+  //         !data.isHost &&
+  //         data.payloadId === gameInstance.game.p2PayloadId
+  //       ) {
+  //         gameInstance.game.p2PayloadId++;
+  //         gameInstance.game.p2Y = data.paddle;
+  //       }
+  //       setGameInstance({ game: gameInstance.game });
+  //     });
+  //   }
+
+  //   return () => sio.off("update_game");
+  // }, [gameInstance]);
+
   useEffect(() => {
     if (gameInstance.game) {
-      sio.on("update_game", (data) => {
-        if (data.isHost && data.payloadId === gameInstance.game.p1PayloadId) {
-          gameInstance.game.p1PayloadId++;
-          gameInstance.game.p1Y = data.paddle;
-          gameInstance.game.ballX = data.ball[0];
-          gameInstance.game.ballY = data.ball[1];
-          gameInstance.game.scorer = data.scorer;
-          gameInstance.game.paused = data.paused;
-        } else if (
-          !data.isHost &&
-          data.payloadId === gameInstance.game.p2PayloadId
-        ) {
-          gameInstance.game.p2PayloadId++;
-          gameInstance.game.p2Y = data.paddle;
+      const update = (data) => {
+        if (data.isHost !== isHost) {
+          if (data.isHost) {
+            gameInstance.game.p1Y = data.paddle;
+            gameInstance.game.ballX = data.ball[0];
+            gameInstance.game.ballY = data.ball[1];
+            gameInstance.game.scorer = data.scorer;
+            gameInstance.game.paused = data.paused;
+          } else gameInstance.game.p2Y = data.paddle;
+          setGameInstance({ game: gameInstance.game });
         }
-        setGameInstance({ game: gameInstance.game });
-      });
-    }
+      };
 
-    return () => sio.off("update_game");
+      sio.on("update_game", update);
+      return () => sio.off("update_game", update);
+    }
   }, [gameInstance]);
 
   useEffect(() => {
@@ -171,6 +191,8 @@ const PongGame = () => {
       }, 2000);
       gameRef?.current?.focus();
     });
+
+    return () => sio.off("start_game");
   }, [sio, gameRef]);
 
   useEffect(() => {
@@ -178,6 +200,8 @@ const PongGame = () => {
       setGameOver(true);
       setGameInstance({ game: null });
     });
+
+    return () => sio.off("end_game");
   }, [sio]);
 
   useEffect(() => {
