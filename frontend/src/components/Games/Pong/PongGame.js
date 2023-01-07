@@ -136,7 +136,7 @@ const PongGame = () => {
 
   useEffect(() => {
     if (gameInstance.game) {
-      sio.once("update_game", (data) => {
+      sio.on("update_game", (data) => {
         if (data.isHost && data.payloadId === gameInstance.game.p1PayloadId) {
           gameInstance.game.p1PayloadId++;
           gameInstance.game.p1Y = data.paddle;
