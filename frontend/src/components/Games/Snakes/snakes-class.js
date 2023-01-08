@@ -12,12 +12,14 @@ export default class Snakes {
   constructor() {
     this.snakeOne = [];
     this.snakeTwo = [];
+    this.snakeThree = [];
+    this.snakeFour = [];
     this.apples = [];
     this.dir = [0, -1];
     this.currOppDir = [0, 1];
     this.newOppDir = [0, 1];
-    this.p1PayloadId = 0;
-    this.p2PayloadId = 0;
+    // this.p1PayloadId = 0;
+    // this.p2PayloadId = 0;
   }
 
   static createApple = () =>
@@ -44,12 +46,20 @@ export default class Snakes {
   checkCollision = (
     head,
     snakeOne = this.snakeOne,
-    snakeTwo = this.snakeTwo
+    snakeTwo = this.snakeTwo,
+    snakeThree = this.snakeThree,
+    snakeFour = this.snakeFour
   ) => {
     for (const cell of snakeOne) {
       if (head[0] === cell[0] && head[1] === cell[1]) return true;
     }
     for (const cell of snakeTwo) {
+      if (head[0] === cell[0] && head[1] === cell[1]) return true;
+    }
+    for (const cell of snakeThree) {
+      if (head[0] === cell[0] && head[1] === cell[1]) return true;
+    }
+    for (const cell of snakeFour) {
       if (head[0] === cell[0] && head[1] === cell[1]) return true;
     }
     return false;

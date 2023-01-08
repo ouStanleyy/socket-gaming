@@ -70,9 +70,9 @@ const SnakesGame = () => {
       gameType: "snakes",
       snake,
       apples,
-      payloadId: isHost
-        ? gameInstance.game.p1PayloadId
-        : gameInstance.game.p2PayloadId,
+      // payloadId: isHost
+      //   ? gameInstance.game.p1PayloadId
+      //   : gameInstance.game.p2PayloadId,
     });
     isHost
       ? (gameInstance.game.snakeOne = snake)
@@ -148,6 +148,8 @@ const SnakesGame = () => {
       const snakesGame = new Snakes();
       snakesGame.snakeOne = data.snake_one;
       snakesGame.snakeTwo = data.snake_two;
+      snakesGame.snakeThree = data.snake_three;
+      snakesGame.snakeFour = data.snake_four;
       snakesGame.apples = data.apples;
       setGameInstance({ game: snakesGame });
       setTimeout(() => setGameOver(false), 2000);
@@ -180,6 +182,20 @@ const SnakesGame = () => {
     ctx.stroke();
     gameInstance.game?.snakeTwo.forEach(([x, y], idx) => {
       idx === 0 ? (ctx.fillStyle = "blue") : (ctx.fillStyle = "lightblue");
+      ctx.rect(x, y, 1, 1);
+      ctx.fillRect(x, y, 1, 1);
+      ctx.lineWidth = 0.05;
+    });
+    ctx.stroke();
+    gameInstance.game?.snakeThree.forEach(([x, y], idx) => {
+      idx === 0 ? (ctx.fillStyle = "yellow") : (ctx.fillStyle = "lightyellow");
+      ctx.rect(x, y, 1, 1);
+      ctx.fillRect(x, y, 1, 1);
+      ctx.lineWidth = 0.05;
+    });
+    ctx.stroke();
+    gameInstance.game?.snakeFour.forEach(([x, y], idx) => {
+      idx === 0 ? (ctx.fillStyle = "pink") : (ctx.fillStyle = "lightpink");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;

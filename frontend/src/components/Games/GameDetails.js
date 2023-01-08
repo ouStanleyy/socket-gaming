@@ -56,6 +56,8 @@ const GameDetails = () => {
       startGame(gameId, {
         player_1_snake: Snakes.createSnake(),
         player_2_snake: Snakes.createSnake(),
+        player_3_snake: Snakes.createSnake(),
+        player_4_snake: Snakes.createSnake(),
         apples: [Snakes.createApple(), Snakes.createApple()],
       })
     );
