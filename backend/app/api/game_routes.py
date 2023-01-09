@@ -30,7 +30,10 @@ def game(game_id):
         sio.server.enter_room(current_user.sid, f'{game.game_type}-{game.id}')
     return game.to_dict()
 
-
+max_players = {
+    'snakes': 4,
+    'pong': 2
+}
 @game_routes.route('/', methods=['POST'])
 @login_required
 def create_game():
@@ -39,8 +42,9 @@ def create_game():
     """
     # if request.json['game_type'] == 'snakes':
     #     new_game = Snakes(player_1=current_user.id)
-    new_game = globals()[request.json['game_type'].capitalize()](player_1=current_user.id)
-    game = Game(host_id=current_user.id, game_data=json.dumps(new_game.get_data()), game_type=request.json['game_type'])
+    game_type = request.json['game_type']
+    new_game = globals()[game_type.capitalize()](player_1=current_user.id)
+    game = Game(host_id=current_user.id, game_data=json.dumps(new_game.get_data()), game_type=game_type, max_players=max_players[game_type])
     game.users.append(current_user)
 
     db.session.add(game)
