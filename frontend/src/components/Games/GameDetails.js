@@ -23,10 +23,12 @@ const GameDetails = () => {
   const game = useSelector((state) => state.games[gameId]);
   const sessionId = useSelector((state) => state.session.user.id);
   const players = game?.users.sort(({ id }) => (id === game.host_id ? -1 : 0));
-  const openSeats = game
-    ? Array(game?.max_players - game?.users.length).fill()
-    : null;
-  const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
+  const openSeats = game ? Array(4 - game?.users.length).fill() : null;
+  const [ready, setReady] = useState(false);
+  // const openSeats = game
+  //   ? Array(game?.max_players - game?.users.length).fill()
+  //   : null;
+  // const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
   const [closeLobbyModal, setCloseLobbyModal] = useState(false);
 
   const toggleCloseLobbyModal = () => {
@@ -38,7 +40,7 @@ const GameDetails = () => {
     dispatch(joinGame(gameId));
   };
 
-  const leave = (unmount = false) => {
+  const leave = (unmount) => {
     setReady(false);
     dispatch(leaveGame(gameId, unmount));
   };
@@ -154,7 +156,7 @@ const GameDetails = () => {
             <div key={user.id} className={styles.seat}>
               <span>{user.username}</span>{" "}
               {user.id === sessionId && game.host_id !== sessionId && (
-                <button className={styles.seatBtn} onClick={leave}>
+                <button className={styles.seatBtn} onClick={() => leave(false)}>
                   <i className="fa-solid fa-user-minus fa-lg" />
                 </button>
               )}

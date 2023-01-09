@@ -2,8 +2,8 @@ class Snakes:
     def __init__(self, player_1=None, game_data={}):
         self.player_1 = game_data.get('player_1', player_1)
         self.player_2 = game_data.get('player_2', None)
-        self.player_3 = game_data.get('player_2', None)
-        self.player_4 = game_data.get('player_2', None)
+        self.player_3 = game_data.get('player_3', None)
+        self.player_4 = game_data.get('player_4', None)
         self.player_2_ready = game_data.get('player_2_ready', False)
         self.player_3_ready = game_data.get('player_3_ready', False)
         self.player_4_ready = game_data.get('player_4_ready', False)

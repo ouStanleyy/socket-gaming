@@ -8,13 +8,23 @@ const SnakesGame = () => {
   const { gameId } = useParams();
   const sio = useSelector((state) => state.socket.socket);
   const sessionId = useSelector((state) => state.session.user.id);
-  const hostId = useSelector((state) => state.games[gameId]?.host_id);
-  const isHost = sessionId === hostId;
+  const game = useSelector((state) => state.games[gameId]);
+  // const hostId = useSelector((state) => state.games[gameId]?.host_id);
+  const isHost = sessionId === game?.host_id;
+  const player = Object.keys(game?.game_data).find(
+    (data) => game?.game_data[data] === sessionId
+  );
   const canvasRef = useRef();
   const gameRef = useRef();
   const [gameOver, setGameOver] = useState(true);
   // const [otherPlayer, setOtherPlayer] = useState(null);
   const [gameInstance, setGameInstance] = useState({ game: null });
+  const snakeNum = {
+    player_1: "snakeOne",
+    player_2: "snakeTwo",
+    player_3: "snakeThree",
+    player_4: "snakeFour",
+  };
 
   // const gameLoop = () => {
   //   const snake = [...gameInstance.game.snakeOne];
@@ -46,7 +56,8 @@ const SnakesGame = () => {
 
   const gameLoop = () => {
     let apples;
-    const snake = [...gameInstance.game[isHost ? "snakeOne" : "snakeTwo"]];
+    // const snake = [...gameInstance.game[isHost ? "snakeOne" : "snakeTwo"]];
+    const snake = [...gameInstance.game[snakeNum[player]]];
     const newSnakeHead = [
       snake[0][0] + gameInstance.game.dir[0],
       snake[0][1] + gameInstance.game.dir[1],
@@ -66,6 +77,7 @@ const SnakesGame = () => {
     else apples = gameInstance.game.apples;
     sio?.emit("update_game", {
       isHost,
+      player,
       gameId,
       gameType: "snakes",
       snake,
@@ -74,9 +86,10 @@ const SnakesGame = () => {
       //   ? gameInstance.game.p1PayloadId
       //   : gameInstance.game.p2PayloadId,
     });
-    isHost
-      ? (gameInstance.game.snakeOne = snake)
-      : (gameInstance.game.snakeTwo = snake);
+    // isHost
+    //   ? (gameInstance.game.snakeOne = snake)
+    //   : (gameInstance.game.snakeTwo = snake);
+    gameInstance.game[snakeNum[player]] = snake;
     setGameInstance({ game: gameInstance.game });
   };
 
@@ -116,10 +129,12 @@ const SnakesGame = () => {
   useEffect(() => {
     if (gameInstance.game) {
       const update = (data) => {
-        if (data.isHost !== isHost) {
-          data.isHost
-            ? (gameInstance.game.snakeOne = data.snake)
-            : (gameInstance.game.snakeTwo = data.snake);
+        // if (data.isHost !== isHost) {
+        //   data.isHost
+        //     ? (gameInstance.game.snakeOne = data.snake)
+        //     : (gameInstance.game.snakeTwo = data.snake);
+        if (data.player !== player) {
+          gameInstance.game[snakeNum[data.player]] = data.snake;
           if (data.apples) gameInstance.game.apples = data.apples;
           setGameInstance({ game: gameInstance.game });
         }
