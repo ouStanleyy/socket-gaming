@@ -81,10 +81,11 @@ export const joinGame = (gameId) => async (dispatch) => {
   }
 };
 
-export const leaveGame = (gameId) => async (dispatch) => {
+export const leaveGame = (gameId, unmount) => async (dispatch) => {
   const res = await fetch(`/api/games/${gameId}/leave`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ unmount }),
   });
   const game = await res.json();
 

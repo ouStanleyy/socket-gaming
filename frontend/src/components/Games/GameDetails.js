@@ -23,11 +23,27 @@ const GameDetails = () => {
   const game = useSelector((state) => state.games[gameId]);
   const sessionId = useSelector((state) => state.session.user.id);
   const players = game?.users.sort(({ id }) => (id === game.host_id ? -1 : 0));
+  // const player = game
+  //   ? Object.keys(game?.game_data).find(
+  //       (data) => game?.game_data[data] === sessionId
+  //     )
+  //   : null;
   const openSeats = game
     ? Array(game?.max_players - game?.users.length).fill()
     : null;
-  const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
+  const [ready, setReady] = useState(false);
+  // const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
   const [closeLobbyModal, setCloseLobbyModal] = useState(false);
+  const playerReady = {
+    player_2: "player_2_ready",
+    player_3: "player_3_ready",
+    player_4: "player_4_ready",
+  };
+
+  const player = (userId) =>
+    Object.keys(game?.game_data).find(
+      (data) => game?.game_data[data] === userId
+    );
 
   const toggleCloseLobbyModal = () => {
     setCloseLobbyModal((state) => !state);
@@ -38,17 +54,17 @@ const GameDetails = () => {
     dispatch(joinGame(gameId));
   };
 
-  const leave = () => {
+  const leave = (unmount) => {
     setReady(false);
-    dispatch(leaveGame(gameId));
+    dispatch(leaveGame(gameId, unmount));
   };
 
   const toggleReady = () => setReady((state) => !state);
 
-  const closeLobby = async () => {
+  const closeLobby = async (push = true) => {
     await dispatch(deleteGame(gameId));
     toggleCloseLobbyModal();
-    history.push("/games");
+    if (push) history.push("/games");
   };
 
   const start = () => {
@@ -56,6 +72,8 @@ const GameDetails = () => {
       startGame(gameId, {
         player_1_snake: Snakes.createSnake(),
         player_2_snake: Snakes.createSnake(),
+        player_3_snake: Snakes.createSnake(),
+        player_4_snake: Snakes.createSnake(),
         apples: [Snakes.createApple(), Snakes.createApple()],
       })
     );
@@ -91,6 +109,11 @@ const GameDetails = () => {
       setReady(false);
     });
   }, [sio]);
+
+  useEffect(() => () => leave(true), []);
+  useEffect(() => {
+    if (game?.host_id === sessionId) return () => closeLobby(false);
+  }, []);
 
   // useEffect(() => {
   //   sio.on("update_game", (data) => {
@@ -144,14 +167,34 @@ const GameDetails = () => {
         <h3>Players</h3>
         <div className={styles.playersList}>
           {players?.map((user) => (
-            <div key={user.id} className={styles.seat}>
-              <span>{user.username}</span>{" "}
-              {user.id === sessionId && game.host_id !== sessionId && (
-                <button className={styles.seatBtn} onClick={leave}>
-                  <i className="fa-solid fa-user-minus fa-lg" />
-                </button>
+            <div className={styles.player}>
+              <div key={user.id} className={styles.seat}>
+                <span>{user.username}</span>{" "}
+                {user.id === sessionId && game.host_id !== sessionId && (
+                  <button
+                    className={styles.seatBtn}
+                    onClick={() => leave(false)}
+                  >
+                    <i className="fa-solid fa-user-minus fa-lg" />
+                  </button>
+                )}
+                {/* <span>{game.game_data.winner === user.id && "Winner"}</span> */}
+              </div>
+              {game.host_id !== user.id && (
+                <div>
+                  {game?.game_data[playerReady[player(user.id)]] ? (
+                    <i
+                      className="fa-solid fa-check fa-lg fa-beat"
+                      style={{ color: "green" }}
+                    />
+                  ) : (
+                    <i
+                      className="fa-solid fa-xmark fa-lg fa-fade"
+                      style={{ color: "red" }}
+                    />
+                  )}
+                </div>
               )}
-              {/* <span>{game.game_data.winner === user.id && "Winner"}</span> */}
             </div>
           ))}
           {openSeats?.map((_, idx) => (
@@ -166,9 +209,9 @@ const GameDetails = () => {
             </div>
           ))}
         </div>
-        <div>
+        {/* <div>
           Player 2 is {game?.game_data.player_2_ready ? "ready" : "not ready"}
-        </div>
+        </div> */}
         {game?.users.find((user) => user.id === sessionId) &&
           game.host_id !== sessionId && (
             <button onClick={toggleReady}>
