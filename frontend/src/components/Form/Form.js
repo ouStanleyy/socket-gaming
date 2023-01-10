@@ -7,12 +7,13 @@ import { useState } from "react";
 const Form = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
 
-  const handleFormToggle = (e) => setIsLoginForm((prev) => !prev);
+  const handleFormToggle = () => setIsLoginForm((prev) => !prev);
 
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topSection}>
-        <div className={styles.logoContainer}>{icons["Instagram"]}</div>
+        {/* <div className={styles.logoContainer}>{icons["Instagram"]}</div> */}
+        <div className={styles.logoContainer}>Socket-Gaming</div>
         {isLoginForm ? <LoginForm /> : <SignUpForm />}
       </div>
       <div className={styles.bottomSection}>

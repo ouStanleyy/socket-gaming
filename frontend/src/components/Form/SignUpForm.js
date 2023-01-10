@@ -7,39 +7,34 @@ import { normalizeErrors } from "../Utils";
 const SignUpForm = () => {
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [disableSubmit, setDisableSubmit] = useState(true);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
-  const updateEmail = (e) => setEmail(e.target.value);
+  // const updateEmail = (e) => setEmail(e.target.value);
+  // const updateFullName = (e) => setFullName(e.target.value);
   const updateUsername = (e) => setUsername(e.target.value);
-  const updateFullName = (e) => setFullName(e.target.value);
   const updatePassword = (e) => setPassword(e.target.value);
   const updateRepeatPassword = (e) => setRepeatPassword(e.target.value);
 
   useEffect(() => {
-    if (
-      email.length &&
-      username.length &&
-      password.length &&
-      repeatPassword.length &&
-      password === repeatPassword
-    ) {
-      setDisableSubmit(false);
-    } else {
-      setDisableSubmit(true);
-    }
-  }, [email, fullName, username, password, repeatPassword, errors]);
+    username.length &&
+    password.length &&
+    repeatPassword.length &&
+    password === repeatPassword
+      ? setDisableSubmit(false)
+      : setDisableSubmit(true);
+  }, [username, password, repeatPassword, errors]);
 
   const handleSignup = async (e) => {
-    setHasSubmitted(true);
     e.preventDefault();
+    setHasSubmitted(true);
     if (password === repeatPassword) {
-      const data = await dispatch(signUp(username, email, password, fullName));
+      const data = await dispatch(signUp(username, password));
 
       if (data) {
         const errors = normalizeErrors(data);
@@ -50,7 +45,8 @@ const SignUpForm = () => {
 
   const handleRandomUsername = (e) => {
     e.preventDefault();
-    const rootUsername = email.split("@")[0];
+    const rootUsername = "user";
+    // const rootUsername = email.split("@")[0];
     // const NUM_OF_PLACEHOLDER = 4;
     const NUM_OF_PLACEHOLDER = Math.floor(Math.random() * 4 + 2);
     const randomNum = Math.floor(
@@ -63,9 +59,9 @@ const SignUpForm = () => {
   return (
     <form onSubmit={handleSignup} className={styles.formContainer}>
       <div className={styles.signupMessage}>
-        Sign up to see photos and videos from your friends.
+        Sign up to play some retro games with others.
       </div>
-      <div className={styles.inputContainer}>
+      {/* <div className={styles.inputContainer}>
         <label htmlFor="email">Email</label>
         <input
           id="email"
@@ -107,7 +103,7 @@ const SignUpForm = () => {
           onChange={updateFullName}
           className={hasSubmitted && styles.inputHasSubmitted}
         />
-      </div>
+      </div> */}
       <div className={styles.inputContainer}>
         <label htmlFor="username">Username</label>
         <input
@@ -154,7 +150,7 @@ const SignUpForm = () => {
           value={password}
           onChange={updatePassword}
           maxLength={15}
-          className={hasSubmitted && styles.inputHasSubmitted}
+          className={`${hasSubmitted && styles.inputHasSubmitted}`}
         />
         {errors?.password ? (
           <span
@@ -184,7 +180,7 @@ const SignUpForm = () => {
           value={repeatPassword}
           onChange={updateRepeatPassword}
           maxLength={15}
-          className={hasSubmitted && styles.inputHasSubmitted}
+          className={`${hasSubmitted && styles.inputHasSubmitted}`}
         />
         {errors?.repeatPassword ? (
           <span
