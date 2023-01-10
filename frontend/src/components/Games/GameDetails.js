@@ -35,9 +35,9 @@ const GameDetails = () => {
   // const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
   const [closeLobbyModal, setCloseLobbyModal] = useState(false);
   const allReady =
-    game?.game_data.player_2_ready +
-      game?.game_data.player_3_ready +
-      game?.game_data.player_4_ready ===
+    (game?.game_data.player_2_ready || 0) +
+      (game?.game_data.player_3_ready || 0) +
+      (game?.game_data.player_4_ready || 0) ===
     game?.users.length - 1;
   const playerReady = {
     player_2: "player_2_ready",
@@ -172,8 +172,8 @@ const GameDetails = () => {
         <h3>Players</h3>
         <div className={styles.playersList}>
           {players?.map((user) => (
-            <div className={styles.player}>
-              <div key={user.id} className={styles.seat}>
+            <div key={user.id} className={styles.player}>
+              <div className={styles.seat}>
                 <span>{user.username}</span>{" "}
                 {user.id === sessionId && game.host_id !== sessionId && (
                   <button

@@ -155,10 +155,11 @@ def update_ready_state(game_id):
 
     if current_user.id == game_instance.player_2:
         game_instance.player_2_ready = request.json['ready_state']
-    if current_user.id == game_instance.player_3:
-        game_instance.player_3_ready = request.json['ready_state']
-    if current_user.id == game_instance.player_4:
-        game_instance.player_4_ready = request.json['ready_state']
+    if game.game_type == "snakes":
+        if current_user.id == game_instance.player_3:
+            game_instance.player_3_ready = request.json['ready_state']
+        if current_user.id == game_instance.player_4:
+            game_instance.player_4_ready = request.json['ready_state']
 
     game.game_data = json.dumps(game_instance.get_data())
 

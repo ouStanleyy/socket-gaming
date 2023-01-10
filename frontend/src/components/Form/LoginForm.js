@@ -18,15 +18,13 @@ const LoginForm = () => {
     e.preventDefault();
     const data = await dispatch(login(credential, password));
 
-    if (data) {
-      setErrors(data);
-    }
+    if (data) setErrors(data);
   };
-  
+
   const demoLogin = async (e) => {
     e.preventDefault();
-    const demoUser = 'Demo_User'
-    const demoPassword = 'demouserpw'
+    const demoUser = "Demo_User";
+    const demoPassword = "demouserpw";
     const data = await dispatch(login(demoUser, demoPassword));
     if (data) {
       setErrors(data);
@@ -36,7 +34,7 @@ const LoginForm = () => {
   return (
     <form onSubmit={handleLogin} className={styles.formContainer}>
       <div className={styles.inputContainer}>
-        <label htmlFor="credential">Phone Number, username, or email</label>
+        <label htmlFor="credential">Username</label>
         <input
           id="credential"
           name="credential"
