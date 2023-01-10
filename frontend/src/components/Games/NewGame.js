@@ -62,7 +62,7 @@ const NewGame = ({ onClose }) => {
           </div>
           <div className={styles.gameDetails}>
             <p className={styles.gameTitle}>Snakes</p>
-            <p className={styles.numPlayers}>2 Players</p>
+            <p className={styles.numPlayers}>2-4 Players</p>
           </div>
         </div>
         <div className={styles.gameContainer} onClick={handleClick("pong")}>

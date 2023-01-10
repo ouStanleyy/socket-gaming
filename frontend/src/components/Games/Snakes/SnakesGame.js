@@ -55,42 +55,46 @@ const SnakesGame = () => {
   // };
 
   const gameLoop = () => {
-    let apples;
     // const snake = [...gameInstance.game[isHost ? "snakeOne" : "snakeTwo"]];
     const snake = [...gameInstance.game[snakeNum[player]]];
-    const newSnakeHead = [
-      snake[0][0] + gameInstance.game.dir[0],
-      snake[0][1] + gameInstance.game.dir[1],
-    ];
-    if (newSnakeHead[0] * Snakes.SCALE >= Snakes.CANVAS_SIZE[0])
-      newSnakeHead[0] = 0;
-    else if (newSnakeHead[0] < 0)
-      newSnakeHead[0] = Snakes.CANVAS_SIZE[0] / Snakes.SCALE;
-    else if (newSnakeHead[1] * Snakes.SCALE >= Snakes.CANVAS_SIZE[1])
-      newSnakeHead[1] = 0;
-    else if (newSnakeHead[1] < 0)
-      newSnakeHead[1] = Snakes.CANVAS_SIZE[1] / Snakes.SCALE;
-    if (gameInstance.game.checkCollision(newSnakeHead))
-      sio?.emit("end_game", { gameId });
-    snake.unshift(newSnakeHead);
-    if (!gameInstance.game.checkAppleCollision(snake)) snake.pop();
-    else apples = gameInstance.game.apples;
-    sio?.emit("update_game", {
-      isHost,
-      player,
-      gameId,
-      gameType: "snakes",
-      snake,
-      apples,
-      // payloadId: isHost
-      //   ? gameInstance.game.p1PayloadId
-      //   : gameInstance.game.p2PayloadId,
-    });
-    // isHost
-    //   ? (gameInstance.game.snakeOne = snake)
-    //   : (gameInstance.game.snakeTwo = snake);
-    gameInstance.game[snakeNum[player]] = snake;
-    setGameInstance({ game: gameInstance.game });
+    if (snake.length) {
+      if (gameInstance.game.gameOver())
+        sio?.emit("end_game", { gameId, winner: sessionId });
+      let apples;
+      const newSnakeHead = [
+        snake[0][0] + gameInstance.game.dir[0],
+        snake[0][1] + gameInstance.game.dir[1],
+      ];
+      if (newSnakeHead[0] * Snakes.SCALE >= Snakes.CANVAS_SIZE[0])
+        newSnakeHead[0] = 0;
+      else if (newSnakeHead[0] < 0)
+        newSnakeHead[0] = Snakes.CANVAS_SIZE[0] / Snakes.SCALE;
+      else if (newSnakeHead[1] * Snakes.SCALE >= Snakes.CANVAS_SIZE[1])
+        newSnakeHead[1] = 0;
+      else if (newSnakeHead[1] < 0)
+        newSnakeHead[1] = Snakes.CANVAS_SIZE[1] / Snakes.SCALE;
+      snake.unshift(newSnakeHead);
+      // sio?.emit("end_game", { gameId });
+      if (!gameInstance.game.checkAppleCollision(snake)) snake.pop();
+      else apples = gameInstance.game.apples;
+      if (gameInstance.game.checkCollision(newSnakeHead)) snake.length = 0;
+      sio?.emit("update_game", {
+        isHost,
+        player,
+        gameId,
+        gameType: "snakes",
+        snake,
+        apples,
+        // payloadId: isHost
+        //   ? gameInstance.game.p1PayloadId
+        //   : gameInstance.game.p2PayloadId,
+      });
+      // isHost
+      //   ? (gameInstance.game.snakeOne = snake)
+      //   : (gameInstance.game.snakeTwo = snake);
+      gameInstance.game[snakeNum[player]] = snake;
+      setGameInstance({ game: gameInstance.game });
+    }
   };
 
   // useEffect(() => {
