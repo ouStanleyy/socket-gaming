@@ -34,6 +34,11 @@ const GameDetails = () => {
   const [ready, setReady] = useState(false);
   // const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
   const [closeLobbyModal, setCloseLobbyModal] = useState(false);
+  const allReady =
+    game?.game_data.player_2_ready +
+      game?.game_data.player_3_ready +
+      game?.game_data.player_4_ready ===
+    game?.users.length - 1;
   const playerReady = {
     player_2: "player_2_ready",
     player_3: "player_3_ready",
@@ -218,7 +223,7 @@ const GameDetails = () => {
               {!ready ? "Ready Up" : "Unready"}
             </button>
           )}
-        {game?.host_id === sessionId && game.game_data.player_2_ready && (
+        {game?.host_id === sessionId && game.users.length > 1 && allReady && (
           <button onClick={start}>Start Game</button>
         )}
       </div>
@@ -228,6 +233,14 @@ const GameDetails = () => {
         </div>
         <div>
           <p>Player 2: {game?.game_data.player_2_score}</p>
+        </div>
+        <div>
+          <p>
+            Winner:{" "}
+            {game?.game_data.winner &&
+              game.users.find((user) => game.game_data.winner === user.id)
+                .username}
+          </p>
         </div>
       </div>
     </div>

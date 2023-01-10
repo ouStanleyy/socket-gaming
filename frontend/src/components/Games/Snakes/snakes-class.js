@@ -92,17 +92,27 @@ export default class Snakes {
       this.dir = Snakes.DIRECTIONS[keyCode];
       if (keyCode === 38) {
         this.newOppDir = Snakes.DIRECTIONS[40];
-        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[40]), 100);
+        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[40]), 75);
       } else if (keyCode === 40) {
         this.newOppDir = Snakes.DIRECTIONS[38];
-        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[38]), 100);
+        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[38]), 75);
       } else if (keyCode === 37) {
         this.newOppDir = Snakes.DIRECTIONS[39];
-        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[39]), 100);
+        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[39]), 75);
       } else if (keyCode === 39) {
         this.newOppDir = Snakes.DIRECTIONS[37];
-        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[37]), 100);
+        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[37]), 75);
       }
     }
+  };
+
+  gameOver = () => {
+    let players = 0;
+    if (this.snakeOne.length) players++;
+    if (this.snakeTwo.length) players++;
+    if (this.snakeThree.length) players++;
+    if (this.snakeFour.length) players++;
+
+    return players === 1;
   };
 }
