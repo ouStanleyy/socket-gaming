@@ -18,8 +18,10 @@ export default class Snakes {
     this.dir = [0, -1];
     this.currOppDir = [0, 1];
     this.newOppDir = [0, 1];
-    // this.p1PayloadId = 0;
-    // this.p2PayloadId = 0;
+    this.p1PayloadId = 0;
+    this.p2PayloadId = 0;
+    this.p3PayloadId = 0;
+    this.p4PayloadId = 0;
   }
 
   static createApple = () =>
@@ -80,29 +82,36 @@ export default class Snakes {
     return result;
   };
 
-  moveSnake = ({ keyCode }) => {
+  moveSnake = (keyCode) => {
     if (
       keyCode >= 37 &&
       keyCode <= 40 &&
-      JSON.stringify(Snakes.DIRECTIONS[keyCode]) !==
-        JSON.stringify(this.currOppDir) &&
       JSON.stringify(Snakes.DIRECTIONS[keyCode]) !==
         JSON.stringify(this.newOppDir)
     ) {
       this.dir = Snakes.DIRECTIONS[keyCode];
       if (keyCode === 38) {
         this.newOppDir = Snakes.DIRECTIONS[40];
-        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[40]), 75);
       } else if (keyCode === 40) {
         this.newOppDir = Snakes.DIRECTIONS[38];
-        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[38]), 75);
       } else if (keyCode === 37) {
         this.newOppDir = Snakes.DIRECTIONS[39];
-        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[39]), 75);
       } else if (keyCode === 39) {
         this.newOppDir = Snakes.DIRECTIONS[37];
-        setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[37]), 75);
       }
+      // if (keyCode === 38) {
+      //   this.newOppDir = Snakes.DIRECTIONS[40];
+      //   setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[40]), 75);
+      // } else if (keyCode === 40) {
+      //   this.newOppDir = Snakes.DIRECTIONS[38];
+      //   setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[38]), 75);
+      // } else if (keyCode === 37) {
+      //   this.newOppDir = Snakes.DIRECTIONS[39];
+      //   setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[39]), 75);
+      // } else if (keyCode === 39) {
+      //   this.newOppDir = Snakes.DIRECTIONS[37];
+      //   setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[37]), 75);
+      // }
     }
   };
 
@@ -114,5 +123,15 @@ export default class Snakes {
     if (this.snakeFour.length) players++;
 
     return players === 1;
+  };
+
+  draw = () => {
+    let players = 0;
+    if (this.snakeOne.length) players++;
+    if (this.snakeTwo.length) players++;
+    if (this.snakeThree.length) players++;
+    if (this.snakeFour.length) players++;
+
+    return players === 0;
   };
 }

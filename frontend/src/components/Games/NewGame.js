@@ -58,7 +58,11 @@ const NewGame = ({ onClose }) => {
       <div className={styles.gamesList}>
         <div className={styles.gameContainer} onClick={handleClick("snakes")}>
           <div className={styles.gamePicture}>
-            <img src="https://illustoon.com/photo/2317.png" alt="snake" />
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/528/528105.png"
+              alt="snake"
+            />
+            {/* <img src="https://illustoon.com/photo/2317.png" alt="snake" /> */}
           </div>
           <div className={styles.gameDetails}>
             <p className={styles.gameTitle}>Snakes</p>
@@ -68,8 +72,12 @@ const NewGame = ({ onClose }) => {
         <div className={styles.gameContainer} onClick={handleClick("pong")}>
           <div className={styles.gamePicture}>
             {/* <img src="http://pong-2.com/icon-256.png" alt="pong" /> */}
-            <img
+            {/* <img
               src="https://cdn.pixabay.com/photo/2012/04/02/16/25/pong-24876_1280.png"
+              alt="pong"
+            /> */}
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/1030/1030209.png"
               alt="pong"
             />
           </div>

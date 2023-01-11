@@ -209,10 +209,12 @@ const PongGame = () => {
     // ctx.setTransform(Pong.SCALE, 0, 0, Pong.SCALE, 0, 0);
     // if (ctx) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.beginPath();
     // Ball
     // ctx.lineWidth = 2;
-    ctx.fillStyle = "lightblue";
+    ctx.lineWidth = 2;
+    ctx.fillStyle = "orangered";
+    ctx.strokeStyle = "red";
+    ctx.beginPath();
     ctx.arc(
       gameInstance.game?.ballX,
       gameInstance.game?.ballY,
@@ -221,10 +223,11 @@ const PongGame = () => {
       2 * Math.PI
     );
     ctx.fill();
-    // ctx.strokeStyle = "#fff";
-    // ctx.stroke();
+    ctx.stroke();
     // Player 1
-    ctx.fillStyle = "lightgray";
+    ctx.strokeStyle = "blue";
+    ctx.fillStyle = "lightblue";
+    ctx.beginPath();
     ctx.rect(
       gameInstance.game?.p1X,
       gameInstance.game?.p1Y,
@@ -238,9 +241,11 @@ const PongGame = () => {
       Pong.PADDLE_HEIGHT
     );
     // ctx.lineWidth = 1;
-    // ctx.stroke();
+    ctx.stroke();
     // Player 2
-    // ctx.fillStyle = "lightgray";
+    ctx.strokeStyle = "green";
+    ctx.fillStyle = "lightgreen";
+    ctx.beginPath();
     ctx.rect(
       gameInstance.game?.p2X,
       gameInstance.game?.p2Y,
@@ -253,8 +258,9 @@ const PongGame = () => {
       Pong.PADDLE_WIDTH,
       Pong.PADDLE_HEIGHT
     );
-    ctx.lineWidth = 2;
     ctx.stroke();
+    ctx.strokeStyle = "black";
+    ctx.beginPath();
     if (gameInstance.game?.paused) {
       ctx.font = "30px Arial";
       ctx.lineWidth = 6;

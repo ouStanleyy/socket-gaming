@@ -266,9 +266,10 @@ def end_game(data):
     game_instance.game_over = True
     # game_instance.winner = (game_instance.player_1 if current_user.id == game_instance.player_2 else game_instance.player_2)
     game_instance.winner = data['winner']
-    game_instance.player_2_ready = False
-    game_instance.player_3_ready = False
-    game_instance.player_4_ready = False
+    game_instance.reset_game()
+    # game_instance.player_2_ready = False
+    # game_instance.player_3_ready = False
+    # game_instance.player_4_ready = False
 
     game.game_data = json.dumps(game_instance.get_data())
 

@@ -32,6 +32,7 @@ const GameDetails = () => {
     ? Array(game?.max_players - game?.users.length).fill()
     : null;
   const [ready, setReady] = useState(false);
+  const [gameActive, setGameActive] = useState(false);
   // const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
   const [closeLobbyModal, setCloseLobbyModal] = useState(false);
   const allReady =
@@ -73,6 +74,7 @@ const GameDetails = () => {
   };
 
   const start = () => {
+    setGameActive(true);
     dispatch(
       startGame(gameId, {
         player_1_snake: Snakes.createSnake(),
@@ -112,6 +114,7 @@ const GameDetails = () => {
     sio.on("end_game", (data) => {
       dispatch(loadGameDetails(data));
       setReady(false);
+      setGameActive(false);
     });
   }, [sio]);
 
@@ -223,9 +226,10 @@ const GameDetails = () => {
               {!ready ? "Ready Up" : "Unready"}
             </button>
           )}
-        {game?.host_id === sessionId && game.users.length > 1 && allReady && (
-          <button onClick={start}>Start Game</button>
-        )}
+        {game?.host_id === sessionId &&
+          game.users.length > 1 &&
+          allReady &&
+          !gameActive && <button onClick={start}>Start Game</button>}
       </div>
       <div className={styles.scoreboard}>
         <div>
@@ -238,8 +242,10 @@ const GameDetails = () => {
           <p>
             Winner:{" "}
             {game?.game_data.winner &&
-              game.users.find((user) => game.game_data.winner === user.id)
-                .username}
+              (game.game_data.winner === "draw"
+                ? "draw"
+                : game.users.find((user) => game.game_data.winner === user.id)
+                    .username)}
           </p>
         </div>
       </div>
