@@ -16,6 +16,12 @@ class Snakes:
         self.winner = game_data.get('winner', None)
         self.payload_id = game_data.get('payload_id', 0)
 
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
+
+    # def __getitem__(self, key):
+    #     return getattr(self, key)
+
     def get_players(self):
         return [self.player_1, self.player_2]
 

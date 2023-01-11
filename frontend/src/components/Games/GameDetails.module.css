@@ -50,12 +50,14 @@
   background-color: lightgreen;
 }
 
-.seat:nth-child(3) {
+.seat:nth-child(3),
+.player:nth-child(3) .seat {
   border: 2px solid yellow;
   background-color: lightyellow;
 }
 
-.seat:nth-child(4) {
+.seat:nth-child(4),
+.player:nth-child(4) .seat {
   border: 2px solid orangered;
   background-color: orange;
 }
