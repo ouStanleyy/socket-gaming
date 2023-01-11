@@ -23,9 +23,11 @@ const GameDetails = () => {
   const game = useSelector((state) => state.games[gameId]);
   const sessionId = useSelector((state) => state.session.user.id);
   const player = (userId) =>
-    Object.keys(game?.game_data).find(
-      (data) => game?.game_data[data] === userId
-    );
+    game
+      ? Object.keys(game?.game_data).find(
+          (data) => game?.game_data[data] === userId
+        )
+      : null;
   const players = game
     ? Array(game?.max_players)
         .fill()
@@ -35,8 +37,6 @@ const GameDetails = () => {
           )
         )
     : null;
-
-  console.log("players", players);
   // const players = game?.users.sort(
   //   (a, b) => player(a.id).slice(-1) - player(b.id).slice(-1)
   //   // id === game.host_id ? -1 : 0;
@@ -202,31 +202,45 @@ const GameDetails = () => {
                   )}
                   {/* <span>{game.game_data.winner === user.id && "Winner"}</span> */}
                 </div>
-                {game.host_id !== user.id && (
-                  <div>
-                    {game?.game_data[playerReady[player(user.id)]] ? (
-                      <i
-                        className="fa-solid fa-check fa-lg fa-beat"
-                        style={{ color: "green" }}
-                      />
-                    ) : (
-                      <i
-                        className="fa-solid fa-xmark fa-lg fa-fade"
-                        style={{ color: "red" }}
-                      />
+                {game.host_id === user.id ? (
+                  user.id === sessionId &&
+                  game.users.length > 1 &&
+                  allReady &&
+                  !gameActive && <button onClick={start}>Start Game</button>
+                ) : (
+                  <>
+                    <div>
+                      {game?.game_data[playerReady[player(user.id)]] ? (
+                        <i
+                          className="fa-solid fa-check fa-lg fa-beat"
+                          style={{ color: "green" }}
+                        />
+                      ) : (
+                        <i
+                          className="fa-solid fa-xmark fa-lg fa-fade"
+                          style={{ color: "red" }}
+                        />
+                      )}
+                    </div>
+                    {user.id === sessionId && (
+                      <button onClick={toggleReady}>
+                        {!ready ? "Ready Up" : "Unready"}
+                      </button>
                     )}
-                  </div>
+                  </>
                 )}
               </div>
             ) : (
               <div key={idx} className={styles.seat}>
-                <button
-                  className={styles.seatBtn}
-                  onClick={join(idx + 1)}
-                  disabled={game?.users.find((user) => user.id === sessionId)}
-                >
-                  <i className="fa-solid fa-user-plus fa-lg" />
-                </button>
+                {!player(sessionId) && (
+                  <button
+                    className={styles.seatBtn}
+                    onClick={join(idx + 1)}
+                    disabled={game?.users.find((user) => user.id === sessionId)}
+                  >
+                    <i className="fa-solid fa-user-plus fa-lg" />
+                  </button>
+                )}
               </div>
             )
           )}
@@ -245,24 +259,27 @@ const GameDetails = () => {
         {/* <div>
           Player 2 is {game?.game_data.player_2_ready ? "ready" : "not ready"}
         </div> */}
-        {game?.users.find((user) => user.id === sessionId) &&
-          game.host_id !== sessionId && (
-            <button onClick={toggleReady}>
-              {!ready ? "Ready Up" : "Unready"}
-            </button>
-          )}
-        {game?.host_id === sessionId &&
+        {/* {player(sessionId) && game.host_id !== sessionId && (
+          <button onClick={toggleReady}>
+            {!ready ? "Ready Up" : "Unready"}
+          </button>
+        )} */}
+        {/* {game?.host_id === sessionId &&
           game.users.length > 1 &&
           allReady &&
-          !gameActive && <button onClick={start}>Start Game</button>}
+          !gameActive && <button onClick={start}>Start Game</button>} */}
       </div>
       <div className={styles.scoreboard}>
-        <div>
-          <p>Player 1: {game?.game_data.player_1_score}</p>
-        </div>
-        <div>
-          <p>Player 2: {game?.game_data.player_2_score}</p>
-        </div>
+        {game?.game_type === "pong" && (
+          <>
+            <div>
+              <p>Player 1: {game?.game_data.player_1_score}</p>
+            </div>
+            <div>
+              <p>Player 2: {game?.game_data.player_2_score}</p>
+            </div>
+          </>
+        )}
         <div>
           <p>
             Winner:{" "}
