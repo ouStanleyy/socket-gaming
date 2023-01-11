@@ -14,6 +14,9 @@ class Pong:
         self.paused = game_data.get('paused', False)
         self.payload_id = game_data.get('payload_id', 0)
 
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
+
     def get_players(self):
         return [self.player_1, self.player_2]
 

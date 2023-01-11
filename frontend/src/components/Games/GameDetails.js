@@ -22,15 +22,33 @@ const GameDetails = () => {
   const sio = useSelector((state) => state.socket.socket);
   const game = useSelector((state) => state.games[gameId]);
   const sessionId = useSelector((state) => state.session.user.id);
-  const players = game?.users.sort(({ id }) => (id === game.host_id ? -1 : 0));
+  const player = (userId) =>
+    Object.keys(game?.game_data).find(
+      (data) => game?.game_data[data] === userId
+    );
+  const players = game
+    ? Array(game?.max_players)
+        .fill()
+        .map((_, idx) =>
+          game.users.find(
+            ({ id }) => id === game.game_data[`player_${idx + 1}`]
+          )
+        )
+    : null;
+
+  console.log("players", players);
+  // const players = game?.users.sort(
+  //   (a, b) => player(a.id).slice(-1) - player(b.id).slice(-1)
+  //   // id === game.host_id ? -1 : 0;
+  // );
   // const player = game
   //   ? Object.keys(game?.game_data).find(
   //       (data) => game?.game_data[data] === sessionId
   //     )
   //   : null;
-  const openSeats = game
-    ? Array(game?.max_players - game?.users.length).fill()
-    : null;
+  // const openSeats = game
+  //   ? Array(game?.max_players - game?.users.length).fill()
+  //   : null;
   const [ready, setReady] = useState(false);
   const [gameActive, setGameActive] = useState(false);
   // const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
@@ -46,18 +64,13 @@ const GameDetails = () => {
     player_4: "player_4_ready",
   };
 
-  const player = (userId) =>
-    Object.keys(game?.game_data).find(
-      (data) => game?.game_data[data] === userId
-    );
-
   const toggleCloseLobbyModal = () => {
     setCloseLobbyModal((state) => !state);
   };
 
-  const join = () => {
+  const join = (playerNum) => () => {
     setReady(false);
-    dispatch(joinGame(gameId));
+    dispatch(joinGame(gameId, playerNum));
   };
 
   const leave = (unmount) => {
@@ -174,38 +187,50 @@ const GameDetails = () => {
       <div className={styles.playersContainer}>
         <h3>Players</h3>
         <div className={styles.playersList}>
-          {players?.map((user) => (
-            <div key={user.id} className={styles.player}>
-              <div className={styles.seat}>
-                <span>{user.username}</span>{" "}
-                {user.id === sessionId && game.host_id !== sessionId && (
-                  <button
-                    className={styles.seatBtn}
-                    onClick={() => leave(false)}
-                  >
-                    <i className="fa-solid fa-user-minus fa-lg" />
-                  </button>
-                )}
-                {/* <span>{game.game_data.winner === user.id && "Winner"}</span> */}
-              </div>
-              {game.host_id !== user.id && (
-                <div>
-                  {game?.game_data[playerReady[player(user.id)]] ? (
-                    <i
-                      className="fa-solid fa-check fa-lg fa-beat"
-                      style={{ color: "green" }}
-                    />
-                  ) : (
-                    <i
-                      className="fa-solid fa-xmark fa-lg fa-fade"
-                      style={{ color: "red" }}
-                    />
+          {players?.map((user, idx) =>
+            user ? (
+              <div key={idx} className={styles.player}>
+                <div className={styles.seat}>
+                  <span>{user.username}</span>{" "}
+                  {user.id === sessionId && game.host_id !== sessionId && (
+                    <button
+                      className={styles.seatBtn}
+                      onClick={() => leave(false)}
+                    >
+                      <i className="fa-solid fa-user-minus fa-lg" />
+                    </button>
                   )}
+                  {/* <span>{game.game_data.winner === user.id && "Winner"}</span> */}
                 </div>
-              )}
-            </div>
-          ))}
-          {openSeats?.map((_, idx) => (
+                {game.host_id !== user.id && (
+                  <div>
+                    {game?.game_data[playerReady[player(user.id)]] ? (
+                      <i
+                        className="fa-solid fa-check fa-lg fa-beat"
+                        style={{ color: "green" }}
+                      />
+                    ) : (
+                      <i
+                        className="fa-solid fa-xmark fa-lg fa-fade"
+                        style={{ color: "red" }}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div key={idx} className={styles.seat}>
+                <button
+                  className={styles.seatBtn}
+                  onClick={join(idx + 1)}
+                  disabled={game?.users.find((user) => user.id === sessionId)}
+                >
+                  <i className="fa-solid fa-user-plus fa-lg" />
+                </button>
+              </div>
+            )
+          )}
+          {/* {openSeats?.map((_, idx) => (
             <div key={idx} className={styles.seat}>
               <button
                 className={styles.seatBtn}
@@ -215,7 +240,7 @@ const GameDetails = () => {
                 <i className="fa-solid fa-user-plus fa-lg" />
               </button>
             </div>
-          ))}
+          ))} */}
         </div>
         {/* <div>
           Player 2 is {game?.game_data.player_2_ready ? "ready" : "not ready"}

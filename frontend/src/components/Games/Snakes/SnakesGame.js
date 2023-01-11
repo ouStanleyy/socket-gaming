@@ -265,7 +265,7 @@ const SnakesGame = () => {
     });
     ctx.stroke();
     gameInstance.game?.apples.forEach(([x, y]) => {
-      ctx.fillStyle = "red";
+      ctx.fillStyle = "darkred";
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;

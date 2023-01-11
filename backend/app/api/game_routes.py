@@ -62,22 +62,27 @@ def join_game(game_id):
     """
     Joins game specified by id
     """
+    player_num = f'player_{request.json["playerNum"]}'
     game = Game.query.get_or_404(game_id)
     # game_instance = Snakes(game_data=json.loads(game.game_data))
     game_instance = globals()[game.game_type.capitalize()](game_data=json.loads(game.game_data))
 
-    if game_instance.player_2 is None:
-        game_instance.player_2 = current_user.id
-        game_instance.player_2_ready = False
-        game.users.append(current_user)
-    elif game_instance.player_3 is None:
-        game_instance.player_3 = current_user.id
-        game_instance.player_3_ready = False
-        game.users.append(current_user)
-    elif game_instance.player_4 is None:
-        game_instance.player_4 = current_user.id
-        game_instance.player_4_ready = False
-        game.users.append(current_user)
+    game_instance[player_num] = current_user.id
+    game_instance[f'{player_num}_ready'] = False
+    game.users.append(current_user)
+
+    # if game_instance.player_2 is None:
+    #     game_instance.player_2 = current_user.id
+    #     game_instance.player_2_ready = False
+    #     game.users.append(current_user)
+    # elif game_instance.player_3 is None:
+    #     game_instance.player_3 = current_user.id
+    #     game_instance.player_3_ready = False
+    #     game.users.append(current_user)
+    # elif game_instance.player_4 is None:
+    #     game_instance.player_4 = current_user.id
+    #     game_instance.player_4_ready = False
+    #     game.users.append(current_user)
 
     game.game_data = json.dumps(game_instance.get_data())
 

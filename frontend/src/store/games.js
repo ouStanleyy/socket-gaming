@@ -68,10 +68,11 @@ export const createNewGame = (game_type) => async (dispatch) => {
   }
 };
 
-export const joinGame = (gameId) => async (dispatch) => {
+export const joinGame = (gameId, playerNum) => async (dispatch) => {
   const res = await fetch(`/api/games/${gameId}/join`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ playerNum }),
   });
   const game = await res.json();
 
