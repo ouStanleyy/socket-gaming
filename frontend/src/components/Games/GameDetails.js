@@ -287,7 +287,9 @@ const GameDetails = () => {
               (game.game_data.winner === "draw"
                 ? "draw"
                 : game.users.find((user) => game.game_data.winner === user.id)
-                    .username)}
+                ? game.users.find((user) => game.game_data.winner === user.id)
+                    .username
+                : null)}
           </p>
         </div>
       </div>
