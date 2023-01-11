@@ -7,13 +7,25 @@ import { Modal } from "../../context/Modal";
 import styles from "./GamesList.module.css";
 
 const gamePics = {
-  snakes: <img src="https://illustoon.com/photo/2317.png" alt="snake" />,
+  // snakes: <img src="https://illustoon.com/photo/2317.png" alt="snake" />,
+  snakes: (
+    <img
+      src="https://cdn-icons-png.flaticon.com/512/528/528105.png"
+      alt="snake"
+    />
+  ),
   pong: (
     <img
-      src="https://cdn.pixabay.com/photo/2012/04/02/16/25/pong-24876_1280.png"
+      src="https://cdn-icons-png.flaticon.com/512/1030/1030209.png"
       alt="pong"
     />
   ),
+  // pong: (
+  //   <img
+  //     src="https://cdn.pixabay.com/photo/2012/04/02/16/25/pong-24876_1280.png"
+  //     alt="pong"
+  //   />
+  // ),
 };
 
 const GamesList = () => {

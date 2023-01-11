@@ -35,9 +35,15 @@ class Snakes:
     def player_2_snake_ready(self):
         return len(self.player_2_snake)
 
-    def reset_snakes(self):
+    def reset_game(self):
+        self.player_2_ready = False
+        self.player_3_ready = False
+        self.player_4_ready = False
         self.player_1_snake = []
         self.player_2_snake = []
+        self.player_3_snake = []
+        self.player_4_snake = []
+        self.apples = []
 
     def inc_payload_id(self):
         self.payload_id+=1

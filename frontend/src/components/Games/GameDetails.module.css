@@ -25,14 +25,39 @@
   margin-left: auto;
 }
 
+.playersList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px;
+}
+
 .seat {
   display: flex;
   align-items: center;
-  border: 1px solid #dbdbdb;
+  /* border: 1px solid #dbdbdb; */
+  border: 2px solid blue;
+  background-color: lightblue;
   border-radius: 4px;
   width: 200px;
   height: 40px;
   padding: 8px;
+}
+
+.seat:nth-child(2),
+.player:nth-child(2) .seat {
+  border: 2px solid green;
+  background-color: lightgreen;
+}
+
+.seat:nth-child(3) {
+  border: 2px solid yellow;
+  background-color: lightyellow;
+}
+
+.seat:nth-child(4) {
+  border: 2px solid orangered;
+  background-color: orange;
 }
 
 .seatBtn {
