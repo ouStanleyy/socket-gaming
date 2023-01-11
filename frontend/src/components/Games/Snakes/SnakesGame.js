@@ -136,7 +136,7 @@ const SnakesGame = () => {
       //   ? (gameInstance.game.snakeOne = snake)
       //   : (gameInstance.game.snakeTwo = snake);
       gameInstance.game[snakeNum[player]] = snake;
-      setGameInstance({ game: gameInstance.game });
+      // setGameInstance({ game: gameInstance.game });
     }
   };
 
@@ -184,8 +184,8 @@ const SnakesGame = () => {
           gameInstance.game[payloadId[data.player]] = data.payloadId;
           gameInstance.game[snakeNum[data.player]] = data.snake;
           if (data.apples) gameInstance.game.apples = data.apples;
-          setGameInstance({ game: gameInstance.game });
         }
+        setGameInstance({ game: gameInstance.game });
       };
 
       sio.on("update_game", update);
