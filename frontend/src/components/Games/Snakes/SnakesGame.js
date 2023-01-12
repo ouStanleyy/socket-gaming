@@ -115,7 +115,7 @@ const SnakesGame = () => {
         newSnakeHead[1] = Snakes.CANVAS_SIZE[1] / Snakes.SCALE;
       snake.unshift(newSnakeHead);
       // sio?.emit("end_game", { gameId });
-      if (!gameInstance.game.checkAppleCollision(snake)) snake.pop();
+      if (!gameInstance.game.checkAppleCollision(newSnakeHead)) snake.pop();
       else apples = gameInstance.game.apples;
       if (gameInstance.game.checkCollision(newSnakeHead)) snake.length = 0;
       // else if (gameInstance.game[payloadId[player]] < Math.max(...payloads))
