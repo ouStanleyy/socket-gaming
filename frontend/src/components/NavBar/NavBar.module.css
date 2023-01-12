@@ -1,6 +1,6 @@
 .navBar {
   /* border: 1px solid blue; */
-  border-right: 1px solid #dbdbdb;
+  border-right: 1px solid #2d3132;
   display: flex;
   position: fixed;
   height: 100vh;
@@ -9,7 +9,7 @@
   align-items: space-between;
   padding: 8px 12px 20px;
   width: 244px;
-  background-color: white;
+  background-color: #383c3f;
   transition: 300ms;
   z-index: 10;
 }
