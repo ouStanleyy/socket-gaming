@@ -99,6 +99,9 @@ const SnakesGame = () => {
         : gameInstance.game[payloadId[player]]++;
       if (gameInstance.game.gameOver())
         sio?.emit("end_game", { gameId, winner: sessionId });
+      if (gameInstance.game.powerUp === "break" && snake.length > 2)
+        snake.length = Math.ceil(snake.length / 2);
+      gameInstance.game.powerUp = null;
       let apples;
       gameInstance.game.moveSnake(keyCode);
       const newSnakeHead = [
@@ -127,6 +130,7 @@ const SnakesGame = () => {
         gameType: "snakes",
         snake,
         apples,
+        powerUp: gameInstance.game.powerUp,
         payloadId: gameInstance.game[payloadId[player]],
         // payloadId: isHost
         //   ? gameInstance.game.p1PayloadId
@@ -136,6 +140,7 @@ const SnakesGame = () => {
       //   ? (gameInstance.game.snakeOne = snake)
       //   : (gameInstance.game.snakeTwo = snake);
       gameInstance.game[snakeNum[player]] = snake;
+      gameInstance.game.powerUp = null;
       // setGameInstance({ game: gameInstance.game });
     }
   };
@@ -184,6 +189,7 @@ const SnakesGame = () => {
           gameInstance.game[payloadId[data.player]] = data.payloadId;
           gameInstance.game[snakeNum[data.player]] = data.snake;
           if (data.apples) gameInstance.game.apples = data.apples;
+          if (data.powerUp) gameInstance.game.powerUp = data.powerUp;
         }
         setGameInstance({ game: gameInstance.game });
       };
@@ -264,8 +270,8 @@ const SnakesGame = () => {
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
-    gameInstance.game?.apples.forEach(([x, y]) => {
-      ctx.fillStyle = "darkred";
+    gameInstance.game?.apples.forEach(([x, y, powerUp]) => {
+      powerUp >= 7 ? (ctx.fillStyle = "gold") : (ctx.fillStyle = "darkred");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
