@@ -109,11 +109,11 @@ def leave_game(game_id):
         game_instance.player_2 = None
         game_instance.player_2_ready = False
         game.users.remove(current_user)
-    if current_user.id == game_instance.player_3:
+    elif current_user.id == game_instance.player_3:
         game_instance.player_3 = None
         game_instance.player_3_ready = False
         game.users.remove(current_user)
-    if current_user.id == game_instance.player_4:
+    elif current_user.id == game_instance.player_4:
         game_instance.player_4 = None
         game_instance.player_4_ready = False
         game.users.remove(current_user)

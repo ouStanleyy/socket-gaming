@@ -221,6 +221,7 @@ const SnakesGame = () => {
       snakesGame.snakeFour = data.snake_four;
       snakesGame.apples = data.apples;
       setGameInstance({ game: snakesGame });
+      console.log("player", player);
       if (player) setTimeout(() => setGameOver(false), 2000);
       gameRef?.current?.focus();
     });

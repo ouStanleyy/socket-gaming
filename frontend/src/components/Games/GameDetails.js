@@ -23,11 +23,9 @@ const GameDetails = () => {
   const game = useSelector((state) => state.games[gameId]);
   const sessionId = useSelector((state) => state.session.user.id);
   const player = (userId) =>
-    game
-      ? Object.keys(game?.game_data).find(
-          (data) => game?.game_data[data] === userId
-        )
-      : null;
+    Object.keys(game?.game_data).find(
+      (data) => game?.game_data[data] === userId && data !== "winner"
+    );
   const players = game
     ? Array(game?.max_players)
         .fill()
@@ -232,15 +230,15 @@ const GameDetails = () => {
               </div>
             ) : (
               <div key={idx} className={styles.seat}>
-                {/* {!player(sessionId) && ( */}
-                <button
-                  className={styles.seatBtn}
-                  onClick={join(idx + 1)}
-                  disabled={game?.users.find((user) => user.id === sessionId)}
-                >
-                  <i className="fa-solid fa-user-plus fa-lg" />
-                </button>
-                {/* )} */}
+                {game && !player(sessionId) && (
+                  <button
+                    className={styles.seatBtn}
+                    onClick={join(idx + 1)}
+                    disabled={game?.users.find((user) => user.id === sessionId)}
+                  >
+                    <i className="fa-solid fa-user-plus fa-lg" />
+                  </button>
+                )}
               </div>
             )
           )}
