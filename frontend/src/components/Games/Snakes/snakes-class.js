@@ -15,6 +15,7 @@ export default class Snakes {
     this.snakeThree = [];
     this.snakeFour = [];
     this.apples = [];
+    this.powerUp = null;
     this.dir = [0, -1];
     this.currOppDir = [0, 1];
     this.newOppDir = [0, 1];
@@ -25,8 +26,10 @@ export default class Snakes {
   }
 
   static createApple = () =>
-    [0, 0].map((_, idx) =>
-      Math.floor(Math.random() * (Snakes.CANVAS_SIZE[idx] / Snakes.SCALE))
+    [0, 0, 0].map((_, idx) =>
+      Math.floor(
+        Math.random() * (idx < 2 ? Snakes.CANVAS_SIZE[idx] / Snakes.SCALE : 10)
+      )
     );
 
   static createSnake = () => {
@@ -67,6 +70,8 @@ export default class Snakes {
     let result = false;
     this.apples.forEach((apple, idx) => {
       if (newSnakeHead[0] === apple[0] && newSnakeHead[1] === apple[1]) {
+        if (apple[2] >= 7) this.powerUp = "break";
+
         let newApple = Snakes.createApple();
         while (this.checkCollision(newApple, newSnakeHead)) {
           newApple = Snakes.createApple();
