@@ -45,34 +45,30 @@ export default class Snakes {
     return startPos;
   };
 
-  checkCollision = (
-    head,
-    snakeOne = this.snakeOne,
-    snakeTwo = this.snakeTwo,
-    snakeThree = this.snakeThree,
-    snakeFour = this.snakeFour
-  ) => {
-    for (const cell of snakeOne) {
-      if (head[0] === cell[0] && head[1] === cell[1]) return true;
+  checkCollision = (newCell, newSnakeHead = []) => {
+    if (newCell[0] === newSnakeHead[0] && newCell[1] === newSnakeHead[1])
+      return true;
+    for (const body of this.snakeOne) {
+      if (newCell[0] === body[0] && newCell[1] === body[1]) return true;
     }
-    for (const cell of snakeTwo) {
-      if (head[0] === cell[0] && head[1] === cell[1]) return true;
+    for (const body of this.snakeTwo) {
+      if (newCell[0] === body[0] && newCell[1] === body[1]) return true;
     }
-    for (const cell of snakeThree) {
-      if (head[0] === cell[0] && head[1] === cell[1]) return true;
+    for (const body of this.snakeThree) {
+      if (newCell[0] === body[0] && newCell[1] === body[1]) return true;
     }
-    for (const cell of snakeFour) {
-      if (head[0] === cell[0] && head[1] === cell[1]) return true;
+    for (const body of this.snakeFour) {
+      if (newCell[0] === body[0] && newCell[1] === body[1]) return true;
     }
     return false;
   };
 
-  checkAppleCollision = (newSnake) => {
+  checkAppleCollision = (newSnakeHead) => {
     let result = false;
     this.apples.forEach((apple, idx) => {
-      if (newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
+      if (newSnakeHead[0] === apple[0] && newSnakeHead[1] === apple[1]) {
         let newApple = Snakes.createApple();
-        while (this.checkCollision(newApple, newSnake)) {
+        while (this.checkCollision(newApple, newSnakeHead)) {
           newApple = Snakes.createApple();
         }
         this.apples[idx] = newApple;
