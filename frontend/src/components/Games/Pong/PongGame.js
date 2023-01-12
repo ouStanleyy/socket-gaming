@@ -8,8 +8,11 @@ const PongGame = () => {
   const { gameId } = useParams();
   const sio = useSelector((state) => state.socket.socket);
   const sessionId = useSelector((state) => state.session.user.id);
-  const hostId = useSelector((state) => state.games[gameId]?.host_id);
-  const isHost = sessionId === hostId;
+  const game = useSelector((state) => state.games[gameId]);
+  const player = Object.keys(game?.game_data).find(
+    (data) => game?.game_data[data] === sessionId
+  );
+  const isHost = sessionId === game?.host_id;
   const canvasRef = useRef();
   const gameRef = useRef();
   const [gameOver, setGameOver] = useState(true);
@@ -185,15 +188,17 @@ const PongGame = () => {
       // setCtx(canvasRef?.current?.getContext("2d"));
       // setOtherPlayer(data[sessionId].opponent);
       setGameInstance({ game: pongGame });
-      setTimeout(() => {
-        setGameOver(false);
-        pongGame.serve(1);
-      }, 2000);
+      console.log("player", player);
+      if (player)
+        setTimeout(() => {
+          setGameOver(false);
+          pongGame.serve(1);
+        }, 2000);
       gameRef?.current?.focus();
     });
 
     return () => sio.off("start_game");
-  }, [sio, gameRef]);
+  }, [sio, gameRef, player]);
 
   useEffect(() => {
     sio.on("end_game", () => {
