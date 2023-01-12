@@ -53,7 +53,11 @@ const LoginForm = () => {
           onChange={updatePassword}
         />
         <span className={styles.showPassword} onClick={toggleShowPassword}>
-          {showPassword ? "Hide" : "Show"}
+          {showPassword ? (
+            <i className="fa-solid fa-eye-slash fa-lg" />
+          ) : (
+            <i className="fa-solid fa-eye fa-lg" />
+          )}
         </span>
       </div>
       <button className={styles.loginButton} type="submit">

@@ -19,7 +19,8 @@ svg {
   /* border: 1px solid green; */
   font-size: 16px;
   font-family: sans-serif;
-  color: #262626;
+  /* color: #aad179; */
+  color: #86c232;
   display: flex;
   align-items: center;
   gap: 16px;

@@ -9,17 +9,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0;
+  margin: -20px 0 0;
 }
 
-.logoContainer svg{
-  width: 175px;
-  height: 50px;
+.logoContainer svg {
+  /* border: 1px solid; */
+  color: #aad179;
+  width: 340px;
+  /* height: 400px; */
 }
 
-.topSection, .bottomSection {
-  border: 1px solid #DBDBDB;
-  background-color: #FFFFFF;
+.topSection,
+.bottomSection {
+  border: 1px solid #2d3132;
+  background-color: #383c3f;
+  color: #ffffff;
   padding: 16px 32px;
   display: flex;
   justify-content: center;
@@ -37,7 +41,7 @@
 
 .bottomSection span {
   margin-left: 4px;
-  color: #0095F6;
+  color: #aad179;
   font-weight: bold;
 }
 

@@ -130,8 +130,8 @@ def leave_game(game_id):
     return game.to_dict()
 
 
+# @login_required
 @game_routes.route('/<int:game_id>', methods=['DELETE'])
-@login_required
 def delete_game(game_id):
     """
     Deletes game specified by id

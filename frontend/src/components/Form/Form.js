@@ -12,8 +12,7 @@ const Form = () => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topSection}>
-        {/* <div className={styles.logoContainer}>{icons["Instagram"]}</div> */}
-        <div className={styles.logoContainer}>Socket-Gaming</div>
+        <div className={styles.logoContainer}>{icons["Logo"]}</div>
         {isLoginForm ? <LoginForm /> : <SignUpForm />}
       </div>
       <div className={styles.bottomSection}>

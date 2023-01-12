@@ -129,10 +129,14 @@ const GameDetails = () => {
     });
   }, [sio]);
 
-  useEffect(() => () => leave(true), []);
-  useEffect(() => {
-    if (game?.host_id === sessionId) return () => closeLobby(false);
-  }, []);
+  useEffect(
+    () =>
+      game?.host_id === sessionId ? () => closeLobby(false) : () => leave(true),
+    []
+  );
+  // useEffect(() => {
+  //   if (game?.host_id === sessionId) return () => closeLobby(false);
+  // }, []);
 
   // useEffect(() => {
   //   sio.on("update_game", (data) => {

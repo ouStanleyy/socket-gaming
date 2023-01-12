@@ -110,7 +110,7 @@ section {
 }
 body {
   line-height: 1;
-  background-color: #fafafa;
+  background-color: #222629;
 }
 ol,
 ul {
@@ -134,5 +134,5 @@ table {
 a,
 a:active {
   text-decoration: none;
-  color: #262626;
+  color: #6b6e70;
 }
