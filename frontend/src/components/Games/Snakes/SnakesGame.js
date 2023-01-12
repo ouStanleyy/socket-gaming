@@ -91,12 +91,12 @@ const SnakesGame = () => {
       sio?.emit("end_game", { gameId, winner: "draw" });
     const snake = [...gameInstance.game[snakeNum[player]]];
     if (
-      snake.length &&
-      (equalPayloads() || gameInstance.game[payloadId[player]] < maxId)
+      snake.length
+      // (equalPayloads() || gameInstance.game[payloadId[player]] < maxId)
     ) {
-      gameInstance.game[payloadId[player]] < maxId
-        ? (gameInstance.game[payloadId[player]] = maxId)
-        : gameInstance.game[payloadId[player]]++;
+      // gameInstance.game[payloadId[player]] < maxId
+      //   ? (gameInstance.game[payloadId[player]] = maxId)
+      //   : gameInstance.game[payloadId[player]]++;
       if (gameInstance.game.gameOver())
         sio?.emit("end_game", { gameId, winner: sessionId });
       if (gameInstance.game.powerUp === "break" && snake.length > 2)
@@ -131,7 +131,7 @@ const SnakesGame = () => {
         snake,
         apples,
         powerUp: gameInstance.game.powerUp,
-        payloadId: gameInstance.game[payloadId[player]],
+        // payloadId: gameInstance.game[payloadId[player]],
         // payloadId: isHost
         //   ? gameInstance.game.p1PayloadId
         //   : gameInstance.game.p2PayloadId,
@@ -186,7 +186,7 @@ const SnakesGame = () => {
         //     ? (gameInstance.game.snakeOne = data.snake)
         //     : (gameInstance.game.snakeTwo = data.snake);
         if (data.player !== player) {
-          gameInstance.game[payloadId[data.player]] = data.payloadId;
+          // gameInstance.game[payloadId[data.player]] = data.payloadId;
           gameInstance.game[snakeNum[data.player]] = data.snake;
           if (data.apples) gameInstance.game.apples = data.apples;
           if (data.powerUp) gameInstance.game.powerUp = data.powerUp;
@@ -271,7 +271,7 @@ const SnakesGame = () => {
     });
     ctx.stroke();
     gameInstance.game?.apples.forEach(([x, y, powerUp]) => {
-      powerUp >= 7 ? (ctx.fillStyle = "gold") : (ctx.fillStyle = "darkred");
+      powerUp >= 8 ? (ctx.fillStyle = "gold") : (ctx.fillStyle = "darkred");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;

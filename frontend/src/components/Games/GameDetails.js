@@ -232,15 +232,15 @@ const GameDetails = () => {
               </div>
             ) : (
               <div key={idx} className={styles.seat}>
-                {!player(sessionId) && (
-                  <button
-                    className={styles.seatBtn}
-                    onClick={join(idx + 1)}
-                    disabled={game?.users.find((user) => user.id === sessionId)}
-                  >
-                    <i className="fa-solid fa-user-plus fa-lg" />
-                  </button>
-                )}
+                {/* {!player(sessionId) && ( */}
+                <button
+                  className={styles.seatBtn}
+                  onClick={join(idx + 1)}
+                  disabled={game?.users.find((user) => user.id === sessionId)}
+                >
+                  <i className="fa-solid fa-user-plus fa-lg" />
+                </button>
+                {/* )} */}
               </div>
             )
           )}
