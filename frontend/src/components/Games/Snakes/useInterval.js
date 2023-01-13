@@ -13,7 +13,7 @@ const useInterval = (callback, delay, gameOver) => {
       const interval = setInterval(() => savedCallback.current(), delay);
       return () => clearInterval(interval);
     }
-  }, [gameOver]);
+  }, [gameOver, delay]);
 };
 
 export default useInterval;

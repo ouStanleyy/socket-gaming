@@ -20,6 +20,15 @@ const SnakesGame = () => {
   // const [otherPlayer, setOtherPlayer] = useState(null);
   const [gameInstance, setGameInstance] = useState({ game: null });
   const [keyCode, setKeyCode] = useState(null);
+  const [confused, setConfused] = useState(false);
+  const [shielded, setShielded] = useState(false);
+  const [gameSpeed, setGameSpeed] = useState(Snakes.SPEED);
+  const oppKeyCode = {
+    37: 39,
+    38: 40,
+    39: 37,
+    40: 38,
+  };
   const snakeNum = {
     player_1: "snakeOne",
     player_2: "snakeTwo",
@@ -99,11 +108,21 @@ const SnakesGame = () => {
       //   : gameInstance.game[payloadId[player]]++;
       if (gameInstance.game.gameOver())
         sio?.emit("end_game", { gameId, winner: sessionId });
+      let apples;
+
+      if (gameInstance.game.powerUp === "freeze") {
+        setGameSpeed(500);
+        setTimeout(() => setGameSpeed(Snakes.SPEED), 5000);
+      }
       if (gameInstance.game.powerUp === "break" && snake.length > 2)
         snake.length = Math.ceil(snake.length / 2);
+      if (gameInstance.game.powerUp === "confuse") {
+        setConfused(true);
+        setTimeout(() => setConfused(false), 5000);
+      }
       gameInstance.game.powerUp = null;
-      let apples;
-      gameInstance.game.moveSnake(keyCode);
+      if (confused) gameInstance.game.moveSnake(oppKeyCode[keyCode]);
+      else gameInstance.game.moveSnake(keyCode);
       const newSnakeHead = [
         snake[0][0] + gameInstance.game.dir[0],
         snake[0][1] + gameInstance.game.dir[1],
@@ -120,7 +139,14 @@ const SnakesGame = () => {
       // sio?.emit("end_game", { gameId });
       if (!gameInstance.game.checkAppleCollision(newSnakeHead)) snake.pop();
       else apples = gameInstance.game.apples;
-      if (gameInstance.game.checkCollision(newSnakeHead)) snake.length = 0;
+      if (gameInstance.game.powerUp === "shield") {
+        setShielded(true);
+        setTimeout(() => setShielded(false), 5000);
+        gameInstance.game.powerUp = null;
+      }
+      if (!shielded && gameInstance.game.checkCollision(newSnakeHead))
+        snake.length = 0;
+
       // else if (gameInstance.game[payloadId[player]] < Math.max(...payloads))
       //   gameInstance.game[payloadId[player]]++;
       sio?.emit("update_game", {
@@ -221,7 +247,6 @@ const SnakesGame = () => {
       snakesGame.snakeFour = data.snake_four;
       snakesGame.apples = data.apples;
       setGameInstance({ game: snakesGame });
-      console.log("player", player);
       if (player) setTimeout(() => setGameOver(false), 2000);
       gameRef?.current?.focus();
     });
@@ -233,6 +258,9 @@ const SnakesGame = () => {
     sio.on("end_game", () => {
       setGameOver(true);
       setGameInstance({ game: null });
+      setKeyCode(null);
+      setConfused(false);
+      setShielded(false);
     });
 
     return () => sio.off("end_game");
@@ -244,35 +272,55 @@ const SnakesGame = () => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.beginPath();
     gameInstance.game?.snakeOne.forEach(([x, y], idx) => {
-      idx === 0 ? (ctx.fillStyle = "blue") : (ctx.fillStyle = "lightblue");
+      idx === 0
+        ? shielded
+          ? (ctx.fillStyle = "white")
+          : (ctx.fillStyle = "blue")
+        : (ctx.fillStyle = "lightblue");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
     gameInstance.game?.snakeTwo.forEach(([x, y], idx) => {
-      idx === 0 ? (ctx.fillStyle = "green") : (ctx.fillStyle = "lightgreen");
+      idx === 0
+        ? shielded
+          ? (ctx.fillStyle = "white")
+          : (ctx.fillStyle = "green")
+        : (ctx.fillStyle = "lightgreen");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
     gameInstance.game?.snakeThree.forEach(([x, y], idx) => {
-      idx === 0 ? (ctx.fillStyle = "yellow") : (ctx.fillStyle = "lightyellow");
+      idx === 0
+        ? shielded
+          ? (ctx.fillStyle = "white")
+          : (ctx.fillStyle = "yellow")
+        : (ctx.fillStyle = "lightyellow");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
     gameInstance.game?.snakeFour.forEach(([x, y], idx) => {
-      idx === 0 ? (ctx.fillStyle = "orangered") : (ctx.fillStyle = "orange");
+      idx === 0
+        ? shielded
+          ? (ctx.fillStyle = "white")
+          : (ctx.fillStyle = "orangered")
+        : (ctx.fillStyle = "orange");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
     gameInstance.game?.apples.forEach(([x, y, powerUp]) => {
-      powerUp >= 8 ? (ctx.fillStyle = "gold") : (ctx.fillStyle = "darkred");
+      if (powerUp === 0) ctx.fillStyle = "cyan";
+      else if (powerUp === 1) ctx.fillStyle = "gold";
+      else if (powerUp === 2) ctx.fillStyle = "magenta";
+      else if (powerUp === 3) ctx.fillStyle = "white";
+      else ctx.fillStyle = "darkred";
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
       ctx.lineWidth = 0.05;
@@ -280,7 +328,7 @@ const SnakesGame = () => {
     ctx.stroke();
   }, [gameInstance]);
 
-  useInterval(gameLoop, Snakes.SPEED, gameOver);
+  useInterval(gameLoop, gameSpeed, gameOver);
 
   return (
     <div

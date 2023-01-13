@@ -295,7 +295,7 @@ const PongGame = () => {
       onKeyUp={() => setKeyCode(null)}
     >
       <canvas
-        style={{ border: "1px solid", backgroundColor: "#ffffff" }}
+        style={{ border: "1px solid #2d3132", backgroundColor: "#2d3132" }}
         ref={canvasRef}
         width={`${Pong.CANVAS_SIZE[0]}px`}
         height={`${Pong.CANVAS_SIZE[1]}px`}
