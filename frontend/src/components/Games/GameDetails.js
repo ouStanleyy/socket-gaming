@@ -118,7 +118,8 @@ const GameDetails = () => {
   }, [sio]);
 
   useEffect(() => {
-    sio.on("close_game_lobby", () => history.push("/games"));
+    if (game?.host_id !== sessionId)
+      sio.on("close_game_lobby", () => history.push("/games"));
   }, [sio]);
 
   useEffect(() => {
@@ -173,7 +174,12 @@ const GameDetails = () => {
         <h3 className={styles.title}>{game?.game_type}</h3>
         <div className={styles.closeLobbyBtn} onClick={toggleCloseLobbyModal}>
           {game?.host_id === sessionId && (
-            <i className="fa-solid fa-arrow-right-from-bracket fa-lg" />
+            <i
+              className="fa-solid fa-arrow-right-from-bracket fa-lg"
+              style={{
+                color: "#86c232",
+              }}
+            />
           )}
         </div>
         {closeLobbyModal && (

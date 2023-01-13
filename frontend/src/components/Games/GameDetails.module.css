@@ -1,6 +1,7 @@
 .gameDetails {
   /* border: 1px solid red; */
   width: 100%;
+  color: #ffffff;
 }
 
 .header {
@@ -8,7 +9,7 @@
   justify-content: center;
   align-items: center;
   height: 60px;
-  border-bottom: 1px solid #dbdbdb;
+  border-bottom: 1px solid #2d3132;
   padding: 20px;
 }
 
@@ -17,6 +18,7 @@
   font-weight: 500;
   line-height: 24px;
   margin-left: auto;
+  color: #aad179;
 }
 
 .closeLobbyBtn {
@@ -42,6 +44,7 @@
   width: 200px;
   height: 40px;
   padding: 8px;
+  color: #000000;
 }
 
 .seat:nth-child(2),

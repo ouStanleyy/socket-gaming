@@ -19,8 +19,8 @@ svg {
   /* border: 1px solid green; */
   font-size: 16px;
   font-family: sans-serif;
-  /* color: #aad179; */
-  color: #86c232;
+  color: #aad179;
+  /* color: #86c232; */
   display: flex;
   align-items: center;
   gap: 16px;
@@ -40,6 +40,7 @@ svg {
   display: flex;
   place-content: center;
   transition: 100ms;
+  color: #86c232;
 }
 
 /* when navItem is hovered, target svg*/
@@ -52,7 +53,7 @@ svg {
 }
 
 .navItem:hover {
-  background-color: #fafafa;
+  background-color: #2d3132;
   cursor: pointer;
   transition: 0.2s ease;
 }

@@ -24,8 +24,8 @@ const NewGame = ({ onClose }) => {
           <svg
             aria-label="Close"
             // class="_ab6-"
-            color="#262626"
-            fill="#262626"
+            color="currentColor"
+            fill="currentColor"
             height="18"
             role="img"
             viewBox="0 0 24 24"
