@@ -2,8 +2,8 @@
   display: flex;
   width: 936px;
   height: 94vh;
-  background-color: #ffffff;
-  border: 1px solid #dbdbdb;
+  background-color: #383c3f;
+  border: 1px solid #2d3132;
   border-radius: 4px;
 }
 
@@ -11,14 +11,14 @@
   display: flex;
   flex-direction: column;
   width: 50%;
-  border-right: 1px solid #dbdbdb;
+  border-right: 1px solid #2d3132;
 }
 
 .turnBasedContainer {
   display: flex;
   flex-direction: column;
   width: 50%;
-  border-left: 1px solid #dbdbdb;
+  border-left: 1px solid #2d3132;
 }
 
 .header {
@@ -26,7 +26,7 @@
   justify-content: center;
   align-items: center;
   height: 60px;
-  border-bottom: 1px solid #dbdbdb;
+  border-bottom: 1px solid #2d3132;
   padding: 20px;
 }
 
@@ -35,12 +35,14 @@
   font-weight: 500;
   line-height: 24px;
   margin-left: auto;
+  color: #aad179;
 }
 
 .newGameButton {
   height: fit-content;
   cursor: pointer;
   margin-left: auto;
+  color: #86c232;
 }
 
 .gameContainer {
@@ -52,7 +54,7 @@
 }
 
 .gameContainer:hover {
-  background-color: #fafafa;
+  background-color: #2d3132;
 }
 
 .gameDetails {
@@ -68,6 +70,7 @@
 
 .host,
 .numPlayers {
+  color: #ffffff;
   font-weight: 500;
   width: max-content;
 }

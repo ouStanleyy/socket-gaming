@@ -4,7 +4,7 @@
   align-items: center;
   width: 400px;
   height: 400px;
-  background-color: #ffffff;
+  background-color: #383c3f;
   border-radius: 12px;
   animation: onShow 150ms ease;
 }
@@ -17,7 +17,7 @@
   align-items: center;
   width: 100%;
   min-height: 60px;
-  border-bottom: 1px solid #dbdbdb;
+  border-bottom: 1px solid #2d3132;
 }
 
 .header > h2 {
@@ -25,6 +25,7 @@
   font-weight: 500;
   line-height: 24px;
   padding: 8px;
+  color: #aad179;
 }
 
 /* .headerContainer {
@@ -39,6 +40,7 @@
   position: absolute;
   left: 16px;
   cursor: pointer;
+  color: #86c232;
 }
 
 /* .inputContainer {
@@ -118,7 +120,7 @@
 }
 
 .gameContainer:hover {
-  background-color: #fafafa;
+  background-color: #2d3132;
   cursor: pointer;
 }
 
@@ -133,10 +135,12 @@
   font-weight: 500;
   width: max-content;
   cursor: pointer;
+  color: #86c232;
 }
 
 .numPlayers {
-  color: #8e8e8e;
+  /* color: #8e8e8e; */
+  color: #ffffff;
   width: max-content;
 }
 

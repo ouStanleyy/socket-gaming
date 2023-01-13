@@ -1,7 +1,7 @@
 .gameLobby {
   display: flex;
   width: 1200px;
-  background-color: #ffffff;
-  border: 1px solid #dbdbdb;
+  background-color: #383c3f;
+  border: 1px solid #2d3132;
   border-radius: 4px;
 }
