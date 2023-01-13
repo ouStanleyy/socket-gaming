@@ -8,6 +8,12 @@ export default class Snakes {
     37: [-1, 0], // left
     39: [1, 0], // right
   };
+  static POWERUPS = {
+    0: "freeze",
+    1: "break",
+    2: "confuse",
+    3: "shield",
+  };
 
   constructor() {
     this.snakeOne = [];
@@ -70,7 +76,7 @@ export default class Snakes {
     let result = false;
     this.apples.forEach((apple, idx) => {
       if (newSnakeHead[0] === apple[0] && newSnakeHead[1] === apple[1]) {
-        if (apple[2] >= 8) this.powerUp = "break";
+        if (apple[2] < 3) this.powerUp = Snakes.POWERUPS[apple[2]];
 
         let newApple = Snakes.createApple();
         while (this.checkCollision(newApple, newSnakeHead)) {
@@ -91,15 +97,11 @@ export default class Snakes {
         JSON.stringify(this.newOppDir)
     ) {
       this.dir = Snakes.DIRECTIONS[keyCode];
-      if (keyCode === 38) {
-        this.newOppDir = Snakes.DIRECTIONS[40];
-      } else if (keyCode === 40) {
-        this.newOppDir = Snakes.DIRECTIONS[38];
-      } else if (keyCode === 37) {
-        this.newOppDir = Snakes.DIRECTIONS[39];
-      } else if (keyCode === 39) {
-        this.newOppDir = Snakes.DIRECTIONS[37];
-      }
+      if (keyCode === 38) this.newOppDir = Snakes.DIRECTIONS[40];
+      else if (keyCode === 40) this.newOppDir = Snakes.DIRECTIONS[38];
+      else if (keyCode === 37) this.newOppDir = Snakes.DIRECTIONS[39];
+      else if (keyCode === 39) this.newOppDir = Snakes.DIRECTIONS[37];
+
       // if (keyCode === 38) {
       //   this.newOppDir = Snakes.DIRECTIONS[40];
       //   setTimeout(() => (this.currOppDir = Snakes.DIRECTIONS[40]), 75);
