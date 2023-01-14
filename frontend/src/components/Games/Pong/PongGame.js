@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import useInterval from "./useInterval";
 import Pong from "./pong-class";
+import styles from "./PongGame.module.css";
 
 const PongGame = () => {
   const { gameId } = useParams();
@@ -293,9 +294,10 @@ const PongGame = () => {
       tabIndex="0"
       onKeyDown={({ keyCode }) => setKeyCode(keyCode)}
       onKeyUp={() => setKeyCode(null)}
+      className={styles.canvasContainer}
     >
       <canvas
-        style={{ border: "1px solid #2d3132", backgroundColor: "#2d3132" }}
+        style={{ border: "1px solid #2d3132", backgroundColor: "#222629" }}
         ref={canvasRef}
         width={`${Pong.CANVAS_SIZE[0]}px`}
         height={`${Pong.CANVAS_SIZE[1]}px`}

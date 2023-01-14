@@ -76,7 +76,7 @@ export default class Snakes {
     let result = false;
     this.apples.forEach((apple, idx) => {
       if (newSnakeHead[0] === apple[0] && newSnakeHead[1] === apple[1]) {
-        if (apple[2] < 3) this.powerUp = Snakes.POWERUPS[apple[2]];
+        if (apple[2] < 4) this.powerUp = Snakes.POWERUPS[apple[2]];
 
         let newApple = Snakes.createApple();
         while (this.checkCollision(newApple, newSnakeHead)) {

@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import useInterval from "./useInterval";
 import Snakes from "./snakes-class";
+import styles from "./SnakesGame.module.css";
 
 const SnakesGame = () => {
   const { gameId } = useParams();
@@ -20,8 +21,18 @@ const SnakesGame = () => {
   // const [otherPlayer, setOtherPlayer] = useState(null);
   const [gameInstance, setGameInstance] = useState({ game: null });
   const [keyCode, setKeyCode] = useState(null);
-  const [confused, setConfused] = useState(false);
-  const [shielded, setShielded] = useState(false);
+  const [confused, setConfused] = useState({
+    player_1: false,
+    player_2: false,
+    player_3: false,
+    player_4: false,
+  });
+  const [shielded, setShielded] = useState({
+    player_1: false,
+    player_2: false,
+    player_3: false,
+    player_4: false,
+  });
   const [gameSpeed, setGameSpeed] = useState(Snakes.SPEED);
   const oppKeyCode = {
     37: 39,
@@ -117,11 +128,14 @@ const SnakesGame = () => {
       if (gameInstance.game.powerUp === "break" && snake.length > 2)
         snake.length = Math.ceil(snake.length / 2);
       if (gameInstance.game.powerUp === "confuse") {
-        setConfused(true);
-        setTimeout(() => setConfused(false), 5000);
+        setConfused((state) => ({ ...state, [player]: true }));
+        setTimeout(
+          () => setConfused((state) => ({ ...state, [player]: false })),
+          5000
+        );
       }
       gameInstance.game.powerUp = null;
-      if (confused) gameInstance.game.moveSnake(oppKeyCode[keyCode]);
+      if (confused[player]) gameInstance.game.moveSnake(oppKeyCode[keyCode]);
       else gameInstance.game.moveSnake(keyCode);
       const newSnakeHead = [
         snake[0][0] + gameInstance.game.dir[0],
@@ -140,11 +154,14 @@ const SnakesGame = () => {
       if (!gameInstance.game.checkAppleCollision(newSnakeHead)) snake.pop();
       else apples = gameInstance.game.apples;
       if (gameInstance.game.powerUp === "shield") {
-        setShielded(true);
-        setTimeout(() => setShielded(false), 5000);
+        setShielded((state) => ({ ...state, [player]: true }));
+        setTimeout(
+          () => setShielded((state) => ({ ...state, [player]: false })),
+          5000
+        );
         gameInstance.game.powerUp = null;
       }
-      if (!shielded && gameInstance.game.checkCollision(newSnakeHead))
+      if (!shielded[player] && gameInstance.game.checkCollision(newSnakeHead))
         snake.length = 0;
 
       // else if (gameInstance.game[payloadId[player]] < Math.max(...payloads))
@@ -157,6 +174,8 @@ const SnakesGame = () => {
         snake,
         apples,
         powerUp: gameInstance.game.powerUp,
+        shielded: shielded[player],
+        confused: confused[player],
         // payloadId: gameInstance.game[payloadId[player]],
         // payloadId: isHost
         //   ? gameInstance.game.p1PayloadId
@@ -216,6 +235,8 @@ const SnakesGame = () => {
           gameInstance.game[snakeNum[data.player]] = data.snake;
           if (data.apples) gameInstance.game.apples = data.apples;
           if (data.powerUp) gameInstance.game.powerUp = data.powerUp;
+          setShielded((state) => ({ ...state, [data.player]: data.shielded }));
+          setConfused((state) => ({ ...state, [data.player]: data.confused }));
         }
         setGameInstance({ game: gameInstance.game });
       };
@@ -259,8 +280,18 @@ const SnakesGame = () => {
       setGameOver(true);
       setGameInstance({ game: null });
       setKeyCode(null);
-      setConfused(false);
-      setShielded(false);
+      setConfused({
+        player_1: false,
+        player_2: false,
+        player_3: false,
+        player_4: false,
+      });
+      setShielded({
+        player_1: false,
+        player_2: false,
+        player_3: false,
+        player_4: false,
+      });
     });
 
     return () => sio.off("end_game");
@@ -272,49 +303,49 @@ const SnakesGame = () => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.beginPath();
     gameInstance.game?.snakeOne.forEach(([x, y], idx) => {
-      idx === 0
-        ? shielded
-          ? (ctx.fillStyle = "white")
-          : (ctx.fillStyle = "blue")
-        : (ctx.fillStyle = "lightblue");
+      idx === 0 ? (ctx.fillStyle = "blue") : (ctx.fillStyle = "lightblue");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
+      if (shielded.player_1) ctx.strokeStyle = "white";
+      else if (confused.player_1) ctx.strokeStyle = "magenta";
+      else ctx.strokeStyle = "black";
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
+    ctx.beginPath();
     gameInstance.game?.snakeTwo.forEach(([x, y], idx) => {
-      idx === 0
-        ? shielded
-          ? (ctx.fillStyle = "white")
-          : (ctx.fillStyle = "green")
-        : (ctx.fillStyle = "lightgreen");
+      idx === 0 ? (ctx.fillStyle = "green") : (ctx.fillStyle = "lightgreen");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
+      if (shielded.player_2) ctx.strokeStyle = "white";
+      else if (confused.player_2) ctx.strokeStyle = "magenta";
+      else ctx.strokeStyle = "black";
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
+    ctx.beginPath();
     gameInstance.game?.snakeThree.forEach(([x, y], idx) => {
-      idx === 0
-        ? shielded
-          ? (ctx.fillStyle = "white")
-          : (ctx.fillStyle = "yellow")
-        : (ctx.fillStyle = "lightyellow");
+      idx === 0 ? (ctx.fillStyle = "yellow") : (ctx.fillStyle = "lightyellow");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
+      if (shielded.player_3) ctx.strokeStyle = "white";
+      else if (confused.player_3) ctx.strokeStyle = "magenta";
+      else ctx.strokeStyle = "black";
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
+    ctx.beginPath();
     gameInstance.game?.snakeFour.forEach(([x, y], idx) => {
-      idx === 0
-        ? shielded
-          ? (ctx.fillStyle = "white")
-          : (ctx.fillStyle = "orangered")
-        : (ctx.fillStyle = "orange");
+      idx === 0 ? (ctx.fillStyle = "orangered") : (ctx.fillStyle = "orange");
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
+      if (shielded.player_4) ctx.strokeStyle = "white";
+      else if (confused.player_4) ctx.strokeStyle = "magenta";
+      else ctx.strokeStyle = "black";
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
+    ctx.beginPath();
     gameInstance.game?.apples.forEach(([x, y, powerUp]) => {
       if (powerUp === 0) ctx.fillStyle = "cyan";
       else if (powerUp === 1) ctx.fillStyle = "gold";
@@ -323,6 +354,7 @@ const SnakesGame = () => {
       else ctx.fillStyle = "darkred";
       ctx.rect(x, y, 1, 1);
       ctx.fillRect(x, y, 1, 1);
+      ctx.strokeStyle = "black";
       ctx.lineWidth = 0.05;
     });
     ctx.stroke();
@@ -335,10 +367,14 @@ const SnakesGame = () => {
       ref={gameRef}
       tabIndex="0"
       onKeyDown={({ keyCode }) => setKeyCode(keyCode)}
+      className={styles.canvasContainer}
     >
       <canvas
         // style={{ border: "1px solid #E8E6E2", backgroundColor: "#181A1B" }}
-        style={{ border: "1px solid #2d3132", backgroundColor: "#2d3132" }}
+        style={{
+          border: "1px solid #2d3132",
+          backgroundColor: "#2d3132",
+        }}
         ref={canvasRef}
         width={`${Snakes.CANVAS_SIZE[0]}px`}
         height={`${Snakes.CANVAS_SIZE[1]}px`}
