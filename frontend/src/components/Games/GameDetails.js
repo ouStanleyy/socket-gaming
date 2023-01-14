@@ -22,6 +22,7 @@ const GameDetails = () => {
   const sio = useSelector((state) => state.socket.socket);
   const game = useSelector((state) => state.games[gameId]);
   const sessionId = useSelector((state) => state.session.user.id);
+  const isHost = sessionId === game?.host_id;
   const player = (userId) =>
     Object.keys(game?.game_data).find(
       (data) => game?.game_data[data] === userId && data !== "winner"
@@ -130,11 +131,7 @@ const GameDetails = () => {
     });
   }, [sio]);
 
-  useEffect(
-    () =>
-      game?.host_id === sessionId ? () => closeLobby(false) : () => leave(true),
-    []
-  );
+  useEffect(() => (isHost ? () => closeLobby(false) : () => leave(true)), []);
   // useEffect(() => {
   //   if (game?.host_id === sessionId) return () => closeLobby(false);
   // }, []);
@@ -184,7 +181,7 @@ const GameDetails = () => {
         </div>
         {closeLobbyModal && (
           <Modal onClose={toggleCloseLobbyModal}>
-            <div>
+            <div className={styles.closeLobbyModal}>
               <h3>Close game lobby?</h3>
               <button onClick={closeLobby}>Yes</button>
               <button onClick={toggleCloseLobbyModal}>No</button>
@@ -199,7 +196,19 @@ const GameDetails = () => {
             user ? (
               <div key={idx} className={styles.player}>
                 <div className={styles.seat}>
-                  <span>{user.username}</span>{" "}
+                  <span>{user.username}</span>
+                  {game.host_id !== user.id &&
+                    (game?.game_data[playerReady[player(user.id)]] ? (
+                      <i
+                        className="fa-solid fa-check fa-lg fa-beat"
+                        style={{ color: "green" }}
+                      />
+                    ) : (
+                      <i
+                        className="fa-solid fa-xmark fa-lg fa-fade"
+                        style={{ color: "red" }}
+                      />
+                    ))}
                   {user.id === sessionId && game.host_id !== sessionId && (
                     <button
                       className={styles.seatBtn}
@@ -208,6 +217,7 @@ const GameDetails = () => {
                       <i className="fa-solid fa-user-minus fa-lg" />
                     </button>
                   )}
+                  <div></div>
                   {/* <span>{game.game_data.winner === user.id && "Winner"}</span> */}
                 </div>
                 {game.host_id === user.id ? (
@@ -217,19 +227,6 @@ const GameDetails = () => {
                   !gameActive && <button onClick={start}>Start Game</button>
                 ) : (
                   <>
-                    <div>
-                      {game?.game_data[playerReady[player(user.id)]] ? (
-                        <i
-                          className="fa-solid fa-check fa-lg fa-beat"
-                          style={{ color: "green" }}
-                        />
-                      ) : (
-                        <i
-                          className="fa-solid fa-xmark fa-lg fa-fade"
-                          style={{ color: "red" }}
-                        />
-                      )}
-                    </div>
                     {user.id === sessionId && (
                       <button onClick={toggleReady}>
                         {!ready ? "Ready Up" : "Unready"}
