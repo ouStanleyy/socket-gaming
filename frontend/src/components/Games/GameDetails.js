@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { Modal } from "../../context/Modal";
+import GameChat from "./GameChat";
 import {
   getGameById,
   joinGame,
@@ -101,18 +102,18 @@ const GameDetails = () => {
   useEffect(() => {
     (async () => {
       try {
-        await dispatch(updateReadyState(gameId, ready));
-      } catch (err) {}
-    })();
-  }, [ready]);
-
-  useEffect(() => {
-    (async () => {
-      try {
         await dispatch(getGameById(gameId));
       } catch (err) {}
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await dispatch(updateReadyState(gameId, ready));
+      } catch (err) {}
+    })();
+  }, [ready]);
 
   useEffect(() => {
     sio.on("update_game_lobby", (data) => dispatch(loadGameDetails(data)));
@@ -298,6 +299,7 @@ const GameDetails = () => {
           </p>
         </div>
       </div>
+      <GameChat sessionId={sessionId} game={game} />
     </div>
   );
 };
