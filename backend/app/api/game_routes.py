@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 from flask_socketio import emit
 from app.sockets import sio
-from app.models import db, Game
+from app.models import db, Game, Room, Message
 from app.games import Player, Snakes, Pong
 import json
 
@@ -26,8 +26,17 @@ def game(game_id):
     Query for a game by id and returns that game in a dictionary
     """
     game = Game.query.get_or_404(game_id)
+
     if not current_user in game.users:
+        game.room.users.append(current_user)
         sio.server.enter_room(current_user.sid, f'{game.game_type}-{game.id}')
+        sio.server.enter_room(current_user.sid, str(game.room.id))
+
+        db.session.add(Message(room_id=game.room.id, message=f'{current_user.username} has joined the room'))
+        db.session.commit()
+
+        sio.emit('update_game_lobby', game.to_dict(), room=f'{game.game_type}-{game.id}')
+
     return game.to_dict()
 
 max_players = {
@@ -42,15 +51,21 @@ def create_game():
     """
     # if request.json['game_type'] == 'snakes':
     #     new_game = Snakes(player_1=current_user.id)
+    room = Room()
+    room.users.append(current_user)
+    db.session.add(room)
+    db.session.commit()
+
     game_type = request.json['game_type']
     new_game = globals()[game_type.capitalize()](player_1=current_user.id)
-    game = Game(host_id=current_user.id, game_data=json.dumps(new_game.get_data()), game_type=game_type, max_players=max_players[game_type])
+    game = Game(host_id=current_user.id, room_id=room.id, game_data=json.dumps(new_game.get_data()), game_type=game_type, max_players=max_players[game_type])
     game.users.append(current_user)
 
     db.session.add(game)
     db.session.commit()
 
     sio.server.enter_room(current_user.sid, f'{game.game_type}-{game.id}')
+    sio.server.enter_room(current_user.sid, str(room.id))
     sio.emit('update_game_list', broadcast=True)
 
     return game.to_dict()
@@ -120,12 +135,16 @@ def leave_game(game_id):
 
     game.game_data = json.dumps(game_instance.get_data())
 
+    if request.json['unmount']:
+        sio.server.leave_room(current_user.sid, f'{game.game_type}-{game.id}')
+        sio.server.leave_room(current_user.sid, str(game.room.id))
+        game.room.users.remove(current_user)
+        db.session.add(Message(room_id=game.room.id, message=f'{current_user.username} has left the room'))
+
     db.session.commit()
 
     sio.emit('update_game_lobby', game.to_dict(), room=f'{game.game_type}-{game.id}')
     sio.emit('update_game_list', broadcast=True)
-    if request.json['unmount']:
-        sio.server.leave_room(current_user.sid, f'{game.game_type}-{game.id}')
 
     return game.to_dict()
 
@@ -140,9 +159,10 @@ def delete_game(game_id):
 
     sio.emit('close_game_lobby', room=f'{game.game_type}-{game.id}')
     sio.server.close_room(f'{game.game_type}-{game.id}')
+    sio.server.close_room(str(game.room.id))
     sio.emit('update_game_list', broadcast=True)
 
-    db.session.delete(game)
+    db.session.delete(game.room)
     db.session.commit()
 
     return {'message': 'Successfully deleted game'}

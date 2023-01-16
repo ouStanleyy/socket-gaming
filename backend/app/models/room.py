@@ -25,12 +25,19 @@ class Room(db.Model):
 
     users = db.relationship("User", secondary=Occupant, back_populates="rooms")
     messages = db.relationship("Message", back_populates="room", cascade="all, delete-orphan")
-    # games = db.relationship("Game", back_populates="room", cascade="all, delete-orphan")
+    game = db.relationship("Game", uselist=False, back_populates="room", cascade="all, delete-orphan")
 
 
     def to_dict(self):
         return {
             'id': self.id,
             'user': next((user.to_dict() for user in self.users if user.id != current_user.id), {}),
-            'messages': [message.to_dict() for message in self.messages]
+            'messages': [message.to_dict() for message in self.messages],
+        }
+
+    def to_dict_game_chat(self):
+        return {
+            'id': self.id,
+            'users': [user.to_dict() for user in self.users],
+            'messages': [message.to_dict() for message in self.messages],
         }

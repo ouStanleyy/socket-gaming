@@ -15,6 +15,16 @@ def rooms():
     return {'Rooms': [room.to_dict() for room in current_user.rooms]}
 
 
+@room_routes.route('/<int:room_id>')
+@login_required
+def room(room_id):
+    """
+    Query for a room by id and returns that room in a dictionary
+    """
+    room = Room.query.get_or_404(room_id)
+    return room.to_dict_game_chat()
+
+
 @room_routes.route('/', methods=['POST'])
 @login_required
 def join_room():

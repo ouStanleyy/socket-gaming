@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { Modal } from "../../context/Modal";
+import GameChat from "./GameChat";
+import { ProfilePicture } from "../Elements";
 import {
   getGameById,
   joinGame,
@@ -22,6 +24,7 @@ const GameDetails = () => {
   const sio = useSelector((state) => state.socket.socket);
   const game = useSelector((state) => state.games[gameId]);
   const sessionId = useSelector((state) => state.session.user.id);
+  const isHost = sessionId === game?.host_id;
   const player = (userId) =>
     Object.keys(game?.game_data).find(
       (data) => game?.game_data[data] === userId && data !== "winner"
@@ -35,6 +38,7 @@ const GameDetails = () => {
           )
         )
     : null;
+  const room = useSelector((state) => state.rooms[game?.room_id]);
   // const players = game?.users.sort(
   //   (a, b) => player(a.id).slice(-1) - player(b.id).slice(-1)
   //   // id === game.host_id ? -1 : 0;
@@ -100,18 +104,18 @@ const GameDetails = () => {
   useEffect(() => {
     (async () => {
       try {
-        await dispatch(updateReadyState(gameId, ready));
-      } catch (err) {}
-    })();
-  }, [ready]);
-
-  useEffect(() => {
-    (async () => {
-      try {
         await dispatch(getGameById(gameId));
       } catch (err) {}
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await dispatch(updateReadyState(gameId, ready));
+      } catch (err) {}
+    })();
+  }, [ready]);
 
   useEffect(() => {
     sio.on("update_game_lobby", (data) => dispatch(loadGameDetails(data)));
@@ -130,11 +134,7 @@ const GameDetails = () => {
     });
   }, [sio]);
 
-  useEffect(
-    () =>
-      game?.host_id === sessionId ? () => closeLobby(false) : () => leave(true),
-    []
-  );
+  useEffect(() => (isHost ? () => closeLobby(false) : () => leave(true)), []);
   // useEffect(() => {
   //   if (game?.host_id === sessionId) return () => closeLobby(false);
   // }, []);
@@ -184,7 +184,7 @@ const GameDetails = () => {
         </div>
         {closeLobbyModal && (
           <Modal onClose={toggleCloseLobbyModal}>
-            <div>
+            <div className={styles.closeLobbyModal}>
               <h3>Close game lobby?</h3>
               <button onClick={closeLobby}>Yes</button>
               <button onClick={toggleCloseLobbyModal}>No</button>
@@ -193,13 +193,25 @@ const GameDetails = () => {
         )}
       </div>
       <div className={styles.playersContainer}>
-        <h3>Players</h3>
+        {/* <h3>Players</h3> */}
         <div className={styles.playersList}>
           {players?.map((user, idx) =>
             user ? (
               <div key={idx} className={styles.player}>
                 <div className={styles.seat}>
-                  <span>{user.username}</span>{" "}
+                  <span>{user.username}</span>
+                  {game.host_id !== user.id &&
+                    (game?.game_data[playerReady[player(user.id)]] ? (
+                      <i
+                        className="fa-solid fa-check fa-lg fa-beat"
+                        style={{ color: "green" }}
+                      />
+                    ) : (
+                      <i
+                        className="fa-solid fa-xmark fa-lg fa-fade"
+                        style={{ color: "red" }}
+                      />
+                    ))}
                   {user.id === sessionId && game.host_id !== sessionId && (
                     <button
                       className={styles.seatBtn}
@@ -208,6 +220,7 @@ const GameDetails = () => {
                       <i className="fa-solid fa-user-minus fa-lg" />
                     </button>
                   )}
+                  <div></div>
                   {/* <span>{game.game_data.winner === user.id && "Winner"}</span> */}
                 </div>
                 {game.host_id === user.id ? (
@@ -217,19 +230,6 @@ const GameDetails = () => {
                   !gameActive && <button onClick={start}>Start Game</button>
                 ) : (
                   <>
-                    <div>
-                      {game?.game_data[playerReady[player(user.id)]] ? (
-                        <i
-                          className="fa-solid fa-check fa-lg fa-beat"
-                          style={{ color: "green" }}
-                        />
-                      ) : (
-                        <i
-                          className="fa-solid fa-xmark fa-lg fa-fade"
-                          style={{ color: "red" }}
-                        />
-                      )}
-                    </div>
                     {user.id === sessionId && (
                       <button onClick={toggleReady}>
                         {!ready ? "Ready Up" : "Unready"}
@@ -263,6 +263,13 @@ const GameDetails = () => {
               </button>
             </div>
           ))} */}
+        </div>
+        <div className={styles.usersList}>
+          {room?.users.map((user) => (
+            <div key={user.id} className={styles.user}>
+              <ProfilePicture user={user} size="medium" />
+            </div>
+          ))}
         </div>
         {/* <div>
           Player 2 is {game?.game_data.player_2_ready ? "ready" : "not ready"}
@@ -301,6 +308,7 @@ const GameDetails = () => {
           </p>
         </div>
       </div>
+      <GameChat sessionId={sessionId} game={game} />
     </div>
   );
 };

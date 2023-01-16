@@ -39,6 +39,7 @@ def upgrade():
     op.create_table('games',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('host_id', sa.Integer(), nullable=False),
+    sa.Column('room_id', sa.Integer(), nullable=False),
     sa.Column('game_data', sa.Text(), nullable=True),
     sa.Column('game_type', sa.Enum('snakes', 'pong', 'connect4', name='game_type'), nullable=False),
     sa.Column('max_players', sa.Integer(), nullable=False),
