@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_login import login_required, current_user
 from flask_socketio import emit
 from app.sockets import sio
-from app.models import db, Game, Room
+from app.models import db, Game, Room, Message
 from app.games import Player, Snakes, Pong
 import json
 
@@ -32,6 +32,7 @@ def game(game_id):
         sio.server.enter_room(current_user.sid, f'{game.game_type}-{game.id}')
         sio.server.enter_room(current_user.sid, str(game.room.id))
 
+        db.session.add(Message(room_id=game.room.id, message=f'{current_user.username} has joined the room'))
         db.session.commit()
 
         sio.emit('update_game_lobby', game.to_dict(), room=f'{game.game_type}-{game.id}')
@@ -138,6 +139,7 @@ def leave_game(game_id):
         sio.server.leave_room(current_user.sid, f'{game.game_type}-{game.id}')
         sio.server.leave_room(current_user.sid, str(game.room.id))
         game.room.users.remove(current_user)
+        db.session.add(Message(room_id=game.room.id, message=f'{current_user.username} has left the room'))
 
     db.session.commit()
 

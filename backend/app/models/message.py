@@ -28,5 +28,6 @@ class Message(db.Model):
             'user_id': self.user_id,
             'room_id': self.room_id,
             'message': self.message,
-            'time_sent': self.time_sent
+            'time_sent': self.time_sent,
+            'user': self.user.to_dict() if self.user_id else None
         }

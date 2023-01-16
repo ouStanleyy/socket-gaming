@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { Modal } from "../../context/Modal";
 import GameChat from "./GameChat";
+import { ProfilePicture } from "../Elements";
 import {
   getGameById,
   joinGame,
@@ -37,6 +38,7 @@ const GameDetails = () => {
           )
         )
     : null;
+  const room = useSelector((state) => state.rooms[game?.room_id]);
   // const players = game?.users.sort(
   //   (a, b) => player(a.id).slice(-1) - player(b.id).slice(-1)
   //   // id === game.host_id ? -1 : 0;
@@ -191,7 +193,7 @@ const GameDetails = () => {
         )}
       </div>
       <div className={styles.playersContainer}>
-        <h3>Players</h3>
+        {/* <h3>Players</h3> */}
         <div className={styles.playersList}>
           {players?.map((user, idx) =>
             user ? (
@@ -261,6 +263,13 @@ const GameDetails = () => {
               </button>
             </div>
           ))} */}
+        </div>
+        <div className={styles.usersList}>
+          {room?.users.map((user) => (
+            <div key={user.id} className={styles.user}>
+              <ProfilePicture user={user} size="medium" />
+            </div>
+          ))}
         </div>
         {/* <div>
           Player 2 is {game?.game_data.player_2_ready ? "ready" : "not ready"}

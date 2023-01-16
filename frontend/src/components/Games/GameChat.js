@@ -18,7 +18,7 @@ const GameChat = ({ sessionId, game }) => {
     new Date().toDateString() === new Date(date).toDateString();
 
   const isOverHour = (newDate, oldDate) =>
-    (new Date(newDate) - new Date(oldDate)) / 1000 / 60 > 15;
+    (new Date(newDate) - new Date(oldDate)) / 1000 / 60 > 5;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,7 +65,7 @@ const GameChat = ({ sessionId, game }) => {
       </div> */}
       <div className={styles.conversationWrapper}>
         <div className={styles.conversation}>
-          {messages?.map(({ id, message, user_id, time_sent }, idx) => (
+          {messages?.map(({ id, message, user_id, time_sent, user }, idx) => (
             <div className={styles.messageWrapper} key={id}>
               {(isOverHour(time_sent, messages[idx - 1]?.time_sent) ||
                 !idx) && (
@@ -82,21 +82,33 @@ const GameChat = ({ sessionId, game }) => {
                   })}
                 </h4>
               )}
-              <div className={styles.messageBubbles}>
-                <div className={styles.profilePic}>
+              {!user_id ? (
+                <div className={styles.connectionMessage}>{message}</div>
+              ) : (
+                <>
                   {user_id !== sessionId &&
-                    user_id !== messages[idx + 1]?.user_id && (
-                      <ProfilePicture user={findUser(user_id)} size="xsmall" />
+                    user_id !== messages[idx - 1]?.user_id && (
+                      <div className={styles.username}>{user.username}</div>
                     )}
-                </div>
-                <p
-                  className={`${styles.message} ${
-                    user_id === sessionId ? styles.outgoing : styles.incoming
-                  }`}
-                >
-                  {message}
-                </p>
-              </div>
+                  <div className={styles.messageBubbles}>
+                    <div className={styles.profilePic}>
+                      {user_id !== sessionId &&
+                        user_id !== messages[idx + 1]?.user_id && (
+                          <ProfilePicture user={user} size="xsmall" />
+                        )}
+                    </div>
+                    <p
+                      className={`${styles.message} ${
+                        user_id === sessionId
+                          ? styles.outgoing
+                          : styles.incoming
+                      }`}
+                    >
+                      {message}
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           ))}
           <div id={styles.anchor}></div>
