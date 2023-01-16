@@ -45,6 +45,7 @@ def upgrade():
     sa.Column('max_players', sa.Integer(), nullable=False),
     sa.Column('is_private', sa.Boolean(), nullable=False),
     sa.ForeignKeyConstraint(['host_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['room_id'], ['rooms.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('messages',
