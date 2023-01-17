@@ -1,0 +1,49 @@
+.settingContainer {
+  border: 1px solid #2d3132;
+  border-radius: 3px;
+  background-color: #383c3f;
+  display: flex;
+  max-width: 935px;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.settingNav {
+  /* border: 1px solid blue; */
+  display: flex;
+  flex-direction: column;
+  width: 236px;
+}
+
+.settingNav a {
+  /* border: 1px solid green; */
+  padding: 16px 16px 16px 30px;
+  color: #aad179;
+  font-size: 16px;
+}
+
+.activeLink {
+  font-weight: bold;
+  position: relative;
+}
+
+.activeLink::before {
+  position: absolute;
+  content: "";
+  /* z-index: 10; */
+  left: 0;
+  top: 0;
+  display: inline-block;
+  height: 100%;
+  width: 2px;
+  background-color: #86c232;
+}
+
+.settingOption {
+  border-left: 2px solid #2d3132;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 300px; */
+}

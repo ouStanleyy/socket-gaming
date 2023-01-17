@@ -93,6 +93,59 @@ export const signUp = (username, password) => async (dispatch) => {
   }
 };
 
+export const editProfile =
+  ({ profilePicture, username }) =>
+  async (dispatch) => {
+    const res = await fetch(`/api/users/profile`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        profile_picture: profilePicture,
+        username,
+      }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      dispatch(setUser(data));
+      return null;
+    } else if (res.status < 500) {
+      const data = await res.json();
+      if (data.errors) {
+        return data.errors;
+      }
+    } else {
+      return ["An error occurred. Please try again."];
+    }
+  };
+
+export const updatePassword =
+  ({ oldPassword, newPassword }) =>
+  async (dispatch) => {
+    const res = await fetch("/api/users/profile/password", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        old_password: oldPassword,
+        new_password: newPassword,
+      }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      dispatch(setUser(data));
+    } else {
+      const data = await res.json();
+      if (data.errors) {
+        return data.errors;
+      }
+    }
+  };
+
 // reducer
 export default function reducer(state = { user: null }, action) {
   switch (action.type) {

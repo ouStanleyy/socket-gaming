@@ -1,4 +1,3 @@
-import Iphone from "./Iphone";
 import styles from "./Splash.module.css";
 import Form from "../Form/Form";
 

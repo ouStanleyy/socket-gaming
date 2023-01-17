@@ -1,0 +1,116 @@
+.editProfileForm {
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 32px;
+  background-color: #383c3f;
+}
+
+.fieldContainer {
+  display: flex;
+  margin-top: 6px;
+}
+
+.labelContainer {
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 32px;
+  text-align: right;
+  width: 40%;
+}
+
+.labelContainer label {
+  font-weight: 500;
+  font-size: 16px;
+  color: #aad179;
+}
+
+.inputContainer {
+  /* border: 1px solid blue; */
+  padding-right: 60px;
+  flex: 1;
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  color: #ee2d3e;
+  top: 2px;
+  right: 76px;
+  z-index: 2;
+  user-select: none;
+}
+
+.error:hover .errorMessage {
+  visibility: visible;
+}
+
+.errorMessage {
+  /* border: 1px solid red; */
+  visibility: hidden;
+  position: absolute;
+  font-size: 12px;
+  top: 5px;
+  left: 34px;
+  word-wrap: break-word;
+  width: 150px;
+  white-space: normal;
+}
+
+.inputContainer input {
+  padding: 4px 10px;
+  font-size: 16px;
+}
+
+.inputContainer input,
+.inputContainer textarea {
+  width: 100%;
+  max-width: 335px;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+}
+
+.inputContainer textarea {
+  padding: 6px 10px;
+  font-size: 16px;
+  resize: vertical;
+  max-height: 400px;
+}
+
+.inputContainer div {
+  color: #8e8e8e;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 6px 0;
+}
+
+.personalInfoHeader {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.buttonContainer {
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 0 6px;
+}
+
+.submitButton {
+  width: fit-content;
+  border: none;
+  color: #ffffff;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: #86c232;
+  border-radius: 4px;
+  padding: 5px 9px;
+}
+
+.disableSubmit {
+  opacity: 0.7;
+  cursor: auto;
+}
