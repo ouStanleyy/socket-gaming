@@ -103,14 +103,14 @@ svg {
 }
 
 .hideNavItem.searchBorder {
-  border: 1px solid #dbdbdb;
+  border: 2px solid #2d3132;
   border-radius: 50%;
   width: 48px;
   height: 48px;
 }
 
 .hideNavItem.notifBorder {
-  border: 1px solid #dbdbdb;
+  border: 2px solid #2d3132;
   border-radius: 50%;
   width: 48px;
   height: 48px;
@@ -118,7 +118,7 @@ svg {
 
 .redCircle {
   background-color: red;
-  border: 1px solid white;
+  border: 1px solid #2d3132;
   width: 10px;
   height: 10px;
   border-radius: 50%;

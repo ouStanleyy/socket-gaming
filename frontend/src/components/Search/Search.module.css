@@ -2,14 +2,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-right: 1px solid #dbdbdb;
-  box-shadow: 12px 0 20px -8px #dbdbdb;
+  border-right: 1px solid #2d3132;
+  box-shadow: 12px 0 20px -8px #383c3f;
   border-radius: 16px;
   position: fixed;
   height: 100vh;
   padding-left: 72px;
   width: 472px;
-  background-color: white;
+  background-color: #383c3f;
   animation: slideIn 300ms ease-out;
   z-index: 4;
 }
@@ -24,13 +24,14 @@
   justify-content: space-between;
   padding: 24px;
   height: 154px;
-  border-bottom: 1px solid #dbdbdb;
+  border-bottom: 1px solid #2d3132;
 }
 
 .searchHeader > h2 {
   font-size: 22px;
   font-weight: 500;
   line-height: 25px;
+  color: #aad179;
 }
 
 .inputContainer {
@@ -48,7 +49,8 @@
   padding: 14px;
   font-size: 16px;
   margin-left: -4px;
-  background-color: #efefef;
+  background-color: #2d3132;
+  color: #8e8e8e;
 }
 
 .searchInput::placeholder {
@@ -60,7 +62,7 @@
   position: absolute;
   right: 14px;
   font-size: 20px;
-  color: #c7c7c7;
+  color: #8e8e8e;
   cursor: pointer;
   user-select: none;
 }

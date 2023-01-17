@@ -33,6 +33,7 @@ const GamesList = () => {
   const sio = useSelector((state) => state.socket.socket);
   const games = useSelector((state) => Object.values(state.games));
   const [newGameModal, setNewGameModal] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const toggleNewGameModal = () => {
     setNewGameModal((state) => !state);
@@ -42,13 +43,17 @@ const GamesList = () => {
     (async () => {
       try {
         await dispatch(getGames());
+        setLoaded(true);
       } catch (err) {}
     })();
   }, []);
 
   useEffect(() => {
-    sio.once("update_game_list", () => dispatch(getGames()));
-  }, [sio, games]);
+    const updateList = () => dispatch(getGames());
+
+    sio.on("update_game_list", updateList);
+    return () => sio.off("update_game_list", updateList);
+  }, [sio]);
 
   return (
     <div className={styles.gamesListContainer}>
@@ -59,25 +64,29 @@ const GamesList = () => {
             <i className="fa-solid fa-plus fa-lg" />
           </div>
         </div>
-        {games.map((game) => (
-          <Link key={game.id} to={`/games/${game.id}`}>
-            <div className={styles.gameContainer}>
-              <div className={styles.gamePicture}>
-                {/* <img src="https://illustoon.com/photo/2317.png" alt="snake" /> */}
-                {gamePics[game.game_type]}
+        {loaded &&
+          games.map((game) => (
+            <Link key={game.id} to={`/games/${game.id}`}>
+              <div className={styles.gameContainer}>
+                <div className={styles.gamePicture}>
+                  {/* <img src="https://illustoon.com/photo/2317.png" alt="snake" /> */}
+                  {gamePics[game.game_type]}
+                </div>
+                <div className={styles.gameDetails}>
+                  <p className={styles.host}>
+                    Host:{" "}
+                    {
+                      game.users.find((user) => user.id === game.host_id)
+                        .username
+                    }
+                  </p>
+                  <p className={styles.numPlayers}>
+                    Players:{game.users.length}/{game.max_players}
+                  </p>
+                </div>
               </div>
-              <div className={styles.gameDetails}>
-                <p className={styles.host}>
-                  Host:{" "}
-                  {game.users.find((user) => user.id === game.host_id).username}
-                </p>
-                <p className={styles.numPlayers}>
-                  Players:{game.users.length}/{game.max_players}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
       </div>
       <div className={styles.turnBasedContainer}>
         <div className={styles.header}>

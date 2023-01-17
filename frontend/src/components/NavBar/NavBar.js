@@ -21,7 +21,7 @@ const NavBar = () => {
   const links = [
     // { icon: "Logo", path: "/" },
     // { icon: "Instagram", path: "/" },
-    { icon: "Home", path: "/" },
+    // { icon: "Home", path: "/" },
     { icon: "Search", path: "/search" },
     // { icon: "Explore", path: "/explore" },
     { icon: "Messages", path: "/messages" },
