@@ -12,7 +12,7 @@ const NavItem = ({
   hasNotification,
 }) => {
   const user = useSelector((state) => state.session.user);
-  const isLogo = type === "Logo" || type === "Instagram";
+  const isLogo = type === "Icon" || type === "Logo";
   const style = isLogo ? styles.logo : styles.navItem;
   const profilePicture = (
     <>
@@ -26,7 +26,7 @@ const NavItem = ({
 
   const iconButton = (
     <>
-      {isLogo && <div className={styles.instagramLogo}>{icons["Logo"]}</div>}
+      {isLogo && <div className={styles.namedLogo}>{icons["Icon"]}</div>}
       <div className={`${styles.svgContainer} ${isLogo && styles.hideSvg}`}>
         {icons[type]}
         {type === "Notifications" && hasNotification && (
