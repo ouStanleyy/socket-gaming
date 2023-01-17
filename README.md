@@ -30,6 +30,14 @@
 2. <a href="#features">Features</a>
 3. <a href="#contact-me">Contact Me</a>
 
+<!-- PREVIEW -->
+## Preview
+
+<img width="1727" alt="Screen Shot 2023-01-17 at 5 18 44 PM" src="https://user-images.githubusercontent.com/97637598/213026527-cb35a49d-9c91-4be2-9d11-56f1484831ac.png">
+<img width="1727" alt="Screen Shot 2023-01-17 at 5 20 27 PM" src="https://user-images.githubusercontent.com/97637598/213026588-2e436390-6710-48dc-ba52-3bef5fc6b724.png">
+<img width="1727" alt="Screen Shot 2023-01-17 at 5 24 21 PM" src="https://user-images.githubusercontent.com/97637598/213026616-acb74041-8ac6-41db-b79f-b4413d7a9732.png">
+<img width="1727" alt="Screen Shot 2023-01-17 at 5 27 00 PM" src="https://user-images.githubusercontent.com/97637598/213026639-9b460a5c-da99-4857-8b50-a9df75dd2dc7.png">
+
 <!-- BUILD -->
 ## Built With The Following
 
