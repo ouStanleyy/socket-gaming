@@ -26,9 +26,10 @@
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
-1. <a href="#getting-started">Getting Started</a>
-2. <a href="#features">Features</a>
-3. <a href="#contact-me">Contact Me</a>
+1. <a href="#preview">Preview</a>
+2. <a href="#getting-started">Getting Started</a>
+3. <a href="#features">Features</a>
+4. <a href="#contact-me">Contact Me</a>
 
 <!-- PREVIEW -->
 ## Preview
