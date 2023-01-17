@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/ouStanleyy/socket-gaming">
-    ![favicon](https://user-images.githubusercontent.com/97637598/213017662-30fc9ec6-2280-4831-9c6f-1da7f6c9e06d.svg)
+      <img src="https://user-images.githubusercontent.com/97637598/213017662-30fc9ec6-2280-4831-9c6f-1da7f6c9e06d.svg" alt="Logo" width="200" height="200">
   </a>
 
 
