@@ -23,6 +23,7 @@ const Messages = () => {
   );
   const [newMessageModal, setNewMessageModal] = useState(false);
   const [roomId, setRoomId] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   const toggleNewMessageModal = () => {
     setNewMessageModal((state) => !state);
@@ -32,6 +33,7 @@ const Messages = () => {
     (async () => {
       try {
         await dispatch(getRooms());
+        setLoaded(true);
       } catch (err) {}
     })();
   }, []);
@@ -103,36 +105,37 @@ const Messages = () => {
           </div>
         </div>
         <h3 className={styles.title}>Messages</h3>
-        {rooms.map((room) => (
-          <Link key={room.id} to={`/messages/${room.id}`}>
-            <div
-              className={`${styles.userContainer} ${
-                roomId && room.id === parseInt(roomId) && styles.activeUser
-              }`}
-            >
-              <div className={styles.profilePicture}>
-                <div
-                  className={`${styles.status} ${
-                    room.user?.is_online && styles.online
-                  }`}
-                >
-                  <ProfilePicture
-                    path={`/messages/${room.id}`}
-                    user={room.user}
-                    size={"large"}
-                  />
+        {loaded &&
+          rooms.map((room) => (
+            <Link key={room.id} to={`/messages/${room.id}`}>
+              <div
+                className={`${styles.userContainer} ${
+                  roomId && room.id === parseInt(roomId) && styles.activeUser
+                }`}
+              >
+                <div className={styles.profilePicture}>
+                  <div
+                    className={`${styles.status} ${
+                      room.user?.is_online && styles.online
+                    }`}
+                  >
+                    <ProfilePicture
+                      path={`/messages/${room.id}`}
+                      user={room.user}
+                      size={"large"}
+                    />
+                  </div>
+                </div>
+                <div className={styles.userDetails}>
+                  <p className={styles.username}>{room.user?.username}</p>
+
+                  <p className={styles.msgPreview}>
+                    {room.messages[room.messages.length - 1]?.message}
+                  </p>
                 </div>
               </div>
-              <div className={styles.userDetails}>
-                <p className={styles.username}>{room.user?.username}</p>
-
-                <p className={styles.msgPreview}>
-                  {room.messages[room.messages.length - 1]?.message}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
       </div>
       <div className={styles.convoContainer}>
         <Switch>
@@ -146,7 +149,8 @@ const Messages = () => {
           <Route path="/messages">
             <div className={styles.noConvo}>
               {/* <i className="fa-regular fa-comments fa-5x" /> */}
-              <i className="fa-solid fa-paper-plane fa-5x" />
+              {/* <i className="fa-solid fa-paper-plane fa-5x" /> */}
+              <i class="fa-regular fa-comment-dots fa-5x" />
               {/* <svg
                 aria-label="Direct"
                 // class="_ab6-"
@@ -186,7 +190,7 @@ const Messages = () => {
                 ></polygon>
               </svg> */}
               <h3>Your Messages</h3>
-              <p>Send private messages to a friend.</p>
+              <p>Send private messages to another user.</p>
               <button onClick={toggleNewMessageModal}>Send Message</button>
             </div>
           </Route>

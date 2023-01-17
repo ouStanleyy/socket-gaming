@@ -7,7 +7,7 @@
 }
 
 .userContainer:hover {
-  background-color: #fafafa;
+  background-color: #2d3132;
 }
 
 .userDetails {
@@ -21,9 +21,10 @@
   font-weight: 500;
   width: max-content;
   cursor: pointer;
+  color: #ffffff;
 }
 
 .fullName {
-  color: #8e8e8e;
+  color: #ffffff;
   width: max-content;
 }

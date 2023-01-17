@@ -2,9 +2,11 @@ import { useState } from "react";
 import { login } from "../../store/session";
 import { useDispatch } from "react-redux";
 import styles from "./LoginForm.module.css";
+import { useHistory } from "react-router-dom";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [errors, setErrors] = useState([]);
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +19,7 @@ const LoginForm = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const data = await dispatch(login(credential, password));
+    history.push("/games");
 
     if (data) setErrors(data);
   };
@@ -26,6 +29,7 @@ const LoginForm = () => {
     const demoUser = "Demo_User";
     const demoPassword = "demouserpw";
     const data = await dispatch(login(demoUser, demoPassword));
+    history.push("/games");
     if (data) {
       setErrors(data);
     }

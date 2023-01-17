@@ -1,7 +1,7 @@
 .convoHeader {
   min-height: 60px;
   width: 584px;
-  border-bottom: 1px solid #dbdbdb;
+  border-bottom: 1px solid #2d3132;
   padding-left: 24px;
   margin-bottom: auto;
 }
@@ -24,6 +24,7 @@
 .username {
   font-weight: 500;
   width: max-content;
+  color: #ffffff;
 }
 
 .status {
@@ -79,7 +80,8 @@
 }
 
 .message {
-  border: 1px solid #efefef;
+  background-color: #2d3132;
+  /* border: 1px solid #efefef; */
   border-radius: 20px;
   width: fit-content;
   max-width: 236px;
@@ -87,11 +89,12 @@
   font-size: 14px;
   line-height: 18px;
   margin-left: 8px;
+  color: #ffffff;
   overflow-wrap: break-word;
 }
 
 .message.outgoing {
-  background-color: #efefef;
+  background-color: #86c232;
   margin-left: auto;
 }
 

@@ -4,8 +4,9 @@
   align-items: center;
   padding: 8px 16px;
   font-size: 16px;
-  border-bottom: 1px solid #E6E6E6;
-  color: #262626;
+  border-bottom: 2px solid #2d3132;
+  color: #aad179;
+  background-color: #383c3f;
 }
 
 /* Placeholder for non SVG icons */
@@ -14,7 +15,7 @@
 }
 
 .moreItemContainer:hover {
-  background-color: #FAFAFA;
+  background-color: #2d3132;
 }
 
 .moreItemContainer:active {
