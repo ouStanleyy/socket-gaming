@@ -1,16 +1,17 @@
 import styles from "./ProfilePicture.module.css";
-import { Link } from "react-router-dom";
+import { Modal } from "../../context/Modal";
+import UserModal from "../Users/UserModal";
+import { useState } from "react";
 
 // size : "xsmall", "small", "medium", "large", "xlarge", "xxlarge"
 const ProfilePicture = ({
+  clickable = false,
   user,
   size = "large",
   onClose,
-  hasStory = false,
-  path = "",
+  hasBorder = false,
 }) => {
   let style;
-
   switch (size) {
     case "xsmall":
       style = styles.profileXSmall;
@@ -30,10 +31,20 @@ const ProfilePicture = ({
     default:
       style = styles.profileXXLarge;
   }
+  const [userModal, setUserModal] = useState(false);
+
+  const toggleUserModal = () => {
+    setUserModal((state) => !state);
+  };
 
   return (
-    <Link to={path || `/users/${user?.id}`}>
-      <div onClick={onClose} className={`${style} ${hasStory && styles.story}`}>
+    <>
+      <div
+        onClick={clickable ? toggleUserModal : undefined}
+        className={`${style} ${clickable && styles.clickable} ${
+          hasBorder && styles.border
+        }`}
+      >
         <img
           src={
             user?.profile_picture ||
@@ -42,7 +53,12 @@ const ProfilePicture = ({
           alt="profile"
         />
       </div>
-    </Link>
+      {userModal && (
+        <Modal onClose={toggleUserModal}>
+          <UserModal user={user} onClose={toggleUserModal} />
+        </Modal>
+      )}
+    </>
   );
 };
 

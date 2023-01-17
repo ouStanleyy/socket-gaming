@@ -267,7 +267,7 @@ const GameDetails = () => {
         <div className={styles.usersList}>
           {room?.users.map((user) => (
             <div key={user.id} className={styles.user}>
-              <ProfilePicture user={user} size="medium" />
+              <ProfilePicture clickable={true} user={user} size="medium" />
             </div>
           ))}
         </div>
