@@ -21,6 +21,10 @@
   align-items: center;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 .profileXXLarge {
   width: 150px;
   height: 150px;
@@ -56,11 +60,11 @@ img {
   height: 100%;
 }
 
-.story {
+.border {
   position: relative;
 }
 
-.story::after {
+.border::after {
   position: absolute;
   content: "";
   background: linear-gradient(white, white) padding-box,
