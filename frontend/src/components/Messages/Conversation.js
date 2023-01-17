@@ -28,10 +28,14 @@ const Conversation = ({ sessionUser, rooms, setRoomId }) => {
   };
 
   useEffect(() => {
-    if (sio) {
-      sio?.once("message", () => dispatch(getRooms()));
-    }
-  }, [sio, messages]);
+    const message = () => {
+      dispatch(getRooms());
+    };
+
+    sio.on("message", message);
+
+    return () => sio.off("message", message);
+  }, [sio]);
 
   useEffect(() => {
     (async () => {
