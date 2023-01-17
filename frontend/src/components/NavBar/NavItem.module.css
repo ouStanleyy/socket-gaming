@@ -43,6 +43,12 @@ svg {
   color: #86c232;
 }
 
+.logo > .svgContainer > svg {
+  margin: -24px;
+  width: 244px;
+  height: 80px;
+}
+
 /* when navItem is hovered, target svg*/
 .navItem:hover .svgContainer {
   transform: scale(1.08);
@@ -66,10 +72,15 @@ svg {
   background-color: transparent;
 }
 
-.instagramLogo {
+.namedLogo {
   position: fixed;
-  scale: 0;
-  transition: 300ms;
+  opacity: 0;
+  scale: 0.6;
+  margin: -84px;
+  width: 244px;
+  height: 120px;
+  color: #86c232;
+  transition: 150ms;
 }
 
 @media screen and (max-width: 1264px) {
@@ -79,7 +90,7 @@ svg {
     display: none;
   }
 
-  .instagramLogo {
+  .namedLogo {
     display: inline-block;
   }
 }
@@ -96,10 +107,11 @@ svg {
   visibility: hidden;
 }
 
-.hideNavItem .instagramLogo {
+.hideNavItem .namedLogo {
   position: static;
-  scale: 1;
-  transition: 300ms;
+  opacity: 1;
+  scale: 0.55;
+  /* transition: 300ms; */
 }
 
 .hideNavItem.searchBorder {

@@ -19,8 +19,8 @@ const NavBar = () => {
   const refSearchBar = useRef(null);
   const user = useSelector((state) => state.session.user);
   const links = [
-    // { icon: "Logo", path: "/" },
-    // { icon: "Instagram", path: "/" },
+    // { icon: "Icon", path: "/games" },
+    { icon: "Logo", path: "/games" },
     // { icon: "Home", path: "/" },
     { icon: "Search", path: "/search" },
     // { icon: "Explore", path: "/explore" },
