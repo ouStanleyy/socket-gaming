@@ -10,8 +10,11 @@ import { useHistory } from "react-router-dom";
 const NewMessage = ({ onClose }) => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const sessionId = useSelector((state) => state.session.user.id);
   const searchResults = useSelector((state) =>
-    Object.values(state.users.searchResults)
+    Object.values(state.users.searchResults).filter(
+      ({ id }) => id !== sessionId
+    )
   );
   const [searchVal, setSearchVal] = useState(``);
   const [loaded, setLoaded] = useState(true);

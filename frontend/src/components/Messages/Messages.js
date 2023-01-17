@@ -37,10 +37,19 @@ const Messages = () => {
   }, []);
 
   useEffect(() => {
-    if (sio) {
-      sio?.on("connected", (data) => dispatch(getRooms()));
-      sio?.on("disconnected", (data) => dispatch(getRooms()));
-    }
+    const updateList = () => {
+      dispatch(getRooms());
+    };
+
+    sio.on("connected", updateList);
+    sio.on("disconnected", updateList);
+    sio.on("message", updateList);
+
+    return () => {
+      sio.off("connected", updateList);
+      sio.off("disconnected", updateList);
+      sio.off("message", updateList);
+    };
   }, [sio]);
 
   return (
