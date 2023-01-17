@@ -1,0 +1,32 @@
+.popupContainer {
+  position: fixed;
+  bottom: -42px;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: #262626;
+  color: #FFFFFF;
+  height: 42px;
+  padding: 12px;
+  font-size: 16px;
+  animation: popUp 3000ms ease;
+}
+
+
+@keyframes popUp {
+ 0% {
+  bottom: -42px;
+ }
+
+ 10% {
+  bottom: 0;
+ }
+
+ 90% {
+  bottom: 0;
+ }
+
+ 100% {
+  bottom: -42px;
+ }
+}

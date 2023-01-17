@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app.models import db, User
+from app.forms import UpdateProfileForm, ChangePasswordForm
+from .auth_routes import validation_errors_to_error_messages
 
 user_routes = Blueprint('users', __name__)
 
@@ -23,6 +25,45 @@ def user(user_id):
     """
     user = User.query.get_or_404(user_id)
     return user.to_dict()
+
+
+@user_routes.route('/profile', methods=['PUT'])
+@login_required
+def update_user_profile():
+    """
+    Update current user's profile with provided data
+    """
+    form = UpdateProfileForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if form.validate_on_submit():
+        for key, val in form.data.items():
+            if val:
+                setattr(current_user, key, val)
+        db.session.commit()
+        return current_user.to_dict()
+
+    return {'errors': validation_errors_to_error_messages(form.errors)}, 401
+
+
+@user_routes.route('/profile/password', methods=['PUT'])
+@login_required
+def change_password():
+    """
+    Change current user's password
+    """
+
+    form = ChangePasswordForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if form.validate_on_submit():
+        for key, val in form.data.items():
+            if key == "new_password":
+                setattr(current_user, "password", val)
+        db.session.commit()
+        return current_user.to_dict()
+
+    return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 
 
 @user_routes.route('/search')

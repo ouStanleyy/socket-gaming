@@ -140,7 +140,7 @@ const NavBar = () => {
               id="menu-dropdown"
             >
               <NavLink
-                to="/account/edit"
+                to="/settings/edit"
                 exact={true}
                 className={styles.navLink}
               >
