@@ -34,11 +34,11 @@ const GameChat = ({ sessionId, game }) => {
     };
 
     sio.on("message", message);
-
     return () => sio.off("message", message);
   }, [sio, room]);
 
   useEffect(() => {
+    console.log("here", game);
     (async () => {
       try {
         await dispatch(getRoomById(game.room_id));
