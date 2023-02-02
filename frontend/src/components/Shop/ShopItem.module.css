@@ -1,0 +1,11 @@
+.shopItemContainer {
+  border: 1px solid red;
+  /* width: 292px; */
+  /* height: 292px; */
+  background-color: black;
+  position: relative;
+}
+
+.shopItemContainer img {
+  object-fit: cover;
+}

@@ -180,7 +180,7 @@ l-99 3 -3 99 c-1 55 0 106 2 113 7 17 196 19 214 1z"
       ></line>
     </svg>
   ),
-  Explore: (
+  Shop: (
     <svg
       aria-label="Explore"
       className="_ab6-"

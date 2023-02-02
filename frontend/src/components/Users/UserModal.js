@@ -31,8 +31,19 @@ function UserModal({ user, onClose }) {
   return (
     loaded && (
       <div className={styles.userContainer}>
-        <div className={styles.userHeader}>
-          <ProfilePicture user={user} size={"large"} onClose={onClose} />
+        <div
+          className={styles.userHeader}
+          style={{
+            backgroundImage:
+              "url(https://marketplace.canva.com/EAFKAwefFZs/1/0/1600w/canva-purple-aquamarine-art-pixel-art-discord-profile-banner-aw9UuWkrCts.jpg)",
+            backgroundPosition: "center",
+            backgroundSize: "100%",
+            // backgroundRepeat: "no-repeat",
+            // height: "150px",
+            // width: "300px",
+          }}
+        >
+          <ProfilePicture user={user} size={"xlarge"} onClose={onClose} />
           <div className={styles.userDetails}>
             <Link to={`/users/${user.id}`}>
               <p onClick={onClose} className={styles.username}>

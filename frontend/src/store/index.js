@@ -5,6 +5,7 @@ import rooms from "./rooms";
 import socket from "./socket";
 import users from "./users";
 import games from "./games";
+import shop from "./shop";
 
 const rootReducer = combineReducers({
   session,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   socket,
   users,
   games,
+  shop,
 });
 
 let enhancer;

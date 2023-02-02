@@ -11,6 +11,7 @@ import { Messages } from "./components/Messages";
 import styles from "./App.module.css";
 import { GamesList, GameLobby } from "./components/Games";
 import { Settings } from "./components/Settings";
+import { Shop } from "./components/Shop";
 
 function App() {
   const dispatch = useDispatch();
@@ -57,6 +58,11 @@ function App() {
         <ProtectedRoute exact path="/games">
           <div className={styles.innerBody}>
             <GamesList />
+          </div>
+        </ProtectedRoute>
+        <ProtectedRoute exact path="/shop">
+          <div className={styles.innerBody}>
+            <Shop />
           </div>
         </ProtectedRoute>
         <ProtectedRoute path="/games/:gameId">
