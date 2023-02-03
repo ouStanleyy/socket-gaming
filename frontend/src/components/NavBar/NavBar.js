@@ -28,6 +28,7 @@ const NavBar = () => {
     { icon: "Games", path: "/games" },
     { icon: "Shop", path: "/shop" },
     { icon: "Profile", path: `/users/${user.id}` },
+    { icon: "Coin", path: "#" },
     { icon: "More", path: "#" },
   ];
 

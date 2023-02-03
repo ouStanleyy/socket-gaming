@@ -2,6 +2,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
+  min-width: 26px;
   /* border: 1px solid red; */
   /* overflow: hidden; */
 }
@@ -41,6 +42,7 @@ svg {
   place-content: center;
   transition: 100ms;
   color: #86c232;
+  min-width: 26px;
 }
 
 .logo > .svgContainer > svg {
@@ -119,6 +121,7 @@ svg {
   border-radius: 50%;
   width: 48px;
   height: 48px;
+  padding: 0 10px;
 }
 
 .hideNavItem.notifBorder {
