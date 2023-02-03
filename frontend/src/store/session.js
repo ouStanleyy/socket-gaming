@@ -1,6 +1,8 @@
 // constants
 const SET_USER = "session/SET_USER";
-const REMOVE_USER = "session/REMOVE_USER";
+const CLEAR_SESSION = "session/CLEAR_SESSION";
+const LOAD_ITEMS = "session/LOAD_ITEMS";
+const ADD_ITEM = "session/ADD_ITEM";
 
 // actions
 const setUser = (user) => ({
@@ -8,8 +10,18 @@ const setUser = (user) => ({
   payload: user,
 });
 
-const removeUser = () => ({
-  type: REMOVE_USER,
+const clearSession = () => ({
+  type: CLEAR_SESSION,
+});
+
+const loadItems = (items) => ({
+  type: LOAD_ITEMS,
+  items,
+});
+
+export const addItem = (item) => ({
+  type: ADD_ITEM,
+  item,
 });
 
 // thunks
@@ -26,6 +38,7 @@ export const authenticate = () => async (dispatch) => {
     }
 
     dispatch(setUser(data));
+    dispatch(loadItems(data.items));
   }
 };
 
@@ -44,6 +57,7 @@ export const login = (username, password) => async (dispatch) => {
   if (response.ok) {
     const data = await response.json();
     dispatch(setUser(data));
+    dispatch(loadItems(data.items));
     return null;
   } else if (response.status < 500) {
     const data = await response.json();
@@ -63,7 +77,7 @@ export const logout = () => async (dispatch) => {
   });
 
   if (response.ok) {
-    dispatch(removeUser());
+    dispatch(clearSession());
   }
 };
 
@@ -147,12 +161,16 @@ export const updatePassword =
   };
 
 // reducer
-export default function reducer(state = { user: null }, action) {
+export default function reducer(state = { user: null, items: [] }, action) {
   switch (action.type) {
     case SET_USER:
       return { ...state, user: action.payload };
-    case REMOVE_USER:
-      return { user: null };
+    case LOAD_ITEMS:
+      return { ...state, items: action.items };
+    case ADD_ITEM:
+      return { ...state, items: [...state.items, action.item] };
+    case CLEAR_SESSION:
+      return { user: null, items: [] };
     default:
       return state;
   }

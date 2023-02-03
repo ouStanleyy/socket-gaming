@@ -19,7 +19,20 @@ def items():
 @login_required
 def item(item_id):
     """
-    Query for a item by id and returns that item in a dictionary
+    Query for item by id and returns that item in a dictionary
     """
     item = Item.query.get_or_404(item_id)
+    return item.to_dict()
+
+
+@item_routes.route('/<int:item_id>/buy', methods=['POST'])
+@login_required
+def buy_item(item_id):
+    """
+    Query for item by id and adds it to current user's items
+    """
+    item = Item.query.get_or_404(item_id)
+    current_user.items.append(item)
+    db.session.commit()
+
     return item.to_dict()

@@ -1,3 +1,5 @@
+import { addItem } from "./session";
+
 // constants
 const LOAD_SHOP_ITEMS = "shop/LOAD_SHOP_ITEMS";
 // const LOAD_GAME_DETAILS = "games/LOAD_GAME_DETAILS";
@@ -41,6 +43,19 @@ export const getShopItems = () => async (dispatch) => {
     items.forEach((item) => (normalizedData[item.id] = item));
     dispatch(loadShopItems(normalizedData));
     return normalizedData;
+  }
+};
+
+export const buyItem = (itemId) => async (dispatch) => {
+  const res = await fetch(`/api/items/${itemId}/buy`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (res.ok) {
+    const item = await res.json();
+    dispatch(addItem(item));
+    return item;
   }
 };
 

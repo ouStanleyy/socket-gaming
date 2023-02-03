@@ -1,11 +1,101 @@
 .shopItemContainer {
-  border: 1px solid red;
+  /* border: 1px solid red; */
   /* width: 292px; */
-  /* height: 292px; */
-  background-color: black;
+  height: max-content;
   position: relative;
 }
 
-.shopItemContainer img {
-  object-fit: cover;
+.itemImage {
+  position: relative;
+  object-fit: contain;
+}
+
+.hoverOptions {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  /* width: 292px;
+  height: 292px; */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* cursor: pointer; */
+}
+
+.hoverOptions:hover {
+  z-index: 2;
+}
+
+.itemImage:hover {
+  z-index: -1;
+}
+
+.priceContainer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.price {
+  font-weight: 500;
+  font-size: 20px;
+  user-select: none;
+}
+
+.goldCoin {
+  width: 28px;
+  height: 28px;
+}
+
+.disabledButton {
+  cursor: default;
+}
+
+.buyItemModal {
+  display: flex;
+  padding: 16px;
+  color: #ffffff;
+  align-items: center;
+  width: 300px;
+  height: 80px;
+  background-color: #383c3f;
+  border-radius: 12px;
+  animation: onShow 150ms ease;
+}
+
+.buyItemModal > h3 {
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.buyItemModal > h3 > img {
+  width: 24px;
+  height: 24px;
+  margin: 0 4px;
+}
+
+.buyItemModal > h3 + button {
+  margin-left: auto;
+}
+
+.buyItemModal > button + button {
+  margin-left: 8px;
+}
+
+@keyframes onShow {
+  from {
+    opacity: 0;
+    scale: 1.2;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
 }
