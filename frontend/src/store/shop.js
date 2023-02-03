@@ -33,12 +33,12 @@ const loadShopItems = (items) => ({
 
 // thunks
 export const getShopItems = () => async (dispatch) => {
-  const res = await fetch(`/api/shop/items/`);
-  const { Items } = await res.json();
+  const res = await fetch(`/api/items/`);
+  const { items } = await res.json();
 
   if (res.ok) {
     const normalizedData = {};
-    Items.forEach((item) => (normalizedData[item.id] = item));
+    items.forEach((item) => (normalizedData[item.id] = item));
     dispatch(loadShopItems(normalizedData));
     return normalizedData;
   }

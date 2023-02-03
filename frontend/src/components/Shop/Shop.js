@@ -14,15 +14,15 @@ const Shop = () => {
 
   return (
     <div className={styles.shopContainer}>
-      {/* {shopItems?.map((item) => {
+      {shopItems?.map((item) => {
         return <ShopItem item={item} key={item.id} />;
-      })} */}
+      })}
       {/* <ShopItem
         item={
           "https://png.pngtree.com/png-clipart/20220303/original/pngtree-metallic-game-avatar-frame-vector-icon-png-image_7393471.png"
         }
       /> */}
-      <ShopItem
+      {/* <ShopItem
         item={
           "https://marketplace.canva.com/EAFKAwefFZs/1/0/1600w/canva-purple-aquamarine-art-pixel-art-discord-profile-banner-aw9UuWkrCts.jpg"
         }
@@ -51,7 +51,7 @@ const Shop = () => {
         item={
           "https://marketplace.canva.com/EAFIJGWz8q4/1/0/1600w/canva-red-black-white-anime-podcast-twitch-banner-UWLRt79y-g4.jpg"
         }
-      />
+      /> */}
     </div>
   );
 };
