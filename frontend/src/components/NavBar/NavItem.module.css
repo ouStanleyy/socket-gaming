@@ -51,6 +51,11 @@ svg {
   height: 80px;
 }
 
+.svgContainer > img {
+  width: 24px;
+  height: 24px;
+}
+
 /* when navItem is hovered, target svg*/
 .navItem:hover .svgContainer {
   transform: scale(1.08);
@@ -60,14 +65,18 @@ svg {
   transform: scale(1);
 }
 
-.navItem:hover {
+.navItem:hover:not(.coinItem) {
   background-color: #2d3132;
   cursor: pointer;
   transition: 0.2s ease;
 }
 
-.navItem:active {
+.navItem:active:not(.coinItem) {
   opacity: 0.6;
+}
+
+.coinItem {
+  user-select: none;
 }
 
 .logo:hover {

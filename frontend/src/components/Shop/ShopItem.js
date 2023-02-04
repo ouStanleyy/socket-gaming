@@ -25,7 +25,11 @@ const ShopItem = ({ item }) => {
       <div className={styles.hoverOptions}>
         <div className={styles.priceContainer}>
           <p className={styles.price}>100</p>
-          <img className={styles.goldCoin} src="https://i.gifer.com/Fw3P.gif" />
+          <img
+            className={styles.goldCoin}
+            src="https://i.gifer.com/Fw3P.gif"
+            alt="gold coin"
+          />
         </div>
         <button
           className={isOwned && styles.disabledButton}
@@ -43,6 +47,7 @@ const ShopItem = ({ item }) => {
               <img
                 className={styles.goldCoin}
                 src="https://i.gifer.com/Fw3P.gif"
+                alt="gold coin"
               />
               ?
             </h3>

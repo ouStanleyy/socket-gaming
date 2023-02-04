@@ -113,6 +113,14 @@ const NavBar = () => {
                     hideSearch={hideSearch}
                   />
                 </div>
+              ) : icon === "Coin" ? (
+                <div key={idx}>
+                  <NavItem
+                    type={icon}
+                    showSearch={showSearch}
+                    hideSearch={hideSearch}
+                  />
+                </div>
               ) : (
                 <NavLink
                   key={idx}

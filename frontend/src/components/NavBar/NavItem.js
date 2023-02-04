@@ -13,6 +13,7 @@ const NavItem = ({
 }) => {
   const user = useSelector((state) => state.session.user);
   const isLogo = type === "Icon" || type === "Logo";
+  const isCoin = type === "Coin";
   const style = isLogo ? styles.logo : styles.navItem;
   const profilePicture = (
     <>
@@ -33,7 +34,7 @@ const NavItem = ({
           <div className={styles.redCircle}></div>
         )}
       </div>
-      <span>{isLogo ? "" : type}</span>
+      <span>{isLogo ? "" : isCoin ? "500" : type}</span>
     </>
   );
 
@@ -45,6 +46,7 @@ const NavItem = ({
                     !showNotification &&
                     styles.searchBorder
                   }
+                  ${isCoin && styles.coinItem}
                   ${showNotification && !hideNotification && styles.hideNavItem}
                   ${
                     type === "Notifications" &&

@@ -305,6 +305,7 @@ l-99 3 -3 99 c-1 55 0 106 2 113 7 17 196 19 214 1z"
     //   ></line>
     // </svg>
   ),
+  Coin: <img src="https://i.gifer.com/Fw3P.gif" alt="gold coin" />,
   More: (
     <svg
       aria-label="Settings"
