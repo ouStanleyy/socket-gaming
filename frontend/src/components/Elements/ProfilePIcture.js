@@ -1,6 +1,6 @@
 import styles from "./ProfilePicture.module.css";
 import { Modal } from "../../context/Modal";
-import UserModal from "../Users/UserModal";
+import { UserModal } from "../Users";
 import { useState } from "react";
 
 // size : "xsmall", "small", "medium", "large", "xlarge", "xxlarge"

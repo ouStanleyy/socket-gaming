@@ -2,20 +2,22 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
-import NavBar from "./components/NavBar/NavBar";
 import { authenticate } from "./store/session";
 import { setSocket } from "./store/socket";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import NavBar from "./components/NavBar/NavBar";
 import Splash from "./components/Splash/Splash";
 import { Messages } from "./components/Messages";
-import styles from "./App.module.css";
 import { GamesList, GameLobby } from "./components/Games";
 import { Settings } from "./components/Settings";
 import { Shop } from "./components/Shop";
+import { UserProfile } from "./components/Users";
+import styles from "./App.module.css";
 
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.session.user);
+  const sio = useSelector((state) => state.socket.socket);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -26,7 +28,7 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (user) {
+    if (user && !sio.connected) {
       const socket = io();
 
       dispatch(setSocket(socket));
@@ -68,6 +70,11 @@ function App() {
         <ProtectedRoute path="/games/:gameId">
           <div className={styles.innerBody}>
             <GameLobby />
+          </div>
+        </ProtectedRoute>
+        <ProtectedRoute path="/users/:userId">
+          <div className={styles.innerBody}>
+            <UserProfile />
           </div>
         </ProtectedRoute>
         <ProtectedRoute path="/settings">
