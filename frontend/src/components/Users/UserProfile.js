@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, Link, useHistory } from "react-router-dom";
 import { Modal } from "../../context/Modal";
-import { getUserById } from "../../store/users";
 import { ProfilePicture } from "../Elements";
+import EditModal from "./EditModal";
+import { getUserById } from "../../store/users";
 import { createNewRoom } from "../../store/rooms";
 import styles from "./UserProfile.module.css";
 
@@ -16,6 +17,24 @@ const UserProfile = () => {
     (state) => state.session.user.id === parseInt(userId)
   );
   const [loaded, setLoaded] = useState(false);
+  const [editModal, setEditModal] = useState({
+    show: false,
+    editType: "",
+  });
+
+  const toggleEditModal =
+    (editType = "") =>
+    () => {
+      setEditModal((state) => ({
+        show: !state.show,
+        editType,
+      }));
+    };
+
+  // const confirmChoice = async () => {
+  //   await dispatch(setBanner(item.id));
+  //   toggleBannerModal();
+  // };
 
   const handleMessageClick = async () => {
     try {
@@ -55,7 +74,7 @@ const UserProfile = () => {
             backgroundImage:
               "url(https://marketplace.canva.com/EAFKAwefFZs/1/0/1600w/canva-purple-aquamarine-art-pixel-art-discord-profile-banner-aw9UuWkrCts.jpg)",
             backgroundPosition: "center",
-            backgroundSize: "100%",
+            backgroundSize: "100% 100%",
             // backgroundRepeat: "no-repeat",
             // height: "150px",
             // width: "300px",
@@ -65,7 +84,7 @@ const UserProfile = () => {
           <div className={styles.userDetails}>
             <div className={styles.detailsHeader}>
               <p className={styles.username}>{user.username}</p>
-              {!isOwner && (
+              {!isOwner ? (
                 <>
                   {/* <FriendRequestButton user={user} /> */}
                   <button>Add Friend</button>
@@ -76,6 +95,10 @@ const UserProfile = () => {
                     Message
                   </button>
                 </>
+              ) : (
+                <button onClick={toggleEditModal("Banners")}>
+                  Edit Banner
+                </button>
               )}
             </div>
             <div className={styles.detailsStats}>
@@ -87,6 +110,15 @@ const UserProfile = () => {
               </p>
             </div>
           </div>
+          {editModal.show && (
+            <Modal onClose={toggleEditModal()}>
+              <EditModal
+                editType={editModal.editType}
+                userId={userId}
+                onClose={toggleEditModal()}
+              />
+            </Modal>
+          )}
         </div>
       </>
     ))
