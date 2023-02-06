@@ -36,3 +36,20 @@ def buy_item(item_id):
     db.session.commit()
 
     return item.to_dict()
+
+
+@item_routes.route('/<int:item_id>/set', methods=['PUT'])
+@login_required
+def set_item(item_id):
+    """
+    Query for item by id and sets it as current user's profile choice
+    """
+    item = next((item for item in current_user.items if item.id == item_id), None)
+
+    if item is not None:
+        item_type = request.json["item_type"]
+        if item_type == "banner":
+            current_user.banner_id = item.id
+        db.session.commit()
+
+    return current_user.to_dict()

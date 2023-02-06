@@ -28,6 +28,7 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
+    console.log("sio", sio.connected);
     if (user && !sio.connected) {
       const socket = io();
 
@@ -37,7 +38,9 @@ function App() {
       //   dispatch();
       // });
 
-      return () => socket.disconnect();
+      return () => {
+        if (!user) socket.disconnect();
+      };
     }
   }, [user]);
 

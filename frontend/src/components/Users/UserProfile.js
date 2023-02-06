@@ -16,6 +16,7 @@ const UserProfile = () => {
   const isOwner = useSelector(
     (state) => state.session.user.id === parseInt(userId)
   );
+  const bannerImage = user?.items.find(({ id }) => id === user.banner_id).image;
   const [loaded, setLoaded] = useState(false);
   const [editModal, setEditModal] = useState({
     show: false,
@@ -71,8 +72,7 @@ const UserProfile = () => {
         <div
           className={styles.userHeader}
           style={{
-            backgroundImage:
-              "url(https://marketplace.canva.com/EAFKAwefFZs/1/0/1600w/canva-purple-aquamarine-art-pixel-art-discord-profile-banner-aw9UuWkrCts.jpg)",
+            backgroundImage: `url(${bannerImage})`,
             backgroundPosition: "center",
             backgroundSize: "100% 100%",
             // backgroundRepeat: "no-repeat",

@@ -160,6 +160,22 @@ export const updatePassword =
     }
   };
 
+export const setItem = (item_type, itemId) => async (dispatch) => {
+  const res = await fetch(`/api/items/${itemId}/set`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ item_type }),
+  });
+
+  if (res.ok) {
+    const user = await res.json();
+    dispatch(setUser(user));
+    return user;
+  }
+};
+
 // reducer
 export default function reducer(state = { user: null, items: [] }, action) {
   switch (action.type) {

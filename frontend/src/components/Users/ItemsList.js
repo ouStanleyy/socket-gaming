@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { setItem } from "../../store/session";
 import styles from "./ItemsList.module.css";
 
 function ItemsList({ itemType, userId, currUser, onClose }) {
