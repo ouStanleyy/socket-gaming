@@ -3,6 +3,7 @@
   /* width: 292px; */
   height: max-content;
   position: relative;
+  border-radius: 4px;
 }
 
 .bannerType {
@@ -16,6 +17,7 @@
 .itemImage {
   position: relative;
   object-fit: contain;
+  border-radius: 4px;
 }
 
 .hoverOptions {
@@ -26,12 +28,13 @@
   gap: 40px;
   background-color: rgba(0, 0, 0, 0.3);
   color: white;
-  /* width: 292px;
-  height: 292px; */
+  /* width: 292px; */
+  height: 99%;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
+  border-radius: 4px;
   /* cursor: pointer; */
 }
 
