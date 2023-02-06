@@ -5,6 +5,14 @@
   position: relative;
 }
 
+.bannerType {
+  grid-column: auto / span 2;
+}
+
+.avatarType {
+  grid-column: auto / span 1;
+}
+
 .itemImage {
   position: relative;
   object-fit: contain;

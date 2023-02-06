@@ -20,6 +20,7 @@ class User(db.Model, UserMixin):
     is_online = db.Column(db.Boolean, nullable=False, default=False)
     sid = db.Column(db.String)
     banner_id = db.Column(db.Integer)
+    avatar_id = db.Column(db.Integer)
     # gender = db.Column(db.Enum("Male", "Female", "Non-binary", "Prefer not to say",
     #                    name='gender'), nullable=False, default="Prefer not to say")
 
@@ -47,6 +48,7 @@ class User(db.Model, UserMixin):
             'is_online': self.is_online,
             'sid': self.sid,
             'banner_id': self.banner_id,
+            'avatar_id': self.avatar_id,
             'items': [item.to_dict() for item in self.items],
         }
 

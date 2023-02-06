@@ -50,6 +50,8 @@ def set_item(item_id):
         item_type = request.json["item_type"]
         if item_type == "banner":
             current_user.banner_id = item.id
+        elif item_type == "avatar":
+            current_user.avatar_id = item.id
         db.session.commit()
 
     return item.to_dict()

@@ -32,6 +32,9 @@ const ProfilePicture = ({
       style = styles.profileXXLarge;
   }
   const [userModal, setUserModal] = useState(false);
+  const avatarImage = user?.items.find(
+    ({ id }) => id === user.avatar_id
+  )?.image;
 
   const toggleUserModal = () => {
     setUserModal((state) => !state);
@@ -47,7 +50,7 @@ const ProfilePicture = ({
       >
         <img
           src={
-            user?.profile_picture ||
+            avatarImage ||
             "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/680px-Default_pfp.svg.png?20220226140232"
           }
           alt="profile"

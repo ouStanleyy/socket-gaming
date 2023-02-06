@@ -40,6 +40,7 @@ def upgrade():
     sa.Column('is_online', sa.Boolean(), nullable=False),
     sa.Column('sid', sa.String(), nullable=True),
     sa.Column('banner_id', sa.Integer(), nullable=True),
+    sa.Column('avatar_id', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('username')
     )

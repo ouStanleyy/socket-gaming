@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "../../context/Modal";
 import { buyItem } from "../../store/shop";
@@ -10,6 +10,7 @@ const ShopItem = ({ item }) => {
     state.session.items.find(({ id }) => id === item.id)
   );
   const [buyItemModal, setBuyItemModal] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const toggleBuyItemModal = () => {
     setBuyItemModal((state) => !state);
@@ -20,24 +21,35 @@ const ShopItem = ({ item }) => {
     toggleBuyItemModal();
   };
 
+  useEffect(() => {
+    const timeout = setTimeout(() => setLoaded(true), 50);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
-    <div className={styles.shopItemContainer}>
-      <div className={styles.hoverOptions}>
-        <div className={styles.priceContainer}>
-          <p className={styles.price}>100</p>
-          <img
-            className={styles.goldCoin}
-            src="https://i.gifer.com/Fw3P.gif"
-            alt="gold coin"
-          />
+    <div
+      className={`${styles.shopItemContainer} ${
+        item.item_type === "banner" && styles.bannerType
+      } ${item.item_type === "avatar" && styles.avatarType}`}
+    >
+      {loaded && (
+        <div className={styles.hoverOptions}>
+          <div className={styles.priceContainer}>
+            <p className={styles.price}>100</p>
+            <img
+              className={styles.goldCoin}
+              src="https://i.gifer.com/Fw3P.gif"
+              alt="gold coin"
+            />
+          </div>
+          <button
+            className={isOwned && styles.disabledButton}
+            onClick={!isOwned ? toggleBuyItemModal : undefined}
+          >
+            {!isOwned ? "Buy" : "Owned"}
+          </button>
         </div>
-        <button
-          className={isOwned && styles.disabledButton}
-          onClick={!isOwned ? toggleBuyItemModal : undefined}
-        >
-          {!isOwned ? "Buy" : "Owned"}
-        </button>
-      </div>
+      )}
       <img className={styles.itemImage} src={item.image} alt={item.image} />
       {buyItemModal && (
         <Modal onClose={toggleBuyItemModal}>

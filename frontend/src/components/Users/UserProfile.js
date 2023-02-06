@@ -16,7 +16,9 @@ const UserProfile = () => {
   const isOwner = useSelector(
     (state) => state.session.user.id === parseInt(userId)
   );
-  const bannerImage = user?.items.find(({ id }) => id === user.banner_id).image;
+  const bannerImage = user?.items.find(
+    ({ id }) => id === user.banner_id
+  )?.image;
   const [loaded, setLoaded] = useState(false);
   const [editModal, setEditModal] = useState({
     show: false,
@@ -72,7 +74,10 @@ const UserProfile = () => {
         <div
           className={styles.userHeader}
           style={{
-            backgroundImage: `url(${bannerImage})`,
+            backgroundImage: `url(${
+              bannerImage ||
+              "https://marketplace.canva.com/EAEePNU1OYQ/1/0/1600w/canva-blue-and-white-illustration-vintage-retro-twitch-banner--l5a8ritW2w.jpg"
+            })`,
             // backgroundPosition: "center",
             // backgroundSize: "100% 100%",
             // backgroundRepeat: "no-repeat",
@@ -96,9 +101,14 @@ const UserProfile = () => {
                   </button>
                 </>
               ) : (
-                <button onClick={toggleEditModal("Banners")}>
-                  Edit Banner
-                </button>
+                <>
+                  <button onClick={toggleEditModal("Banners")}>
+                    Edit Banner
+                  </button>
+                  <button onClick={toggleEditModal("Avatars")}>
+                    Edit Avatar
+                  </button>
+                </>
               )}
             </div>
             <div className={styles.detailsStats}>
