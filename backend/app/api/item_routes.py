@@ -52,4 +52,4 @@ def set_item(item_id):
             current_user.banner_id = item.id
         db.session.commit()
 
-    return current_user.to_dict()
+    return item.to_dict()

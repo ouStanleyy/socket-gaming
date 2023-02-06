@@ -73,8 +73,8 @@ const UserProfile = () => {
           className={styles.userHeader}
           style={{
             backgroundImage: `url(${bannerImage})`,
-            backgroundPosition: "center",
-            backgroundSize: "100% 100%",
+            // backgroundPosition: "center",
+            // backgroundSize: "100% 100%",
             // backgroundRepeat: "no-repeat",
             // height: "150px",
             // width: "300px",
@@ -114,7 +114,6 @@ const UserProfile = () => {
             <Modal onClose={toggleEditModal()}>
               <EditModal
                 editType={editModal.editType}
-                userId={userId}
                 onClose={toggleEditModal()}
               />
             </Modal>

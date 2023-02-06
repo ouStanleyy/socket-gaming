@@ -10,6 +10,7 @@ function UserModal({ user, onClose }) {
   const history = useHistory();
   const dispatch = useDispatch();
   // const user = useSelector((state) => state.users[userId]);
+  const bannerImage = user?.items.find(({ id }) => id === user.banner_id).image;
   const [loaded, setLoaded] = useState(false);
 
   const handleMessageClick = async () => {
@@ -34,10 +35,9 @@ function UserModal({ user, onClose }) {
         <div
           className={styles.userHeader}
           style={{
-            backgroundImage:
-              "url(https://marketplace.canva.com/EAFKAwefFZs/1/0/1600w/canva-purple-aquamarine-art-pixel-art-discord-profile-banner-aw9UuWkrCts.jpg)",
-            backgroundPosition: "center",
-            backgroundSize: "100%",
+            backgroundImage: `url(${bannerImage})`,
+            // backgroundPosition: "center",
+            // backgroundSize: "100%",
             // backgroundRepeat: "no-repeat",
             // height: "150px",
             // width: "300px",

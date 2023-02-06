@@ -7,7 +7,7 @@ const ADD_ITEM = "session/ADD_ITEM";
 // actions
 const setUser = (user) => ({
   type: SET_USER,
-  payload: user,
+  user,
 });
 
 const clearSession = () => ({
@@ -32,13 +32,13 @@ export const authenticate = () => async (dispatch) => {
     },
   });
   if (response.ok) {
-    const data = await response.json();
-    if (data.errors) {
+    const user = await response.json();
+    if (user.errors) {
       return;
     }
 
-    dispatch(setUser(data));
-    dispatch(loadItems(data.items));
+    dispatch(setUser(user));
+    dispatch(loadItems(user.items));
   }
 };
 
@@ -160,27 +160,11 @@ export const updatePassword =
     }
   };
 
-export const setItem = (item_type, itemId) => async (dispatch) => {
-  const res = await fetch(`/api/items/${itemId}/set`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ item_type }),
-  });
-
-  if (res.ok) {
-    const user = await res.json();
-    dispatch(setUser(user));
-    return user;
-  }
-};
-
 // reducer
 export default function reducer(state = { user: null, items: [] }, action) {
   switch (action.type) {
     case SET_USER:
-      return { ...state, user: action.payload };
+      return { ...state, user: action.user };
     case LOAD_ITEMS:
       return { ...state, items: action.items };
     case ADD_ITEM:

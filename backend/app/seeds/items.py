@@ -1,4 +1,4 @@
-from app.models import db, Item, environment, SCHEMA
+from app.models import db, Item, Owned_Item, environment, SCHEMA
 
 items = [
     {
@@ -30,12 +30,29 @@ items = [
         # 6
         "item_type": "banner",
         "image": "https://marketplace.canva.com/EAFIJGWz8q4/1/0/1600w/canva-red-black-white-anime-podcast-twitch-banner-UWLRt79y-g4.jpg",
+    },
+    {
+        # 7
+        "item_type": "banner",
+        "image": "https://marketplace.canva.com/EAFIJOdbuUM/1/0/1600w/canva-purple-teal-pastel-yellow-gamer-girl-just-chatting-twitch-banner-1qV7dCmBRQo.jpg",
+    },
+    {
+        # 8
+        "item_type": "banner",
+        "image": "https://marketplace.canva.com/EAFIIQMNuCY/1/0/1600w/canva-black-neon-pink-blue-arcade-pixel-music-twitch-banner-mXh8oQAaeyM.jpg",
+    },
+    {
+        # 9
+        "item_type": "banner",
+        "image": "https://marketplace.canva.com/EAEeOQwo3jY/1/0/1600w/canva-purple-mountain-vintage-retro-twitch-banner-1NYTq34QR6I.jpg",
     }
 ]
 
 
 def seed_items():
     db.session.add_all([Item(**item) for item in items])
+    db.session.commit()
+    db.session.connection().execute(Owned_Item.insert().values([(1, 1), (2, 1), (3, 1), (1, 2), (2, 2), (3, 2), (1, 3), (2, 3), (3, 3)]))
     db.session.commit()
 
 

@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setItem } from "../../store/session";
+import { useParams } from "react-router-dom";
+import { editItemSetting } from "../../store/users";
 import styles from "./ItemsList.module.css";
 
-function ItemsList({ itemType, userId, currUser, onClose }) {
+function ItemsList({ itemType, onClose }) {
   const dispatch = useDispatch();
+  const { userId } = useParams();
   const items = useSelector((state) =>
     Object.values(state.session.items)
   ).filter(({ item_type }) => itemType.toLowerCase().includes(item_type));
   const currChoices = {
-    banner: useSelector((state) => state.session.user.banner_id),
+    banner: useSelector((state) => state.users[userId].banner_id),
   };
   // const [loaded, setLoaded] = useState(false);
-
+  console.log("current choices: ", currChoices);
   const isCurrChoice = (itemType, itemId) => itemId === currChoices[itemType];
 
   const selectItem = (itemType, itemId) => () => {
-    dispatch(setItem(itemType, itemId));
+    dispatch(editItemSetting(itemType, itemId, userId));
   };
 
   // useEffect(() => {
@@ -36,7 +38,9 @@ function ItemsList({ itemType, userId, currUser, onClose }) {
         onClick={selectItem(item_type, id)}
       >
         <img src={image} alt={image} />
-        {isCurrChoice(item_type, id) && <button>Current</button>}
+        {isCurrChoice(item_type, id) && (
+          <button className={styles.current}>Current</button>
+        )}
       </div>
     );
   });

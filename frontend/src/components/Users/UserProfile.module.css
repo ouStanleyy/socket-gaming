@@ -6,6 +6,9 @@
   max-width: 65%;
   /* max-height: fit-content(50%); */
   padding: 20px;
+  background-position: center;
+  background-size: 100% 100%;
+  border-radius: 4px;
 }
 
 .profilePicture {

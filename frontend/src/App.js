@@ -17,7 +17,6 @@ import styles from "./App.module.css";
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.session.user);
-  const sio = useSelector((state) => state.socket.socket);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -28,8 +27,7 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("sio", sio.connected);
-    if (user && !sio.connected) {
+    if (user) {
       const socket = io();
 
       dispatch(setSocket(socket));
@@ -38,9 +36,7 @@ function App() {
       //   dispatch();
       // });
 
-      return () => {
-        if (!user) socket.disconnect();
-      };
+      return () => socket.disconnect();
     }
   }, [user]);
 

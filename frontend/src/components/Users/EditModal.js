@@ -2,9 +2,7 @@ import { useSelector } from "react-redux";
 import ItemsList from "./ItemsList";
 import styles from "./EditModal.module.css";
 
-function EditModal({ editType, userId, onClose }) {
-  const currUser = useSelector((state) => state.session.user);
-
+function EditModal({ editType, onClose }) {
   return (
     <div className={styles.modalContainer}>
       <div className={styles.headerContainer}>
@@ -24,16 +22,16 @@ function EditModal({ editType, userId, onClose }) {
               fill="none"
               points="20.643 3.357 12 12 3.353 20.647"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="3"
             ></polyline>
             <line
               fill="none"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="3"
               x1="20.649"
               x2="3.354"
               y1="20.649"
@@ -43,12 +41,7 @@ function EditModal({ editType, userId, onClose }) {
         </div>
       </div>
       <div className={styles.listContainer}>
-        <ItemsList
-          itemType={editType}
-          userId={userId}
-          currUser={currUser}
-          onClose={onClose}
-        />
+        <ItemsList itemType={editType} onClose={onClose} />
       </div>
     </div>
   );

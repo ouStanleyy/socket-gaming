@@ -4,6 +4,7 @@
   align-items: center;
   width: 100%; */
   /* padding: 0 8px; */
+  position: relative;
 }
 
 .itemContainer:hover {
@@ -11,34 +12,15 @@
   cursor: pointer;
 }
 
-.userDetails {
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 14px;
-  line-height: 18px;
-}
-
-.username {
-  font-weight: 500;
-  width: max-content;
-  cursor: pointer;
-}
-
-.fullName {
-  color: #8e8e8e;
-  width: max-content;
-}
-
-.userPopUp {
-  position: fixed;
-  border-radius: 10px;
-  border: 1px solid #dbdbdb;
-  box-shadow: 0 0 8px #8e8e8e;
-  width: 400px;
-  height: 350px;
-  overflow: hidden;
-  background-color: #ffffff;
-  /* margin-top: 350px;
-  margin-left: 68px; */
-  z-index: 100;
+.current {
+  position: absolute;
+  margin-top: auto;
+  /* width: 100px; */
+  /* height: 292px; */
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* cursor: pointer; */
 }

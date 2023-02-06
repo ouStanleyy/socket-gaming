@@ -18,6 +18,8 @@
   padding: 16px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+  background-position: center;
+  background-size: 100%;
 }
 
 .userDetails {
