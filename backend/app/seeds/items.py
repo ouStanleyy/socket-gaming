@@ -2,6 +2,16 @@ from app.models import db, Item, Owned_Item, environment, SCHEMA
 
 items = [
     {
+        # default
+        "item_type": "banner",
+        "image": "https://marketplace.canva.com/EAEePNU1OYQ/1/0/1600w/canva-blue-and-white-illustration-vintage-retro-twitch-banner--l5a8ritW2w.jpg",
+    },
+    {
+        # default
+        "item_type": "avatar",
+        "image": "https://marketplace.canva.com/EAFEinVJ1ic/1/0/800w/canva-pastel-angry-cat-animated-twitch-profile-picture-A_oQXHIwRhQ.mp4",
+    },
+    {
         # 1
         "item_type": "banner",
         "image": "https://marketplace.canva.com/EAFKAwefFZs/1/0/1600w/canva-purple-aquamarine-art-pixel-art-discord-profile-banner-aw9UuWkrCts.jpg",
@@ -142,7 +152,7 @@ items = [
 def seed_items():
     db.session.add_all([Item(**item) for item in items])
     db.session.commit()
-    db.session.connection().execute(Owned_Item.insert().values([(1, 1), (2, 1), (3, 1), (10, 1), (11, 1), (12, 1), (1, 2), (2, 2), (10, 2), (11, 2), (12, 2), (3, 2), (1, 3), (2, 3), (3, 3), (10, 3), (11, 3), (12, 3),]))
+    db.session.connection().execute(Owned_Item.insert().values([(1, 1), (2, 1), (3, 1), (4, 1), (12, 1), (13, 1), (14, 1), (1, 2), (2, 2), (3, 2), (4, 2), (12, 2), (13, 2), (14, 2), (1, 3), (2, 3), (3, 3), (4, 3), (12, 3), (13, 3), (14, 3),]))
     db.session.commit()
 
 

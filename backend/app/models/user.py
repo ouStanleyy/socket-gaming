@@ -19,8 +19,8 @@ class User(db.Model, UserMixin):
     profile_picture = db.Column(db.String)
     is_online = db.Column(db.Boolean, nullable=False, default=False)
     sid = db.Column(db.String)
-    banner_id = db.Column(db.Integer)
-    avatar_id = db.Column(db.Integer)
+    banner_id = db.Column(db.Integer, default=1)
+    avatar_id = db.Column(db.Integer, default=1)
     coins_amount = db.Column(db.Integer, default=200)
     # gender = db.Column(db.Enum("Male", "Female", "Non-binary", "Prefer not to say",
     #                    name='gender'), nullable=False, default="Prefer not to say")

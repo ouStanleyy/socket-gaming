@@ -48,13 +48,26 @@ const ProfilePicture = ({
           hasBorder && styles.border
         }`}
       >
-        <img
-          src={
-            avatarImage ||
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/680px-Default_pfp.svg.png?20220226140232"
-          }
-          alt="profile"
-        />
+        {avatarImage?.endsWith(".mp4") ? (
+          <video
+            loop
+            autoPlay
+            muted
+            src={
+              avatarImage ||
+              "https://marketplace.canva.com/EAFEinVJ1ic/1/0/800w/canva-pastel-angry-cat-animated-twitch-profile-picture-A_oQXHIwRhQ.mp4"
+            }
+            alt="profile"
+          />
+        ) : (
+          <img
+            src={
+              avatarImage ||
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/680px-Default_pfp.svg.png?20220226140232"
+            }
+            alt="profile"
+          />
+        )}
       </div>
       {userModal && (
         <Modal onClose={toggleUserModal}>

@@ -3,6 +3,7 @@ const SET_USER = "session/SET_USER";
 const CLEAR_SESSION = "session/CLEAR_SESSION";
 const LOAD_ITEMS = "session/LOAD_ITEMS";
 const ADD_ITEM = "session/ADD_ITEM";
+const RESET_ANIMATION = "session/RESET_ANIMATION";
 
 // actions
 const setUser = (user) => ({
@@ -22,6 +23,10 @@ const loadItems = (items) => ({
 export const addItem = (item) => ({
   type: ADD_ITEM,
   item,
+});
+
+export const resetAnimation = () => ({
+  type: RESET_ANIMATION,
 });
 
 // thunks
@@ -162,7 +167,7 @@ export const updatePassword =
 
 // reducer
 export default function reducer(
-  state = { user: null, items: [], coins: 0 },
+  state = { user: null, items: [], coins: { amount: 0, animation: false } },
   action
 ) {
   switch (action.type) {
@@ -171,7 +176,7 @@ export default function reducer(
         ...state,
         user: action.user,
         items: action.user.items,
-        coins: action.user.coins_amount,
+        coins: { ...state.coins, amount: action.user.coins_amount },
       };
     case LOAD_ITEMS:
       return { ...state, items: action.items };
@@ -179,7 +184,19 @@ export default function reducer(
       return {
         ...state,
         items: [...state.items, action.item],
-        coins: state.coins - 100,
+        coins: {
+          ...state.coins,
+          amount: state.coins.amount - 100,
+          animation: true,
+        },
+      };
+    case RESET_ANIMATION:
+      return {
+        ...state,
+        coins: {
+          ...state.coins,
+          animation: false,
+        },
       };
     case CLEAR_SESSION:
       return { user: null, items: [] };

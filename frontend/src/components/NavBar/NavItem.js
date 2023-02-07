@@ -14,7 +14,8 @@ const NavItem = ({
   const user = useSelector(
     (state) => state.users[state.session.user.id] || state.session.user
   );
-  const coins = useSelector((state) => state.session.coins);
+  const coins = useSelector((state) => state.session.coins.amount);
+  const coinsAnimation = useSelector((state) => state.session.coins.animation);
   const isLogo = type === "Icon" || type === "Logo";
   const isCoin = type === "Coin";
   const style = isLogo ? styles.logo : styles.navItem;
@@ -37,6 +38,9 @@ const NavItem = ({
         )}
       </div>
       <span>{isLogo ? "" : isCoin ? coins : type}</span>
+      {isCoin && coinsAnimation && (
+        <div className={styles.coinsAnimation}>{icons[type]} -100</div>
+      )}
     </>
   );
 

@@ -75,8 +75,8 @@ const UserProfile = () => {
           className={styles.userHeader}
           style={{
             backgroundImage: `url(${
-              bannerImage ||
-              "https://marketplace.canva.com/EAEePNU1OYQ/1/0/1600w/canva-blue-and-white-illustration-vintage-retro-twitch-banner--l5a8ritW2w.jpg"
+              bannerImage
+              // "https://marketplace.canva.com/EAEePNU1OYQ/1/0/1600w/canva-blue-and-white-illustration-vintage-retro-twitch-banner--l5a8ritW2w.jpg"
             })`,
             // backgroundPosition: "center",
             // backgroundSize: "100% 100%",

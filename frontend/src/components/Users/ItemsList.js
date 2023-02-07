@@ -31,25 +31,37 @@ function ItemsList({ itemType, onClose }) {
   //   })();
   // }, [dispatch, userId]);
 
-  return items.length > 0 ? (
-    items.map(({ id, image, item_type }) => {
-      return (
-        <div
-          className={styles.itemContainer}
-          key={id}
-          onClick={selectItem(item_type, id)}
+  return (
+    <>
+      {items.map(({ id, image, item_type }) => {
+        return (
+          <div
+            className={`${styles.itemContainer} ${
+              item_type === "avatar" && styles.avatarItem
+            }`}
+            key={id}
+            onClick={selectItem(item_type, id)}
+          >
+            {image.endsWith(".mp4") ? (
+              <video loop autoPlay muted src={image} alt={image} />
+            ) : (
+              <img src={image} alt={image} />
+            )}
+            {isCurrChoice(item_type, id) && (
+              <button className={styles.current}>Current</button>
+            )}
+          </div>
+        );
+      })}
+      {items.length < 2 && (
+        <button
+          className={styles.linkToShop}
+          onClick={() => history.push(`/shop`)}
         >
-          <img src={image} alt={image} />
-          {isCurrChoice(item_type, id) && (
-            <button className={styles.current}>Current</button>
-          )}
-        </div>
-      );
-    })
-  ) : (
-    <button className={styles.linkToShop} onClick={() => history.push(`/shop`)}>
-      Visit The Shop
-    </button>
+          Visit The Shop
+        </button>
+      )}
+    </>
   );
 }
 

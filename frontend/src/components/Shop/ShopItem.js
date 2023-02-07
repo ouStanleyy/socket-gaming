@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "../../context/Modal";
+import { resetAnimation } from "../../store/session";
 import { buyItem } from "../../store/shop";
 import styles from "./ShopItem.module.css";
 
 const ShopItem = ({ item }) => {
   const dispatch = useDispatch();
-  const coins = useSelector((state) => state.session.coins);
+  const coins = useSelector((state) => state.session.coins.amount);
   const isOwned = useSelector((state) =>
     state.session.items.find(({ id }) => id === item.id)
   );
@@ -30,6 +31,7 @@ const ShopItem = ({ item }) => {
   const confirmPurchase = async () => {
     await dispatch(buyItem(item.id));
     toggleBuyItemModal();
+    setTimeout(() => dispatch(resetAnimation()), 1000);
   };
 
   useEffect(() => {

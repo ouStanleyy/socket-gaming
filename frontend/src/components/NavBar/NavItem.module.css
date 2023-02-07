@@ -151,3 +151,30 @@ svg {
   margin-bottom: 12px;
   margin-left: 15px;
 }
+
+.coinsAnimation {
+  position: absolute;
+  display: flex;
+  font-family: sans-serif;
+  color: #dd0f0f;
+  align-items: center;
+  gap: 13px;
+  height: 24px;
+  animation: onShow 1000ms ease;
+}
+
+@keyframes onShow {
+  0% {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) translateX(10px);
+  }
+}

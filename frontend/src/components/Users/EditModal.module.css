@@ -44,6 +44,7 @@
   overflow-y: scroll;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
+  background-color: #222629;
 }
 
 @keyframes onShow {

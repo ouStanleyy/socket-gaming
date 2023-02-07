@@ -21,7 +21,7 @@ const Shop = () => {
   return (
     loaded && (
       <div className={styles.shopContainer}>
-        {shopItems?.map((item) => {
+        {shopItems?.slice(2).map((item) => {
           return <ShopItem item={item} key={item.id} loaded={loaded} />;
         })}
       </div>

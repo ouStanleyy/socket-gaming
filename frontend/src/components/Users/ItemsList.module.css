@@ -12,6 +12,10 @@
   cursor: pointer;
 }
 
+.avatarItem {
+  width: 50%;
+}
+
 .current {
   position: absolute;
   margin-top: auto;
