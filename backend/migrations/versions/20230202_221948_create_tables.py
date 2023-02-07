@@ -41,6 +41,7 @@ def upgrade():
     sa.Column('sid', sa.String(), nullable=True),
     sa.Column('banner_id', sa.Integer(), nullable=True),
     sa.Column('avatar_id', sa.Integer(), nullable=True),
+    sa.Column('coins_amount', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('username')
     )

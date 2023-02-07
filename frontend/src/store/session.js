@@ -38,7 +38,7 @@ export const authenticate = () => async (dispatch) => {
     }
 
     dispatch(setUser(user));
-    dispatch(loadItems(user.items));
+    // dispatch(loadItems(user.items));
   }
 };
 
@@ -161,14 +161,26 @@ export const updatePassword =
   };
 
 // reducer
-export default function reducer(state = { user: null, items: [] }, action) {
+export default function reducer(
+  state = { user: null, items: [], coins: 0 },
+  action
+) {
   switch (action.type) {
     case SET_USER:
-      return { ...state, user: action.user };
+      return {
+        ...state,
+        user: action.user,
+        items: action.user.items,
+        coins: action.user.coins_amount,
+      };
     case LOAD_ITEMS:
       return { ...state, items: action.items };
     case ADD_ITEM:
-      return { ...state, items: [...state.items, action.item] };
+      return {
+        ...state,
+        items: [...state.items, action.item],
+        coins: state.coins - 100,
+      };
     case CLEAR_SESSION:
       return { user: null, items: [] };
     default:

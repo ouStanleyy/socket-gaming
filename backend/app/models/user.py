@@ -21,6 +21,7 @@ class User(db.Model, UserMixin):
     sid = db.Column(db.String)
     banner_id = db.Column(db.Integer)
     avatar_id = db.Column(db.Integer)
+    coins_amount = db.Column(db.Integer, default=200)
     # gender = db.Column(db.Enum("Male", "Female", "Non-binary", "Prefer not to say",
     #                    name='gender'), nullable=False, default="Prefer not to say")
 
@@ -49,6 +50,7 @@ class User(db.Model, UserMixin):
             'sid': self.sid,
             'banner_id': self.banner_id,
             'avatar_id': self.avatar_id,
+            'coins_amount': self.coins_amount,
             'items': [item.to_dict() for item in self.items],
         }
 

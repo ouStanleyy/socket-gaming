@@ -67,7 +67,8 @@
   cursor: default;
 }
 
-.buyItemModal {
+.buyItemModal,
+.messageModal {
   display: flex;
   padding: 16px;
   color: #ffffff;
@@ -79,13 +80,28 @@
   animation: onShow 150ms ease;
 }
 
-.buyItemModal > h3 {
+.messageModal {
+  position: relative;
+  justify-content: center;
+}
+
+.svgContainer {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  cursor: pointer;
+  color: #86c232;
+}
+
+.buyItemModal > h3,
+.messageModal > h3 {
   display: flex;
   align-items: center;
   user-select: none;
 }
 
-.buyItemModal > h3 > img {
+.buyItemModal > h3 > img,
+.messageModal > h3 > img {
   width: 24px;
   height: 24px;
   margin: 0 4px;

@@ -11,7 +11,10 @@ const NavItem = ({
   hideNotification,
   hasNotification,
 }) => {
-  const user = useSelector((state) => state.session.user);
+  const user = useSelector(
+    (state) => state.users[state.session.user.id] || state.session.user
+  );
+  const coins = useSelector((state) => state.session.coins);
   const isLogo = type === "Icon" || type === "Logo";
   const isCoin = type === "Coin";
   const style = isLogo ? styles.logo : styles.navItem;
@@ -19,7 +22,6 @@ const NavItem = ({
     <>
       <div className={styles.profilePicture}>
         <ProfilePicture user={user} size={"xsmall"} />
-        {/* <img src={user?.profile_picture} alt={`${user?.full_name} profile`} /> */}
       </div>
       <span>Profile</span>
     </>
@@ -34,7 +36,7 @@ const NavItem = ({
           <div className={styles.redCircle}></div>
         )}
       </div>
-      <span>{isLogo ? "" : isCoin ? "500" : type}</span>
+      <span>{isLogo ? "" : isCoin ? coins : type}</span>
     </>
   );
 

@@ -33,6 +33,7 @@ def buy_item(item_id):
     """
     item = Item.query.get_or_404(item_id)
     current_user.items.append(item)
+    current_user.coins_amount-=100
     db.session.commit()
 
     return item.to_dict()
