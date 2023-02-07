@@ -5,11 +5,10 @@ import { getRooms } from "../../store/rooms";
 import { ProfilePicture } from "../Elements";
 import styles from "./Conversation.module.css";
 
-const Conversation = ({ sessionUser, rooms, setRoomId }) => {
+const Conversation = ({ sessionUser, rooms, roomId, toggleConvo }) => {
   const dispatch = useDispatch();
   const sio = useSelector((state) => state.socket.socket);
-  const { roomId } = useParams();
-  const room = rooms.find((room) => room.id === parseInt(roomId));
+  const room = rooms.find((room) => room.id === roomId);
   const messages = room?.messages;
   const [message, setMessage] = useState("");
 
@@ -45,83 +44,77 @@ const Conversation = ({ sessionUser, rooms, setRoomId }) => {
     })();
   }, [roomId]);
 
-  useEffect(() => {
-    setRoomId(roomId);
-    return () => setRoomId("");
-  }, [roomId]);
-
   return (
-    rooms.length > 0 &&
-    (!room ? (
-      <Redirect to="/messages" />
-    ) : (
-      <>
-        <div className={styles.convoHeader}>
-          <Link className={styles.userContainer} to={`/users/${room.user.id}`}>
-            <div className={styles.profilePicture}>
-              <ProfilePicture user={room.user} size={"xsmall"} />
-            </div>
-            <div className={styles.userDetails}>
-              <p className={styles.username}>{room.user?.username}</p>
-              <div
-                className={`${styles.status} ${
-                  room.user?.is_online && styles.online
-                }`}
-              ></div>
-            </div>
-          </Link>
-        </div>
-        <div className={styles.conversationWrapper}>
-          <div className={styles.conversation}>
-            {messages.map(({ id, message, user_id, time_sent }, idx) => (
-              <div className={styles.messageWrapper} key={id}>
-                {(isOverHour(time_sent, messages[idx - 1]?.time_sent) ||
-                  !idx) && (
-                  <h4 className={styles.timestamp}>
-                    {!isToday(time_sent) &&
-                      new Date(time_sent).toLocaleDateString("en-US", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                      })}{" "}
-                    {new Date(time_sent).toLocaleTimeString("en-US", {
-                      hour: "numeric",
-                      minute: "numeric",
-                    })}
-                  </h4>
-                )}
-                <div className={styles.messageBubbles}>
-                  <div className={styles.profilePic}>
-                    {user_id !== sessionUser.id &&
-                      user_id !== messages[idx + 1]?.user_id && (
-                        <ProfilePicture user={room.user} size="xsmall" />
-                      )}
-                  </div>
-                  <p
-                    className={`${styles.message} ${
-                      user_id === sessionUser.id
-                        ? styles.outgoing
-                        : styles.incoming
-                    }`}
-                  >
-                    {message}
-                  </p>
-                </div>
-              </div>
-            ))}
-            <div id={styles.anchor}></div>
+    <>
+      <div className={styles.convoHeader}>
+        <i
+          className={`fa-solid fa-chevron-left fa-lg ${styles.backButton}`}
+          onClick={toggleConvo()}
+        />
+        <Link className={styles.userContainer} to={`/users/${room.user.id}`}>
+          <div className={styles.profilePicture}>
+            <ProfilePicture user={room.user} size={"xsmall"} />
           </div>
+          <div className={styles.userDetails}>
+            <p className={styles.username}>{room.user?.username}</p>
+            <div
+              className={`${styles.status} ${
+                room.user?.is_online && styles.online
+              }`}
+            ></div>
+          </div>
+        </Link>
+      </div>
+      <div className={styles.conversationWrapper}>
+        <div className={styles.conversation}>
+          {messages.map(({ id, message, user_id, time_sent }, idx) => (
+            <div className={styles.messageWrapper} key={id}>
+              {(isOverHour(time_sent, messages[idx - 1]?.time_sent) ||
+                !idx) && (
+                <h4 className={styles.timestamp}>
+                  {!isToday(time_sent) &&
+                    new Date(time_sent).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}{" "}
+                  {new Date(time_sent).toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "numeric",
+                  })}
+                </h4>
+              )}
+              <div className={styles.messageBubbles}>
+                <div className={styles.profilePic}>
+                  {user_id !== sessionUser.id &&
+                    user_id !== messages[idx + 1]?.user_id && (
+                      <ProfilePicture user={room.user} size="xsmall" />
+                    )}
+                </div>
+                <p
+                  className={`${styles.message} ${
+                    user_id === sessionUser.id
+                      ? styles.outgoing
+                      : styles.incoming
+                  }`}
+                >
+                  {message}
+                </p>
+              </div>
+            </div>
+          ))}
+          <div id={styles.anchor}></div>
         </div>
-        <form className={styles.messageInput} onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-        </form>
-      </>
-    ))
+      </div>
+      <form className={styles.messageInput} onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+      </form>
+    </>
   );
 };
 

@@ -23,7 +23,7 @@ const NavBar = () => {
     { icon: "Logo", path: "/games" },
     // { icon: "Home", path: "/" },
     { icon: "Search", path: "/search" },
-    { icon: "Messages", path: "/messages" },
+    // { icon: "Messages", path: "/messages" },
     // { icon: "Notifications", path: "/notifications" },
     { icon: "Games", path: "/games" },
     { icon: "Shop", path: "/shop" },

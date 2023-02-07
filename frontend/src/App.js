@@ -7,7 +7,7 @@ import { setSocket } from "./store/socket";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import NavBar from "./components/NavBar/NavBar";
 import Splash from "./components/Splash/Splash";
-import { Messages } from "./components/Messages";
+import { Messages, SideMessages } from "./components/Messages";
 import { GamesList, GameLobby } from "./components/Games";
 import { Settings } from "./components/Settings";
 import { Shop } from "./components/Shop";
@@ -46,16 +46,21 @@ function App() {
 
   return (
     <BrowserRouter>
-      {user && <NavBar />}
+      {user && (
+        <>
+          <NavBar />
+          <SideMessages />
+        </>
+      )}
       <Switch>
         <Route exact path="/">
           {user ? <h1>Homepage</h1> : <Splash />}
         </Route>
-        <ProtectedRoute path="/messages">
+        {/* <ProtectedRoute path="/messages">
           <div className={styles.innerBody}>
-            <Messages user={user} />
+            <Messages />
           </div>
-        </ProtectedRoute>
+        </ProtectedRoute> */}
         <ProtectedRoute exact path="/games">
           <div className={styles.innerBody}>
             <GamesList />

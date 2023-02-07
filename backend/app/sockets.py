@@ -40,10 +40,10 @@ def connected():
 @sio.on('message')
 def handle_message(data):
     """event listener when client types a message"""
-    print("data from the front end: ",data['message'], data['room'])
+    # print("data from the front end: ",data['message'], data['room'])
     db.session.add(Message(user_id=data['uid'], room_id=data['room'], message=data['message']))
     db.session.commit()
-    emit('message',{'message':data['message'],'sid':request.sid},to=data['room'])
+    emit('message',{'message':data['message'],'sid':request.sid},to=str(data['room']))
     # emit(event,{'data':data,'id':request.sid},broadcast=True)
 
 
