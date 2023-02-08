@@ -91,11 +91,24 @@
 
 .convoContainer {
   /* border: 2px solid green; */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #383c3f;
+  transition: 300ms;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   /* width: 584px; */
   height: 100%;
+  z-index: 15;
+}
+
+.activeConvo {
+  transform: translateX(380px);
+  border-left: 1px solid #2d3132;
 }
 
 .userContainer {
