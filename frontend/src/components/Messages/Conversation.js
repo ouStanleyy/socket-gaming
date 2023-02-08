@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useParams, Link } from "react-router-dom";
-import { getRooms } from "../../store/rooms";
+import { getRoomById, getRooms } from "../../store/rooms";
 import { ProfilePicture } from "../Elements";
 import styles from "./Conversation.module.css";
 
@@ -28,7 +28,7 @@ const Conversation = ({ sessionUser, rooms, roomId, toggleConvo }) => {
 
   useEffect(() => {
     const message = () => {
-      dispatch(getRooms());
+      dispatch(getRoomById(roomId));
     };
 
     sio.on("message", message);
@@ -39,7 +39,7 @@ const Conversation = ({ sessionUser, rooms, roomId, toggleConvo }) => {
   useEffect(() => {
     (async () => {
       try {
-        await dispatch(getRooms());
+        await dispatch(getRoomById(roomId));
       } catch (err) {}
     })();
   }, [roomId]);

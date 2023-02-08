@@ -37,7 +37,7 @@
   align-items: center;
   gap: 8px;
   color: #ffffff;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 2px;
   border-radius: 4px;
   width: 50%;
@@ -65,7 +65,7 @@
   gap: 40px;
   font-size: 16px;
   color: #ffffff;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 2px;
   border-radius: 4px;
   width: 50%;

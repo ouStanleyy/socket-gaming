@@ -13,7 +13,9 @@ const NewGame = ({ onClose }) => {
       const gameId = await dispatch(createNewGame(gameType));
       onClose();
       history.push(`/games/${gameId}`);
-    } catch (err) {}
+    } catch (err) {
+      console.log("error", err);
+    }
   };
 
   return (

@@ -12,15 +12,16 @@ const SideMessages = () => {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const sio = useSelector((state) => state.socket.socket);
-  const rooms = useSelector((state) => Object.values(state.rooms)).sort(
-    (a, b) =>
+  const rooms = useSelector((state) => Object.values(state.rooms))
+    .filter(({ game }) => !game)
+    .sort((a, b) =>
       a.messages.length && b.messages.length
         ? new Date(b.messages[b.messages.length - 1].time_sent) -
           new Date(a.messages[a.messages.length - 1].time_sent)
         : a.messages.length
         ? -1
         : +1
-  );
+    );
   const [newMessageModal, setNewMessageModal] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [activeConvo, setActiveConvo] = useState(false);
@@ -52,21 +53,19 @@ const SideMessages = () => {
   }, []);
 
   useEffect(() => {
-    if (sio.connected) {
-      const updateList = () => {
-        dispatch(getRooms());
-      };
+    const updateList = () => {
+      dispatch(getRooms());
+    };
 
-      sio.on("connected", updateList);
-      sio.on("disconnected", updateList);
-      sio.on("message", updateList);
+    sio.on("connected", updateList);
+    sio.on("disconnected", updateList);
+    sio.on("message", updateList);
 
-      return () => {
-        sio.off("connected", updateList);
-        sio.off("disconnected", updateList);
-        sio.off("message", updateList);
-      };
-    }
+    return () => {
+      sio.off("connected", updateList);
+      sio.off("disconnected", updateList);
+      sio.off("message", updateList);
+    };
   }, [sio]);
 
   return (

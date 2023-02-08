@@ -39,7 +39,6 @@ const GameDetails = () => {
         )
     : null;
   const room = useSelector((state) => state.rooms[game?.room_id]);
-  console.log("room", room);
   // const players = game?.users.sort(
   //   (a, b) => player(a.id).slice(-1) - player(b.id).slice(-1)
   //   // id === game.host_id ? -1 : 0;

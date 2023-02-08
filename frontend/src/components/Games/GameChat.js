@@ -38,7 +38,6 @@ const GameChat = ({ sessionId, game }) => {
   }, [sio, room]);
 
   useEffect(() => {
-    console.log("here", game);
     (async () => {
       try {
         await dispatch(getRoomById(game.room_id));
@@ -48,21 +47,6 @@ const GameChat = ({ sessionId, game }) => {
 
   return (
     <div className={styles.convoContainer}>
-      {/* <div className={styles.convoHeader}>
-        <Link className={styles.userContainer} to={`/users/${room?.user.id}`}>
-          <div className={styles.profilePicture}>
-            <ProfilePicture user={room?.user} size={"xsmall"} />
-          </div>
-          <div className={styles.userDetails}>
-            <p className={styles.username}>{room?.user?.username}</p>
-            <div
-              className={`${styles.status} ${
-                room?.user?.is_online && styles.online
-              }`}
-            ></div>
-          </div>
-        </Link>
-      </div> */}
       <div className={styles.conversationWrapper}>
         <div className={styles.conversation}>
           {messages?.map(({ id, message, user_id, time_sent, user }, idx) => (
