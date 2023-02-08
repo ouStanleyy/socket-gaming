@@ -24,17 +24,22 @@ const SideMessages = () => {
   const [newMessageModal, setNewMessageModal] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [activeConvo, setActiveConvo] = useState(false);
+  const [hideMessages, setHideMessages] = useState(true);
   const [loaded, setLoaded] = useState(false);
 
   const toggleNewMessageModal = () => {
     setNewMessageModal((state) => !state);
   };
 
+  const toggleMessages = () => {
+    setHideMessages((state) => !state);
+  };
+
   const toggleConvo =
     (roomId = "") =>
     () => {
-      setActiveConvo((state) => !state);
       setRoomId(roomId);
+      setActiveConvo((state) => !state);
     };
 
   useEffect(() => {
@@ -65,64 +70,92 @@ const SideMessages = () => {
   }, [sio]);
 
   return (
-    <div className={styles.messagesContainer}>
-      {!activeConvo ? (
-        <div className={styles.messagesList}>
-          <div className={styles.messagesListHeader}>
-            <h3 className={styles.title}>Messages</h3>
-            <div
-              className={styles.newConvoButton}
-              onClick={toggleNewMessageModal}
-            >
-              <i className="fa-regular fa-share-from-square fa-lg" />
-            </div>
-          </div>
-          {loaded &&
-            rooms.map((room) => (
+    <div>
+      <div
+        className={`${styles.toggleMessagesButton} ${styles.fixedRight} ${
+          hideMessages && styles.hideMessages
+        }`}
+        onClick={toggleMessages}
+      >
+        <i
+          className={
+            hideMessages
+              ? "fa-regular fa-comments fa-lg"
+              : "fa-solid fa-xmark fa-lg"
+          }
+        />
+        {/* <i className="fa-solid fa-up-right-and-down-left-from-center fa-lg" /> */}
+      </div>
+      <div
+        className={`${styles.messagesContainer} ${
+          hideMessages && styles.hideMessages
+        }`}
+      >
+        {!activeConvo ? (
+          <div className={styles.messagesList}>
+            <div className={styles.messagesListHeader}>
+              <h3 className={styles.title}>Messages</h3>
               <div
-                className={`${styles.userContainer} ${
-                  roomId && room.id === parseInt(roomId) && styles.activeUser
-                }`}
-                onClick={toggleConvo(room.id)}
+                className={styles.newConvoButton}
+                onClick={toggleNewMessageModal}
               >
-                <div className={styles.profilePicture}>
-                  <div
-                    className={`${styles.status} ${
-                      room.user?.is_online && styles.online
-                    }`}
-                  >
-                    <ProfilePicture
-                      path={`/messages/${room.id}`}
-                      user={room.user}
-                      size={"large"}
-                    />
+                {/* <i className="fa-regular fa-share-from-square fa-lg" /> */}
+                <i className="fa-regular fa-pen-to-square fa-lg" />
+              </div>
+              {/* <div
+                className={styles.toggleMessagesButton}
+                onClick={toggleMessages}
+              >
+                <i className="fa-solid fa-up-right-and-down-left-from-center fa-lg" />
+              </div> */}
+            </div>
+            {loaded &&
+              rooms.map((room) => (
+                <div
+                  className={`${styles.userContainer} ${
+                    roomId && room.id === parseInt(roomId) && styles.activeUser
+                  }`}
+                  onClick={toggleConvo(room.id)}
+                  key={room.id}
+                >
+                  <div className={styles.profilePicture}>
+                    <div
+                      className={`${styles.status} ${
+                        room.user?.is_online && styles.online
+                      }`}
+                    >
+                      <ProfilePicture user={room.user} size={"large"} />
+                    </div>
+                  </div>
+                  <div className={styles.userDetails}>
+                    <p className={styles.username}>{room.user?.username}</p>
+
+                    <p className={styles.msgPreview}>
+                      {room.messages[room.messages.length - 1]?.message}
+                    </p>
                   </div>
                 </div>
-                <div className={styles.userDetails}>
-                  <p className={styles.username}>{room.user?.username}</p>
-
-                  <p className={styles.msgPreview}>
-                    {room.messages[room.messages.length - 1]?.message}
-                  </p>
-                </div>
-              </div>
-            ))}
-        </div>
-      ) : (
-        <div className={styles.convoContainer}>
-          <Conversation
-            sessionUser={sessionUser}
-            rooms={rooms}
-            roomId={roomId}
-            toggleConvo={toggleConvo}
-          />
-        </div>
-      )}
-      {newMessageModal && (
-        <Modal onClose={toggleNewMessageModal}>
-          <NewMessage onClose={toggleNewMessageModal} />
-        </Modal>
-      )}
+              ))}
+          </div>
+        ) : (
+          <div className={styles.convoContainer}>
+            <Conversation
+              sessionUser={sessionUser}
+              rooms={rooms}
+              roomId={roomId}
+              toggleConvo={toggleConvo}
+            />
+          </div>
+        )}
+        {newMessageModal && (
+          <Modal onClose={toggleNewMessageModal}>
+            <NewMessage
+              onClose={toggleNewMessageModal}
+              toggleConvo={toggleConvo}
+            />
+          </Modal>
+        )}
+      </div>
     </div>
   );
 };

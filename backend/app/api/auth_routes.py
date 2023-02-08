@@ -63,12 +63,13 @@ def sign_up():
     form = SignUpForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
-        item = Item.query.get_or_404(1)
+        # item = Item.query.get_or_404(1)
+        items = Item.query.filter(Item.id.in_([1,2])).all()
         user = User(
             username=form.data['username'],
             password=form.data['password']
         )
-        user.items.append(item)
+        user.items.extend(items)
         db.session.add(user)
         db.session.commit()
         login_user(user)

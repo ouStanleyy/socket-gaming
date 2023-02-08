@@ -56,6 +56,39 @@
   color: #86c232;
 }
 
+.toggleMessagesButton {
+  height: fit-content;
+  cursor: pointer;
+  margin-left: auto;
+  color: #86c232;
+}
+
+.fixedRight {
+  display: flex;
+  position: fixed;
+  /* top: 1vh; */
+  right: 379px;
+  /* height: 100vh; */
+  /* flex-direction: column; */
+  justify-content: center;
+  align-items: center;
+  /* padding: 8px 12px 20px; */
+  width: 40px;
+  height: 40px;
+  background-color: #383c3f;
+  transition: 300ms;
+  z-index: 11;
+  border-top: 1px solid #2d3132;
+  border-left: 1px solid #2d3132;
+  border-bottom: 1px solid #2d3132;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.hideMessages {
+  transform: translateX(380px);
+}
+
 .convoContainer {
   /* border: 2px solid green; */
   display: flex;

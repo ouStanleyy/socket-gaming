@@ -42,7 +42,6 @@ const UserProfile = () => {
   const handleMessageClick = async () => {
     try {
       const roomId = await dispatch(createNewRoom(userId));
-      history.push(`/messages/${roomId}`);
     } catch (err) {}
   };
 

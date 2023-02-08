@@ -152,7 +152,7 @@ items = [
 def seed_items():
     db.session.add_all([Item(**item) for item in items])
     db.session.commit()
-    db.session.connection().execute(Owned_Item.insert().values([(1, 1), (2, 1), (3, 1), (4, 1), (12, 1), (13, 1), (14, 1), (1, 2), (2, 2), (3, 2), (4, 2), (12, 2), (13, 2), (14, 2), (1, 3), (2, 3), (3, 3), (4, 3), (12, 3), (13, 3), (14, 3),]))
+    db.session.connection().execute(Owned_Item.insert().values([(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (12, 1), (13, 1), (14, 1), (1, 2), (2, 2), (3, 2), (4, 2), (5, 2), (12, 2), (13, 2), (14, 2), (1, 3), (2, 3), (3, 3), (4, 3), (5, 3), (12, 3), (13, 3), (14, 3),]))
     db.session.commit()
 
 
