@@ -53,7 +53,7 @@ const GamesList = () => {
 
     sio.on("update_game_list", updateList);
     return () => sio.off("update_game_list", updateList);
-  }, [sio]);
+  }, [sio.id]);
 
   return (
     <div className={styles.gamesListContainer}>

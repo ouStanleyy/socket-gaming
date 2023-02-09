@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { Modal } from "../../context/Modal";
@@ -55,6 +55,9 @@ const GameDetails = () => {
   const [gameActive, setGameActive] = useState(false);
   // const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
   const [closeLobbyModal, setCloseLobbyModal] = useState(false);
+  const [kicked, setKicked] = useState(false);
+  const kickedRef = useRef();
+  const hostRef = useRef();
   const allReady =
     (game?.game_data.player_2_ready || 0) +
       (game?.game_data.player_3_ready || 0) +
@@ -84,8 +87,11 @@ const GameDetails = () => {
 
   const closeLobby = async (push = true) => {
     await dispatch(deleteGame(gameId));
-    toggleCloseLobbyModal();
-    if (push) history.push("/games");
+    if (push) {
+      setKicked(true);
+      toggleCloseLobbyModal();
+      history.push("/games");
+    }
   };
 
   const start = () => {
@@ -104,10 +110,10 @@ const GameDetails = () => {
   useEffect(() => {
     (async () => {
       try {
-        await dispatch(getGameById(gameId));
+        if (sio.id) await dispatch(getGameById(gameId));
       } catch (err) {}
     })();
-  }, []);
+  }, [sio.id]);
 
   useEffect(() => {
     (async () => {
@@ -122,16 +128,19 @@ const GameDetails = () => {
 
     sio.on("update_game_lobby", load);
     return () => sio.off("update_game_lobby", load);
-  }, [sio]);
+  }, [sio.id]);
 
   useEffect(() => {
     if (game?.host_id !== sessionId) {
-      const closeGameLobby = () => history.push("/games");
+      const closeGameLobby = () => {
+        setKicked(true);
+        history.push("/games");
+      };
 
       sio.on("close_game_lobby", closeGameLobby);
       return () => sio.off("close_game_lobby", closeGameLobby);
     }
-  }, [sio]);
+  }, [sio.id]);
 
   useEffect(() => {
     const endGame = (data) => {
@@ -142,9 +151,21 @@ const GameDetails = () => {
 
     sio.on("end_game", endGame);
     return () => sio.off("end_game", endGame);
-  }, [sio]);
+  }, [sio.id]);
 
-  useEffect(() => (isHost ? () => closeLobby(false) : () => leave(true)), []);
+  useEffect(
+    () => () =>
+      !kickedRef.current && (hostRef.current ? closeLobby(false) : leave(true)),
+    []
+  );
+
+  useEffect(() => {
+    kickedRef.current = kicked;
+  }, [kicked]);
+
+  useEffect(() => {
+    hostRef.current = isHost;
+  }, [isHost]);
   // useEffect(() => {
   //   if (game?.host_id === sessionId) return () => closeLobby(false);
   // }, []);
@@ -165,7 +186,7 @@ const GameDetails = () => {
   // }, [sio]);
 
   useEffect(() => {
-    sio.on("update_game", (data) => {
+    const updateGame = (data) => {
       if (data.scorer && data.paused)
         dispatch(
           updateGameScores({
@@ -173,10 +194,11 @@ const GameDetails = () => {
             scores: data.scores,
           })
         );
-    });
+    };
 
-    return () => sio.off("update_game");
-  }, [sio]);
+    sio.on("update_game", updateGame);
+    return () => sio.off("update_game", updateGame);
+  }, [sio.id]);
 
   return (
     <div className={styles.gameDetails}>

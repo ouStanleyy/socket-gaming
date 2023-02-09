@@ -35,7 +35,7 @@ const GameChat = ({ sessionId, game }) => {
 
     sio.on("message", message);
     return () => sio.off("message", message);
-  }, [sio, room]);
+  }, [sio.id, room]);
 
   useEffect(() => {
     (async () => {
