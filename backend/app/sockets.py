@@ -29,6 +29,7 @@ def connected():
     current_user.is_online = True
     current_user.sid = request.sid
     db.session.commit()
+    print("reached in sockets.py: ", current_user.sid)
     for room in current_user.rooms:
         join_room(str(room.id))
     for game in current_user.games:

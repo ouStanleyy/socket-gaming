@@ -66,7 +66,7 @@ const SideMessages = () => {
       sio.off("disconnected", updateList);
       sio.off("message", updateList);
     };
-  }, [sio]);
+  }, [sio.id]);
 
   return (
     <>
