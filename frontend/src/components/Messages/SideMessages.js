@@ -53,19 +53,21 @@ const SideMessages = () => {
   }, []);
 
   useEffect(() => {
-    const updateList = () => {
-      dispatch(getRooms());
-    };
+    if (sio.id) {
+      const updateList = () => {
+        dispatch(getRooms());
+      };
 
-    sio.on("connected", updateList);
-    sio.on("disconnected", updateList);
-    sio.on("message", updateList);
+      sio.on("connected", updateList);
+      sio.on("disconnected", updateList);
+      sio.on("message", updateList);
 
-    return () => {
-      sio.off("connected", updateList);
-      sio.off("disconnected", updateList);
-      sio.off("message", updateList);
-    };
+      return () => {
+        sio.off("connected", updateList);
+        sio.off("disconnected", updateList);
+        sio.off("message", updateList);
+      };
+    }
   }, [sio.id]);
 
   return (

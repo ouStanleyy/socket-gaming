@@ -13,7 +13,7 @@ class Snakes:
         self.player_4_snake = game_data.get('player_4_snake', [])
         self.apples = game_data.get('apples', [])
         self.game_over = game_data.get('game_over', False)
-        self.winner = game_data.get('winner', None)
+        self.result = game_data.get('result', [])
         self.payload_id = game_data.get('payload_id', 0)
 
     def __setitem__(self, key, value):
@@ -91,6 +91,6 @@ class Snakes:
             'player_4_snake': self.player_4_snake,
             'apples': self.apples,
             'game_over': self.game_over,
-            'winner': self.winner,
+            'result': self.result,
             'payload_id': self.payload_id
         }

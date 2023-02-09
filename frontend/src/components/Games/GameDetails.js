@@ -166,9 +166,6 @@ const GameDetails = () => {
   useEffect(() => {
     hostRef.current = isHost;
   }, [isHost]);
-  // useEffect(() => {
-  //   if (game?.host_id === sessionId) return () => closeLobby(false);
-  // }, []);
 
   // useEffect(() => {
   //   sio.on("update_game", (data) => {
@@ -327,7 +324,7 @@ const GameDetails = () => {
             </div>
           </>
         )}
-        <div>
+        {/* <div>
           <p>
             Winner:{" "}
             {game?.game_data.winner &&
@@ -338,7 +335,7 @@ const GameDetails = () => {
                     .username
                 : null)}
           </p>
-        </div>
+        </div> */}
       </div>
       <GameChat sessionId={sessionId} game={game} />
     </div>
