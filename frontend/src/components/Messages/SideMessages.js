@@ -135,10 +135,9 @@ const SideMessages = () => {
               </div>
             ))}
         </div>
-
         <div
           className={`${styles.convoContainer} ${
-            !activeConvo && styles.activeConvo
+            !activeConvo && styles.inactiveConvo
           }`}
         >
           <Conversation

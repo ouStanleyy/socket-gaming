@@ -106,7 +106,7 @@
   z-index: 15;
 }
 
-.activeConvo {
+.inactiveConvo {
   transform: translateX(380px);
   border-left: 1px solid #2d3132;
 }

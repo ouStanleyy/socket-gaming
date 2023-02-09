@@ -32,23 +32,23 @@ const Conversation = ({
     }
   };
 
-  useEffect(() => {
-    const message = () => {
-      dispatch(getRoomById(roomId));
-    };
+  // useEffect(() => {
+  //   const message = () => {
+  //     dispatch(getRoomById(roomId));
+  //   };
 
-    sio.on("message", message);
+  //   sio.on("message", message);
 
-    return () => sio.off("message", message);
-  }, [sio]);
+  //   return () => sio.off("message", message);
+  // }, [sio]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        if (roomId) await dispatch(getRoomById(roomId));
-      } catch (err) {}
-    })();
-  }, [roomId]);
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       if (roomId) await dispatch(getRoomById(roomId));
+  //     } catch (err) {}
+  //   })();
+  // }, [roomId]);
 
   return (
     <>
@@ -71,8 +71,8 @@ const Conversation = ({
           </div>
         </Link>
       </div>
-      <div className={styles.conversationWrapper}>
-        {activeConvo && (
+      {activeConvo && (
+        <div className={styles.conversationWrapper}>
           <div className={styles.conversation}>
             {messages.map(({ id, message, user_id, time_sent }, idx) => (
               <div className={styles.messageWrapper} key={id}>
@@ -112,8 +112,8 @@ const Conversation = ({
             ))}
             <div id={styles.anchor}></div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <form className={styles.messageInput} onSubmit={handleSubmit}>
         <input
           type="text"
