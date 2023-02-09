@@ -26,9 +26,9 @@ def game(game_id):
     Query for a game by id and returns that game in a dictionary
     """
     game = Game.query.get_or_404(game_id)
-
     if not current_user in game.users:
         game.room.users.append(current_user)
+        print("reached", current_user.sid)
         sio.server.enter_room(current_user.sid, f'{game.game_type}-{game.id}')
         sio.server.enter_room(current_user.sid, str(game.room.id))
 
