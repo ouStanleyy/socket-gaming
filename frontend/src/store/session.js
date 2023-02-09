@@ -1,15 +1,32 @@
 // constants
 const SET_USER = "session/SET_USER";
-const REMOVE_USER = "session/REMOVE_USER";
+const CLEAR_SESSION = "session/CLEAR_SESSION";
+const LOAD_ITEMS = "session/LOAD_ITEMS";
+const ADD_ITEM = "session/ADD_ITEM";
+const RESET_ANIMATION = "session/RESET_ANIMATION";
 
 // actions
 const setUser = (user) => ({
   type: SET_USER,
-  payload: user,
+  user,
 });
 
-const removeUser = () => ({
-  type: REMOVE_USER,
+const clearSession = () => ({
+  type: CLEAR_SESSION,
+});
+
+const loadItems = (items) => ({
+  type: LOAD_ITEMS,
+  items,
+});
+
+export const addItem = (item) => ({
+  type: ADD_ITEM,
+  item,
+});
+
+export const resetAnimation = () => ({
+  type: RESET_ANIMATION,
 });
 
 // thunks
@@ -20,12 +37,13 @@ export const authenticate = () => async (dispatch) => {
     },
   });
   if (response.ok) {
-    const data = await response.json();
-    if (data.errors) {
+    const user = await response.json();
+    if (user.errors) {
       return;
     }
 
-    dispatch(setUser(data));
+    dispatch(setUser(user));
+    // dispatch(loadItems(user.items));
   }
 };
 
@@ -44,6 +62,7 @@ export const login = (username, password) => async (dispatch) => {
   if (response.ok) {
     const data = await response.json();
     dispatch(setUser(data));
+    dispatch(loadItems(data.items));
     return null;
   } else if (response.status < 500) {
     const data = await response.json();
@@ -63,7 +82,7 @@ export const logout = () => async (dispatch) => {
   });
 
   if (response.ok) {
-    dispatch(removeUser());
+    dispatch(clearSession());
   }
 };
 
@@ -147,12 +166,40 @@ export const updatePassword =
   };
 
 // reducer
-export default function reducer(state = { user: null }, action) {
+export default function reducer(
+  state = { user: null, items: [], coins: { amount: 0, animation: false } },
+  action
+) {
   switch (action.type) {
     case SET_USER:
-      return { ...state, user: action.payload };
-    case REMOVE_USER:
-      return { user: null };
+      return {
+        ...state,
+        user: action.user,
+        items: action.user.items,
+        coins: { ...state.coins, amount: action.user.coins_amount },
+      };
+    case LOAD_ITEMS:
+      return { ...state, items: action.items };
+    case ADD_ITEM:
+      return {
+        ...state,
+        items: [...state.items, action.item],
+        coins: {
+          ...state.coins,
+          amount: state.coins.amount - 100,
+          animation: true,
+        },
+      };
+    case RESET_ANIMATION:
+      return {
+        ...state,
+        coins: {
+          ...state.coins,
+          animation: false,
+        },
+      };
+    case CLEAR_SESSION:
+      return { user: null, items: [] };
     default:
       return state;
   }

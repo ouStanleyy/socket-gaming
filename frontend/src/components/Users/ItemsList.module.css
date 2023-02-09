@@ -1,0 +1,35 @@
+.itemContainer {
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; */
+  /* padding: 0 8px; */
+  position: relative;
+}
+
+.itemContainer:hover {
+  filter: brightness(70%);
+  cursor: pointer;
+}
+
+.avatarItem {
+  width: 50%;
+}
+
+.current {
+  position: absolute;
+  margin-top: auto;
+  /* width: 100px; */
+  /* height: 292px; */
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* cursor: pointer; */
+}
+
+.linkToShop {
+  width: 200px;
+  margin-top: 152px;
+}

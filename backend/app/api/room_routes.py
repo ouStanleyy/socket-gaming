@@ -12,7 +12,7 @@ def rooms():
     """
     Query for all rooms of the current user and returns them in a list of room dictionaries
     """
-    return {'Rooms': [room.to_dict() for room in current_user.rooms if room.game is None]}
+    return {'Rooms': [room.to_dict() for room in current_user.rooms]}
 
 
 @room_routes.route('/<int:room_id>')
@@ -22,7 +22,7 @@ def room(room_id):
     Query for a room by id and returns that room in a dictionary
     """
     room = Room.query.get_or_404(room_id)
-    return room.to_dict_game_chat()
+    return room.to_dict()
 
 
 @room_routes.route('/', methods=['POST'])

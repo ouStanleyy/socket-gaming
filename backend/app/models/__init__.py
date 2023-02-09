@@ -3,3 +3,4 @@ from .user import User
 from .message import Message
 from .room import Room, Occupant
 from .game import Game, Player
+from .item import Item, Owned_Item

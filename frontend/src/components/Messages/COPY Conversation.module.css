@@ -1,10 +1,6 @@
 .convoHeader {
-  display: flex;
-  align-items: center;
-  /* justify-content: space-between; */
-  gap: 20px;
   min-height: 60px;
-  /* width: 584px; */
+  width: 584px;
   border-bottom: 1px solid #2d3132;
   padding-left: 24px;
   margin-bottom: auto;
@@ -112,7 +108,7 @@
 .messageInput > input {
   border: 1px solid #dbdbdb;
   border-radius: 40px;
-  width: 100%;
+  width: 540px;
   height: 40px;
   padding: 20px;
 }
@@ -124,9 +120,4 @@
 #anchor {
   overflow-anchor: auto;
   height: 1px;
-}
-
-.backButton {
-  color: #86c232;
-  cursor: pointer;
 }

@@ -6,7 +6,7 @@ from flask_login import UserMixin
 class User(db.Model, UserMixin):
     '''
     Relationships:
-        User has many Rooms, Messages
+        User has many Rooms, Messages, Games, Items
     '''
     __tablename__ = 'users'
 
@@ -19,11 +19,15 @@ class User(db.Model, UserMixin):
     profile_picture = db.Column(db.String)
     is_online = db.Column(db.Boolean, nullable=False, default=False)
     sid = db.Column(db.String)
+    banner_id = db.Column(db.Integer, default=1)
+    avatar_id = db.Column(db.Integer, default=2)
+    coins_amount = db.Column(db.Integer, default=200)
     # gender = db.Column(db.Enum("Male", "Female", "Non-binary", "Prefer not to say",
     #                    name='gender'), nullable=False, default="Prefer not to say")
 
     rooms = db.relationship("Room", secondary="occupants", back_populates="users")
     games = db.relationship("Game", secondary="players", back_populates="users")
+    items = db.relationship("Item", secondary="owned_items", back_populates="users")
     messages = db.relationship("Message", back_populates="user", cascade="all, delete-orphan")
 
     @property
@@ -43,7 +47,11 @@ class User(db.Model, UserMixin):
             'username': self.username,
             'profile_picture': self.profile_picture,
             'is_online': self.is_online,
-            'sid': self.sid
+            'sid': self.sid,
+            'banner_id': self.banner_id,
+            'avatar_id': self.avatar_id,
+            'coins_amount': self.coins_amount,
+            'items': [item.to_dict() for item in self.items],
         }
 
     # def to_dict_all(self):
