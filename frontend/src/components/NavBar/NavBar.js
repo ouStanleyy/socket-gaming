@@ -23,11 +23,12 @@ const NavBar = () => {
     { icon: "Logo", path: "/games" },
     // { icon: "Home", path: "/" },
     { icon: "Search", path: "/search" },
-    // { icon: "Explore", path: "/explore" },
-    { icon: "Messages", path: "/messages" },
+    // { icon: "Messages", path: "/messages" },
     // { icon: "Notifications", path: "/notifications" },
     { icon: "Games", path: "/games" },
+    { icon: "Shop", path: "/shop" },
     { icon: "Profile", path: `/users/${user.id}` },
+    { icon: "Coin", path: "#" },
     { icon: "More", path: "#" },
   ];
 
@@ -106,6 +107,14 @@ const NavBar = () => {
             links.slice(0, links.length - 1).map(({ icon, path }, idx) =>
               icon === "Search" ? (
                 <div key={idx} onClick={toggleSearch}>
+                  <NavItem
+                    type={icon}
+                    showSearch={showSearch}
+                    hideSearch={hideSearch}
+                  />
+                </div>
+              ) : icon === "Coin" ? (
+                <div key={idx}>
                   <NavItem
                     type={icon}
                     showSearch={showSearch}

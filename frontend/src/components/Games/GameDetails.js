@@ -118,20 +118,30 @@ const GameDetails = () => {
   }, [ready]);
 
   useEffect(() => {
-    sio.on("update_game_lobby", (data) => dispatch(loadGameDetails(data)));
+    const load = (data) => dispatch(loadGameDetails(data));
+
+    sio.on("update_game_lobby", load);
+    return () => sio.off("update_game_lobby", load);
   }, [sio]);
 
   useEffect(() => {
-    if (game?.host_id !== sessionId)
-      sio.on("close_game_lobby", () => history.push("/games"));
+    if (game?.host_id !== sessionId) {
+      const closeGameLobby = () => history.push("/games");
+
+      sio.on("close_game_lobby", closeGameLobby);
+      return () => sio.off("close_game_lobby", closeGameLobby);
+    }
   }, [sio]);
 
   useEffect(() => {
-    sio.on("end_game", (data) => {
+    const endGame = (data) => {
       dispatch(loadGameDetails(data));
       setReady(false);
       setGameActive(false);
-    });
+    };
+
+    sio.on("end_game", endGame);
+    return () => sio.off("end_game", endGame);
   }, [sio]);
 
   useEffect(() => (isHost ? () => closeLobby(false) : () => leave(true)), []);

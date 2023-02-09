@@ -180,40 +180,41 @@ l-99 3 -3 99 c-1 55 0 106 2 113 7 17 196 19 214 1z"
       ></line>
     </svg>
   ),
-  Explore: (
-    <svg
-      aria-label="Explore"
-      className="_ab6-"
-      color="#262626"
-      fill="#262626"
-      height="24"
-      role="img"
-      viewBox="0 0 24 24"
-      width="24"
-    >
-      <polygon
-        fill="none"
-        points="13.941 13.953 7.581 16.424 10.06 10.056 16.42 7.585 13.941 13.953"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      ></polygon>
-      <polygon
-        fillRule="evenodd"
-        points="10.06 10.056 13.949 13.945 7.581 16.424 10.06 10.056"
-      ></polygon>
-      <circle
-        cx="12.001"
-        cy="12.005"
-        fill="none"
-        r="10.5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      ></circle>
-    </svg>
+  Shop: (
+    <i className="fa-regular fa-gem fa-lg" />
+    // <svg
+    //   aria-label="Explore"
+    //   className="_ab6-"
+    //   color="#262626"
+    //   fill="#262626"
+    //   height="24"
+    //   role="img"
+    //   viewBox="0 0 24 24"
+    //   width="24"
+    // >
+    //   <polygon
+    //     fill="none"
+    //     points="13.941 13.953 7.581 16.424 10.06 10.056 16.42 7.585 13.941 13.953"
+    //     stroke="currentColor"
+    //     strokeLinecap="round"
+    //     strokeLinejoin="round"
+    //     strokeWidth="2"
+    //   ></polygon>
+    //   <polygon
+    //     fillRule="evenodd"
+    //     points="10.06 10.056 13.949 13.945 7.581 16.424 10.06 10.056"
+    //   ></polygon>
+    //   <circle
+    //     cx="12.001"
+    //     cy="12.005"
+    //     fill="none"
+    //     r="10.5"
+    //     stroke="currentColor"
+    //     strokeLinecap="round"
+    //     strokeLinejoin="round"
+    //     strokeWidth="2"
+    //   ></circle>
+    // </svg>
   ),
   Messages: (
     <i className="fa-regular fa-comments fa-lg" />
@@ -304,6 +305,7 @@ l-99 3 -3 99 c-1 55 0 106 2 113 7 17 196 19 214 1z"
     //   ></line>
     // </svg>
   ),
+  Coin: <img src="https://i.gifer.com/Fw3P.gif" alt="gold coin" />,
   More: (
     <svg
       aria-label="Settings"

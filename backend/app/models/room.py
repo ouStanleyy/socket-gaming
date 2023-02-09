@@ -32,7 +32,9 @@ class Room(db.Model):
         return {
             'id': self.id,
             'user': next((user.to_dict() for user in self.users if user.id != current_user.id), {}),
+            'users': [user.to_dict() for user in self.users],
             'messages': [message.to_dict() for message in self.messages],
+            'game': True if self.game else False
         }
 
     def to_dict_game_chat(self):

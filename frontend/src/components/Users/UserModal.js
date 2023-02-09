@@ -10,6 +10,7 @@ function UserModal({ user, onClose }) {
   const history = useHistory();
   const dispatch = useDispatch();
   // const user = useSelector((state) => state.users[userId]);
+  const bannerImage = user?.items.find(({ id }) => id === user.banner_id).image;
   const [loaded, setLoaded] = useState(false);
 
   const handleMessageClick = async () => {
@@ -31,8 +32,18 @@ function UserModal({ user, onClose }) {
   return (
     loaded && (
       <div className={styles.userContainer}>
-        <div className={styles.userHeader}>
-          <ProfilePicture user={user} size={"large"} onClose={onClose} />
+        <div
+          className={styles.userHeader}
+          style={{
+            backgroundImage: `url(${bannerImage})`,
+            // backgroundPosition: "center",
+            // backgroundSize: "100%",
+            // backgroundRepeat: "no-repeat",
+            // height: "150px",
+            // width: "300px",
+          }}
+        >
+          <ProfilePicture user={user} size={"xlarge"} onClose={onClose} />
           <div className={styles.userDetails}>
             <Link to={`/users/${user.id}`}>
               <p onClick={onClose} className={styles.username}>

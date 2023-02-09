@@ -1,0 +1,19 @@
+.shopContainer {
+  /* border: 1px solid red; */
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 28px;
+}
+
+@media screen and (max-width: 1264px) {
+  .shopContainer {
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: 72px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .shopContainer {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

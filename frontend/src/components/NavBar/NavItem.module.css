@@ -2,6 +2,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
+  min-width: 26px;
   /* border: 1px solid red; */
   /* overflow: hidden; */
 }
@@ -41,12 +42,18 @@ svg {
   place-content: center;
   transition: 100ms;
   color: #86c232;
+  min-width: 26px;
 }
 
 .logo > .svgContainer > svg {
   margin: -24px;
   width: 244px;
   height: 80px;
+}
+
+.svgContainer > img {
+  width: 24px;
+  height: 24px;
 }
 
 /* when navItem is hovered, target svg*/
@@ -58,14 +65,18 @@ svg {
   transform: scale(1);
 }
 
-.navItem:hover {
+.navItem:hover:not(.coinItem) {
   background-color: #2d3132;
   cursor: pointer;
   transition: 0.2s ease;
 }
 
-.navItem:active {
+.navItem:active:not(.coinItem) {
   opacity: 0.6;
+}
+
+.coinItem {
+  user-select: none;
 }
 
 .logo:hover {
@@ -119,6 +130,7 @@ svg {
   border-radius: 50%;
   width: 48px;
   height: 48px;
+  padding: 0 10px;
 }
 
 .hideNavItem.notifBorder {
@@ -138,4 +150,31 @@ svg {
   position: absolute;
   margin-bottom: 12px;
   margin-left: 15px;
+}
+
+.coinsAnimation {
+  position: absolute;
+  display: flex;
+  font-family: sans-serif;
+  color: #dd0f0f;
+  align-items: center;
+  gap: 13px;
+  height: 24px;
+  animation: onShow 1000ms ease;
+}
+
+@keyframes onShow {
+  0% {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) translateX(10px);
+  }
 }

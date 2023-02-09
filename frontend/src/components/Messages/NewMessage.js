@@ -7,7 +7,7 @@ import { ProfilePicture } from "../Elements";
 import { createNewRoom } from "../../store/rooms";
 import { useHistory } from "react-router-dom";
 
-const NewMessage = ({ onClose }) => {
+const NewMessage = ({ onClose, toggleConvo }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const sessionId = useSelector((state) => state.session.user.id);
@@ -27,8 +27,8 @@ const NewMessage = ({ onClose }) => {
   const handleClick = (userId) => async () => {
     try {
       const roomId = await dispatch(createNewRoom(userId));
+      toggleConvo(roomId)();
       onClose();
-      history.push(`/messages/${roomId}`);
     } catch (err) {}
   };
 
@@ -63,16 +63,16 @@ const NewMessage = ({ onClose }) => {
                 fill="none"
                 points="20.643 3.357 12 12 3.353 20.647"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="3"
               ></polyline>
               <line
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="3"
                 x1="20.649"
                 x2="3.354"
                 y1="20.649"
@@ -99,6 +99,7 @@ const NewMessage = ({ onClose }) => {
             <div
               className={styles.userContainer}
               onClick={handleClick(result.id)}
+              key={result.id}
             >
               <div className={styles.profilePicture}>
                 <ProfilePicture user={result} size={"large"} />

@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, session, request
-from app.models import User, db
+from app.models import User, Item, db
 from app.forms import LoginForm
 from app.forms import SignUpForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -63,10 +63,13 @@ def sign_up():
     form = SignUpForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
+        # item = Item.query.get_or_404(1)
+        items = Item.query.filter(Item.id.in_([1,2])).all()
         user = User(
             username=form.data['username'],
             password=form.data['password']
         )
+        user.items.extend(items)
         db.session.add(user)
         db.session.commit()
         login_user(user)

@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
-import NavBar from "./components/NavBar/NavBar";
 import { authenticate } from "./store/session";
 import { setSocket } from "./store/socket";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import NavBar from "./components/NavBar/NavBar";
 import Splash from "./components/Splash/Splash";
-import { Messages } from "./components/Messages";
-import styles from "./App.module.css";
+import { Messages, SideMessages } from "./components/Messages";
 import { GamesList, GameLobby } from "./components/Games";
 import { Settings } from "./components/Settings";
+import { Shop } from "./components/Shop";
+import { UserProfile } from "./components/Users";
+import styles from "./App.module.css";
 
 function App() {
   const dispatch = useDispatch();
@@ -44,24 +46,39 @@ function App() {
 
   return (
     <BrowserRouter>
-      {user && <NavBar />}
+      {user && (
+        <>
+          <NavBar />
+          <SideMessages />
+        </>
+      )}
       <Switch>
         <Route exact path="/">
           {user ? <h1>Homepage</h1> : <Splash />}
         </Route>
-        <ProtectedRoute path="/messages">
+        {/* <ProtectedRoute path="/messages">
           <div className={styles.innerBody}>
-            <Messages user={user} />
+            <Messages />
           </div>
-        </ProtectedRoute>
+        </ProtectedRoute> */}
         <ProtectedRoute exact path="/games">
           <div className={styles.innerBody}>
             <GamesList />
           </div>
         </ProtectedRoute>
+        <ProtectedRoute exact path="/shop">
+          <div className={styles.innerBody}>
+            <Shop />
+          </div>
+        </ProtectedRoute>
         <ProtectedRoute path="/games/:gameId">
           <div className={styles.innerBody}>
             <GameLobby />
+          </div>
+        </ProtectedRoute>
+        <ProtectedRoute path="/users/:userId">
+          <div className={styles.innerBody}>
+            <UserProfile />
           </div>
         </ProtectedRoute>
         <ProtectedRoute path="/settings">

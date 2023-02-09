@@ -22,7 +22,7 @@ def room(room_id):
     Query for a room by id and returns that room in a dictionary
     """
     room = Room.query.get_or_404(room_id)
-    return room.to_dict_game_chat()
+    return room.to_dict()
 
 
 @room_routes.route('/', methods=['POST'])
