@@ -3,6 +3,7 @@ const SET_USER = "session/SET_USER";
 const CLEAR_SESSION = "session/CLEAR_SESSION";
 const LOAD_ITEMS = "session/LOAD_ITEMS";
 const ADD_ITEM = "session/ADD_ITEM";
+const ADD_COINS = "session/ADD_COINS";
 const RESET_ANIMATION = "session/RESET_ANIMATION";
 
 // actions
@@ -23,6 +24,11 @@ const loadItems = (items) => ({
 export const addItem = (item) => ({
   type: ADD_ITEM,
   item,
+});
+
+const addAmount = (amount) => ({
+  type: ADD_COINS,
+  amount,
 });
 
 export const resetAnimation = () => ({
@@ -165,9 +171,27 @@ export const updatePassword =
     }
   };
 
+export const addCoins = (amount) => async (dispatch) => {
+  const res = await fetch("/api/users/session/add_coins", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ amount }),
+  });
+
+  if (res.ok) {
+    dispatch(addAmount(amount));
+  }
+};
+
 // reducer
 export default function reducer(
-  state = { user: null, items: [], coins: { amount: 0, animation: false } },
+  state = {
+    user: null,
+    items: [],
+    coins: { amount: 0, animation: { type: null, amount: 0, show: false } },
+  },
   action
 ) {
   switch (action.type) {
@@ -187,7 +211,26 @@ export default function reducer(
         coins: {
           ...state.coins,
           amount: state.coins.amount - 100,
-          animation: true,
+          animation: {
+            ...state.coins.animation,
+            type: "decrement",
+            amount: 100,
+            show: true,
+          },
+        },
+      };
+    case ADD_COINS:
+      return {
+        ...state,
+        coins: {
+          ...state.coins,
+          amount: state.coins.amount + action.amount,
+          animation: {
+            ...state.coins.animation,
+            type: "increment",
+            amount: action.amount,
+            show: true,
+          },
         },
       };
     case RESET_ANIMATION:
@@ -195,11 +238,20 @@ export default function reducer(
         ...state,
         coins: {
           ...state.coins,
-          animation: false,
+          animation: {
+            ...state.coins.animation,
+            type: null,
+            amount: 0,
+            show: false,
+          },
         },
       };
     case CLEAR_SESSION:
-      return { user: null, items: [] };
+      return {
+        user: null,
+        items: [],
+        coins: { amount: 0, animation: { type: null, amount: 0, show: false } },
+      };
     default:
       return state;
   }

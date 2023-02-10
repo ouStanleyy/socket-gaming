@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import ItemsList from "./ItemsList";
 import styles from "./EditModal.module.css";
 
@@ -10,7 +9,6 @@ function EditModal({ editType, onClose }) {
         <div className={styles.svgContainer} onClick={onClose}>
           <svg
             aria-label="Close"
-            // class="_ab6-"
             color="currentColor"
             fill="currentColor"
             height="18"
