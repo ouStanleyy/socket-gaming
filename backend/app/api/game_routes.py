@@ -290,7 +290,7 @@ def end_game(data):
     game_instance = Snakes(game_data=json.loads(game.game_data))
     # game_instance.game_over = True
     # game_instance.winner = (game_instance.player_1 if current_user.id == game_instance.player_2 else game_instance.player_2)
-    game_instance.result = data['result']
+    game_instance.results = data['results']
     game_instance.reset_game()
     # game_instance.player_2_ready = False
     # game_instance.player_3_ready = False

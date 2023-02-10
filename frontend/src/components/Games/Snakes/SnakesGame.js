@@ -108,7 +108,7 @@ const SnakesGame = () => {
   const gameLoop = () => {
     // const snake = [...gameInstance.game[isHost ? "snakeOne" : "snakeTwo"]];
     if (gameInstance.game.draw())
-      sio?.emit("end_game", { gameId, result: "draw" });
+      sio?.emit("end_game", { gameId, results: "draw" });
     const snake = [...gameInstance.game[snakeNum[player]]];
     if (
       snake.length
@@ -120,9 +120,9 @@ const SnakesGame = () => {
       if (gameInstance.game.gameOver())
         sio?.emit("end_game", {
           gameId,
-          result: [user.username, ...gameInstance.game.result],
+          results: [user.username, ...gameInstance.game.results],
         });
-      let apples, result;
+      let apples, results;
 
       if (gameInstance.game.powerUp === "freeze") {
         setGameSpeed(500);
@@ -166,8 +166,8 @@ const SnakesGame = () => {
       }
       if (!shielded[player] && gameInstance.game.checkCollision(newSnakeHead)) {
         snake.length = 0;
-        gameInstance.game.result.unshift(user.username);
-        result = gameInstance.game.result;
+        gameInstance.game.results.unshift(user.username);
+        results = gameInstance.game.results;
       }
 
       // else if (gameInstance.game[payloadId[player]] < Math.max(...payloads))
@@ -182,7 +182,7 @@ const SnakesGame = () => {
         powerUp: gameInstance.game.powerUp,
         shielded: shielded[player],
         confused: confused[player],
-        result,
+        results,
         // payloadId: gameInstance.game[payloadId[player]],
         // payloadId: isHost
         //   ? gameInstance.game.p1PayloadId
@@ -242,7 +242,7 @@ const SnakesGame = () => {
           gameInstance.game[snakeNum[data.player]] = data.snake;
           if (data.apples) gameInstance.game.apples = data.apples;
           if (data.powerUp) gameInstance.game.powerUp = data.powerUp;
-          if (data.result) gameInstance.game.result = data.result;
+          if (data.results) gameInstance.game.results = data.results;
           setShielded((state) => ({ ...state, [data.player]: data.shielded }));
           setConfused((state) => ({ ...state, [data.player]: data.confused }));
         }

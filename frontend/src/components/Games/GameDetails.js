@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { Modal } from "../../context/Modal";
 import GameChat from "./GameChat";
+import ResultsModal from "./ResultsModal";
 import { ProfilePicture } from "../Elements";
 import {
   getGameById,
@@ -23,7 +24,8 @@ const GameDetails = () => {
   const { gameId } = useParams();
   const sio = useSelector((state) => state.socket.socket);
   const game = useSelector((state) => state.games[gameId]);
-  const sessionId = useSelector((state) => state.session.user.id);
+  const user = useSelector((state) => state.session.user);
+  const sessionId = user.id;
   const isHost = sessionId === game?.host_id;
   const player = (userId) =>
     Object.keys(game?.game_data).find(
@@ -55,6 +57,7 @@ const GameDetails = () => {
   const [gameActive, setGameActive] = useState(false);
   // const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
   const [closeLobbyModal, setCloseLobbyModal] = useState(false);
+  const [resultsModal, setResultsModal] = useState(false);
   const [kicked, setKicked] = useState(false);
   const kickedRef = useRef();
   const hostRef = useRef();
@@ -147,6 +150,7 @@ const GameDetails = () => {
       dispatch(loadGameDetails(data));
       setReady(false);
       setGameActive(false);
+      setResultsModal(true);
     };
 
     sio.on("end_game", endGame);
@@ -323,6 +327,15 @@ const GameDetails = () => {
               <p>Player 2: {game?.game_data.player_2_score}</p>
             </div>
           </>
+        )}
+        {game?.game_type === "snakes" && resultsModal && (
+          <Modal onClose={() => setResultsModal(false)}>
+            <ResultsModal
+              results={game.game_data.results}
+              username={user.username}
+              onClose={() => setResultsModal(false)}
+            />
+          </Modal>
         )}
         {/* <div>
           <p>

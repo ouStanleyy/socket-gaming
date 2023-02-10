@@ -1,11 +1,12 @@
-import ItemsList from "./ItemsList";
-import styles from "./EditModal.module.css";
+import { useSelector } from "react-redux";
+import styles from "./ResultsModal.module.css";
 
-function EditModal({ editType, onClose }) {
+function ResultsModal({ results, username, onClose }) {
+  const position = results.indexOf(username) + 1;
   return (
     <div className={styles.modalContainer}>
       <div className={styles.headerContainer}>
-        <h3 className={styles.title}>{editType}</h3>
+        <h3 className={styles.title}>Results</h3>
         <div className={styles.svgContainer} onClick={onClose}>
           <svg
             aria-label="Close"
@@ -38,11 +39,27 @@ function EditModal({ editType, onClose }) {
           </svg>
         </div>
       </div>
-      <div className={styles.listContainer}>
-        <ItemsList itemType={editType} onClose={onClose} />
+      <ul className={styles.listContainer}>
+        {results === "draw" ? (
+          <li>DRAW</li>
+        ) : (
+          results.map((player, idx) => {
+            return (
+              <li
+                key={idx}
+                className={`${styles.resultsPosition} ${styles[idx + 1]}`}
+              >
+                {player}
+              </li>
+            );
+          })
+        )}
+      </ul>
+      <div className={styles.bonusCoins}>
+        {position === 1 ? "+50 coins" : "+25 coins"}
       </div>
     </div>
   );
 }
 
-export default EditModal;
+export default ResultsModal;

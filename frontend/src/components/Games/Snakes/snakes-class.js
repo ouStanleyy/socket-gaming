@@ -29,7 +29,7 @@ export default class Snakes {
     this.p2PayloadId = 0;
     this.p3PayloadId = 0;
     this.p4PayloadId = 0;
-    this.result = [];
+    this.results = [];
   }
 
   static createApple = () =>
