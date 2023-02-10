@@ -77,3 +77,15 @@ def user_search():
         f'%{filter_}%')).all() if filter_ else []
 
     return {'users': [user.to_dict() for user in users]}
+
+
+@user_routes.route('/session/add_coins', methods=['PUT'])
+@login_required
+def add_coins():
+    """
+    Add coins to current user
+    """
+    current_user.coins_amount+=request.json['amount']
+    db.session.commit()
+
+    return current_user.to_dict()

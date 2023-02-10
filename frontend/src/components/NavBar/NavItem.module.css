@@ -156,11 +156,15 @@ svg {
   position: absolute;
   display: flex;
   font-family: sans-serif;
-  color: #dd0f0f;
+  color: #00ff2f;
   align-items: center;
   gap: 13px;
   height: 24px;
   animation: onShow 1000ms ease;
+}
+
+.decrement {
+  color: #f70808;
 }
 
 @keyframes onShow {

@@ -42,13 +42,13 @@ const Conversation = ({
   //   return () => sio.off("message", message);
   // }, [sio]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       if (roomId) await dispatch(getRoomById(roomId));
-  //     } catch (err) {}
-  //   })();
-  // }, [roomId]);
+  useEffect(() => {
+    (async () => {
+      try {
+        if (roomId) await dispatch(getRoomById(roomId));
+      } catch (err) {}
+    })();
+  }, [roomId]);
 
   return (
     <>

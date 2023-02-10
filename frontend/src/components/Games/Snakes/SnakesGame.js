@@ -8,12 +8,12 @@ import styles from "./SnakesGame.module.css";
 const SnakesGame = () => {
   const { gameId } = useParams();
   const sio = useSelector((state) => state.socket.socket);
-  const sessionId = useSelector((state) => state.session.user.id);
+  const user = useSelector((state) => state.session.user);
   const game = useSelector((state) => state.games[gameId]);
   // const hostId = useSelector((state) => state.games[gameId]?.host_id);
-  const isHost = sessionId === game?.host_id;
+  const isHost = user.id === game?.host_id;
   const player = Object.keys(game?.game_data).find(
-    (data) => game?.game_data[data] === sessionId
+    (data) => game?.game_data[data] === user.id
   );
   const canvasRef = useRef();
   const gameRef = useRef();
@@ -108,7 +108,7 @@ const SnakesGame = () => {
   const gameLoop = () => {
     // const snake = [...gameInstance.game[isHost ? "snakeOne" : "snakeTwo"]];
     if (gameInstance.game.draw())
-      sio?.emit("end_game", { gameId, winner: "draw" });
+      sio?.emit("end_game", { gameId, results: "draw" });
     const snake = [...gameInstance.game[snakeNum[player]]];
     if (
       snake.length
@@ -118,8 +118,11 @@ const SnakesGame = () => {
       //   ? (gameInstance.game[payloadId[player]] = maxId)
       //   : gameInstance.game[payloadId[player]]++;
       if (gameInstance.game.gameOver())
-        sio?.emit("end_game", { gameId, winner: sessionId });
-      let apples;
+        sio?.emit("end_game", {
+          gameId,
+          results: [user.username, ...gameInstance.game.results],
+        });
+      let apples, results;
 
       if (gameInstance.game.powerUp === "freeze") {
         setGameSpeed(500);
@@ -161,8 +164,11 @@ const SnakesGame = () => {
         );
         gameInstance.game.powerUp = null;
       }
-      if (!shielded[player] && gameInstance.game.checkCollision(newSnakeHead))
+      if (!shielded[player] && gameInstance.game.checkCollision(newSnakeHead)) {
         snake.length = 0;
+        gameInstance.game.results.unshift(user.username);
+        results = gameInstance.game.results;
+      }
 
       // else if (gameInstance.game[payloadId[player]] < Math.max(...payloads))
       //   gameInstance.game[payloadId[player]]++;
@@ -176,6 +182,7 @@ const SnakesGame = () => {
         powerUp: gameInstance.game.powerUp,
         shielded: shielded[player],
         confused: confused[player],
+        results,
         // payloadId: gameInstance.game[payloadId[player]],
         // payloadId: isHost
         //   ? gameInstance.game.p1PayloadId
@@ -235,6 +242,7 @@ const SnakesGame = () => {
           gameInstance.game[snakeNum[data.player]] = data.snake;
           if (data.apples) gameInstance.game.apples = data.apples;
           if (data.powerUp) gameInstance.game.powerUp = data.powerUp;
+          if (data.results) gameInstance.game.results = data.results;
           setShielded((state) => ({ ...state, [data.player]: data.shielded }));
           setConfused((state) => ({ ...state, [data.player]: data.confused }));
         }
@@ -260,7 +268,7 @@ const SnakesGame = () => {
   // }, [sio, gameRef]);
 
   useEffect(() => {
-    sio.on("start_game", (data) => {
+    const startGame = (data) => {
       const snakesGame = new Snakes();
       snakesGame.snakeOne = data.snake_one;
       snakesGame.snakeTwo = data.snake_two;
@@ -268,15 +276,16 @@ const SnakesGame = () => {
       snakesGame.snakeFour = data.snake_four;
       snakesGame.apples = data.apples;
       setGameInstance({ game: snakesGame });
-      if (player) setTimeout(() => setGameOver(false), 2000);
+      if (player) setTimeout(() => setGameOver(false), 4000);
       gameRef?.current?.focus();
-    });
+    };
 
-    return () => sio.off("start_game");
-  }, [sio, gameRef, player]);
+    sio.on("start_game", startGame);
+    return () => sio.off("start_game", startGame);
+  }, [sio.id, gameRef, player]);
 
   useEffect(() => {
-    sio.on("end_game", () => {
+    const endGame = () => {
       setGameOver(true);
       setGameInstance({ game: null });
       setKeyCode(null);
@@ -292,10 +301,11 @@ const SnakesGame = () => {
         player_3: false,
         player_4: false,
       });
-    });
+    };
 
-    return () => sio.off("end_game");
-  }, [sio]);
+    sio.on("end_game", endGame);
+    return () => sio.off("end_game", endGame);
+  }, [sio.id]);
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext("2d");

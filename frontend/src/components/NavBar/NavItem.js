@@ -38,8 +38,15 @@ const NavItem = ({
         )}
       </div>
       <span>{isLogo ? "" : isCoin ? coins : type}</span>
-      {isCoin && coinsAnimation && (
-        <div className={styles.coinsAnimation}>{icons[type]} -100</div>
+      {isCoin && coinsAnimation.show && (
+        <div
+          className={`${styles.coinsAnimation} ${
+            coinsAnimation.type === "decrement" && styles.decrement
+          }`}
+        >
+          {icons[type]} {coinsAnimation.type === "decrement" ? "-" : "+"}
+          {coinsAnimation.amount}
+        </div>
       )}
     </>
   );
