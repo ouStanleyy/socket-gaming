@@ -145,6 +145,26 @@ button {
   margin-left: 8px;
 }
 
+.countDown {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  height: 800px;
+  width: 800px;
+  color: #ffffff;
+  font-size: 300px;
+  font-weight: 800;
+  animation: onCount 1000ms ease;
+  opacity: 0;
+}
+
+.countDown.go {
+  animation: onCountGo 1000ms ease;
+  opacity: 1;
+}
+
 @keyframes onShow {
   from {
     opacity: 0;
@@ -154,5 +174,33 @@ button {
   to {
     opacity: 1;
     scale: 1;
+  }
+}
+
+@keyframes onCount {
+  0% {
+    opacity: 0;
+    scale: 1.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    scale: 0.8;
+  }
+}
+
+@keyframes onCountGo {
+  0% {
+    opacity: 1;
+    scale: 1.2;
+  }
+
+  100% {
+    opacity: 1;
+    scale: 0.8;
   }
 }

@@ -51,7 +51,7 @@ const ShopItem = ({ item }) => {
             <p className={styles.price}>100</p>
             <img
               className={styles.goldCoin}
-              src="https://i.gifer.com/Fw3P.gif"
+              src="https://media.tenor.com/jIp4duCAVp4AAAAi/sengage-sengageio.gif"
               alt="gold coin"
             />
           </div>
@@ -71,7 +71,7 @@ const ShopItem = ({ item }) => {
               Buy for 100
               <img
                 className={styles.goldCoin}
-                src="https://i.gifer.com/Fw3P.gif"
+                src="https://media.tenor.com/jIp4duCAVp4AAAAi/sengage-sengageio.gif"
                 alt="gold coin"
               />
               ?
@@ -88,7 +88,7 @@ const ShopItem = ({ item }) => {
               You need 100
               <img
                 className={styles.goldCoin}
-                src="https://i.gifer.com/Fw3P.gif"
+                src="https://media.tenor.com/jIp4duCAVp4AAAAi/sengage-sengageio.gif"
                 alt="gold coin"
               />
               to buy this item.

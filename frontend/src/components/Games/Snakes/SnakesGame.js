@@ -268,7 +268,7 @@ const SnakesGame = () => {
   // }, [sio, gameRef]);
 
   useEffect(() => {
-    sio.on("start_game", (data) => {
+    const startGame = (data) => {
       const snakesGame = new Snakes();
       snakesGame.snakeOne = data.snake_one;
       snakesGame.snakeTwo = data.snake_two;
@@ -276,15 +276,16 @@ const SnakesGame = () => {
       snakesGame.snakeFour = data.snake_four;
       snakesGame.apples = data.apples;
       setGameInstance({ game: snakesGame });
-      if (player) setTimeout(() => setGameOver(false), 2000);
+      if (player) setTimeout(() => setGameOver(false), 4000);
       gameRef?.current?.focus();
-    });
+    };
 
-    return () => sio.off("start_game");
-  }, [sio, gameRef, player]);
+    sio.on("start_game", startGame);
+    return () => sio.off("start_game", startGame);
+  }, [sio.id, gameRef, player]);
 
   useEffect(() => {
-    sio.on("end_game", () => {
+    const endGame = () => {
       setGameOver(true);
       setGameInstance({ game: null });
       setKeyCode(null);
@@ -300,10 +301,11 @@ const SnakesGame = () => {
         player_3: false,
         player_4: false,
       });
-    });
+    };
 
-    return () => sio.off("end_game");
-  }, [sio]);
+    sio.on("end_game", endGame);
+    return () => sio.off("end_game", endGame);
+  }, [sio.id]);
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext("2d");

@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   width: 400px;
-  height: 440px;
+  height: 400px;
   background-color: #383c3f;
   border-radius: 12px;
   animation: onShow 150ms ease;
@@ -38,13 +38,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  /* justify-content: center; */
+  gap: 20px;
   width: 100%;
-  height: 100%;
-  overflow-y: scroll;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  height: 240px;
   background-color: #383c3f;
+  border-bottom: 1px solid #2d3132;
+  padding: 24px 0;
   /* background-color: #222629; */
 }
 
@@ -87,5 +87,36 @@
     0 0 151px #bbc2cc;
 }
 .resultsPosition.3 {
-  background-color: bronze;
+  border-color: #cd7f32;
+  box-shadow: 0 0 20px #cd7f32, inset 0 0 20px #cd7f32;
+  text-shadow: 0 0 7px #ffffff, 0 0 10px #ffffff, 0 0 21px #ffffff,
+    0 0 42px #cd7f32, 0 0 82px #cd7f32, 0 0 92px #cd7f32, 0 0 102px #cd7f32,
+    0 0 151px #cd7f32;
+}
+
+.bonusCoins {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  /* gap: 8px; */
+  width: 100%;
+  /* height: 240px; */
+  background-color: #383c3f;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.bonusCoins > p {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 20px 0;
+  color: #ffffff;
+}
+
+.bonusCoins img {
+  padding-left: 4px;
+  width: 20px;
 }

@@ -1,13 +1,22 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addCoins, resetAnimation } from "../../store/session";
 import styles from "./ResultsModal.module.css";
 
 function ResultsModal({ results, username, onClose }) {
+  const dispatch = useDispatch();
   const position = results.indexOf(username) + 1;
+  const amount = { 1: 25, 2: 15, 3: 10, 4: 5 };
+
+  const confirmResults = async () => {
+    await dispatch(addCoins(25 + amount[position]));
+    onClose();
+    setTimeout(() => dispatch(resetAnimation()), 1000);
+  };
   return (
     <div className={styles.modalContainer}>
       <div className={styles.headerContainer}>
         <h3 className={styles.title}>Results</h3>
-        <div className={styles.svgContainer} onClick={onClose}>
+        <div className={styles.svgContainer} onClick={confirmResults}>
           <svg
             aria-label="Close"
             color="currentColor"
@@ -56,7 +65,52 @@ function ResultsModal({ results, username, onClose }) {
         )}
       </ul>
       <div className={styles.bonusCoins}>
-        {position === 1 ? "+50 coins" : "+25 coins"}
+        {/* <h3 className={styles.coinsTitle}>Coins Earned</h3> */}
+        {position > 0 && (
+          <p>
+            Participation: +25{" "}
+            <img
+              src="https://media.tenor.com/jIp4duCAVp4AAAAi/sengage-sengageio.gif"
+              alt="gold coin"
+            />
+          </p>
+        )}
+        {position === 1 && (
+          <p>
+            First Place: +{amount[position]}{" "}
+            <img
+              src="https://media.tenor.com/jIp4duCAVp4AAAAi/sengage-sengageio.gif"
+              alt="gold coin"
+            />
+          </p>
+        )}
+        {position === 2 && (
+          <p>
+            Second Place: +{amount[position]}{" "}
+            <img
+              src="https://media.tenor.com/jIp4duCAVp4AAAAi/sengage-sengageio.gif"
+              alt="gold coin"
+            />
+          </p>
+        )}
+        {position === 3 && (
+          <p>
+            Third Place: +{amount[position]}{" "}
+            <img
+              src="https://media.tenor.com/jIp4duCAVp4AAAAi/sengage-sengageio.gif"
+              alt="gold coin"
+            />
+          </p>
+        )}
+        {position === 4 && (
+          <p>
+            Fourth Place: +{amount[position]}{" "}
+            <img
+              src="https://media.tenor.com/jIp4duCAVp4AAAAi/sengage-sengageio.gif"
+              alt="gold coin"
+            />
+          </p>
+        )}
       </div>
     </div>
   );
