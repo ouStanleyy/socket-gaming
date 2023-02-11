@@ -277,7 +277,7 @@ const SnakesGame = () => {
       snakesGame.apples = data.apples;
       setGameInstance({ game: snakesGame });
       if (player) setTimeout(() => setGameOver(false), 4000);
-      gameRef?.current?.focus();
+      setTimeout(() => gameRef?.current?.focus(), 4000);
     };
 
     sio.on("start_game", startGame);
