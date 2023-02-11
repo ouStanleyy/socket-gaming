@@ -17,6 +17,7 @@ import {
 } from "../../store/games";
 import Snakes from "./Snakes/snakes-class";
 import styles from "./GameDetails.module.css";
+import InstructionsModal from "./InstructionsModal";
 
 const GameDetails = () => {
   const history = useHistory();
@@ -57,6 +58,7 @@ const GameDetails = () => {
   const [gameActive, setGameActive] = useState(false);
   // const [ready, setReady] = useState(game?.game_data.player_2_ready || false);
   const [closeLobbyModal, setCloseLobbyModal] = useState(false);
+  const [instructionsModal, setInstructionsModal] = useState(false);
   const [countDown, setCountDown] = useState(null);
   const [resultsModal, setResultsModal] = useState(false);
   const [kicked, setKicked] = useState(false);
@@ -71,6 +73,10 @@ const GameDetails = () => {
     player_2: "player_2_ready",
     player_3: "player_3_ready",
     player_4: "player_4_ready",
+  };
+
+  const toggleInstructionsModal = () => {
+    setInstructionsModal((state) => !state);
   };
 
   const toggleCloseLobbyModal = () => {
@@ -237,6 +243,20 @@ const GameDetails = () => {
     <>
       <div className={styles.gameDetails}>
         <div className={styles.header}>
+          <div className={styles.infoBtn} onClick={toggleInstructionsModal}>
+            <i
+              className="fa-solid fa-circle-info fa-lg"
+              style={{ color: "#86c232" }}
+            />
+          </div>
+          {instructionsModal && (
+            <Modal onClose={toggleInstructionsModal}>
+              <InstructionsModal
+                gameType={game?.game_type}
+                onClose={toggleInstructionsModal}
+              />
+            </Modal>
+          )}
           <h3 className={styles.title}>{game?.game_type}</h3>
           <div className={styles.closeLobbyBtn} onClick={toggleCloseLobbyModal}>
             <i
