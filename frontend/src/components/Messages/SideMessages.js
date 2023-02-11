@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Switch, Route } from "react-router-dom";
-import { getRooms } from "../../store/rooms";
+import {
+  getRooms,
+  setActiveConvo,
+  setHideMessages,
+  setRoomId,
+} from "../../store/rooms";
 import Conversation from "./Conversation";
 import { ProfilePicture } from "../Elements";
 import NewMessage from "./NewMessage";
@@ -13,7 +18,7 @@ const SideMessages = () => {
   const sessionUser = useSelector((state) => state.session.user);
   const sio = useSelector((state) => state.socket.socket);
   const rooms = useSelector((state) => Object.values(state.rooms))
-    .filter(({ game }) => !game)
+    .filter(({ id, game }) => id && !game)
     .sort((a, b) =>
       a.messages.length && b.messages.length
         ? new Date(b.messages[b.messages.length - 1].time_sent) -
@@ -22,10 +27,13 @@ const SideMessages = () => {
         ? -1
         : +1
     );
+  const hideMessages = useSelector((state) => state.rooms.chat.hideMessages);
+  const roomId = useSelector((state) => state.rooms.chat.roomId);
+  const activeConvo = useSelector((state) => state.rooms.chat.activeConvo);
   const [newMessageModal, setNewMessageModal] = useState(false);
-  const [roomId, setRoomId] = useState("");
-  const [activeConvo, setActiveConvo] = useState(false);
-  const [hideMessages, setHideMessages] = useState(true);
+  // const [roomId, setRoomId] = useState("");
+  // const [activeConvo, setActiveConvo] = useState(false);
+  // const [hideMessages, setHideMessages] = useState(true);
   const [loaded, setLoaded] = useState(false);
 
   const toggleNewMessageModal = () => {
@@ -33,14 +41,17 @@ const SideMessages = () => {
   };
 
   const toggleMessages = () => {
-    setHideMessages((state) => !state);
+    dispatch(setHideMessages());
+    // setHideMessages((state) => !state);
   };
 
   const toggleConvo =
     (roomId = "") =>
     () => {
-      setRoomId(roomId);
-      setActiveConvo((state) => !state);
+      dispatch(setRoomId(roomId));
+      dispatch(setActiveConvo());
+      // setRoomId(roomId);
+      // setActiveConvo((state) => !state);
     };
 
   useEffect(() => {

@@ -1,23 +1,36 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getUserById } from "../../store/users";
 import { ProfilePicture } from "../Elements";
-import { createNewRoom } from "../../store/rooms";
+import {
+  createNewRoom,
+  setActiveConvo,
+  setHideMessages,
+  setRoomId,
+} from "../../store/rooms";
 import styles from "./UserModal.module.css";
 
 function UserModal({ user, onClose }) {
-  const history = useHistory();
   const dispatch = useDispatch();
-  // const user = useSelector((state) => state.users[userId]);
+  const isOwner = user.id === useSelector((state) => state.session.user.id);
+  const chatRoomId = useSelector((state) => state.rooms.chat.roomId);
   const bannerImage = user?.items.find(({ id }) => id === user.banner_id).image;
   const [loaded, setLoaded] = useState(false);
 
   const handleMessageClick = async () => {
-    try {
-      const roomId = await dispatch(createNewRoom(user.id));
-      history.push(`/messages/${roomId}`);
-    } catch (err) {}
+    if (!isOwner) {
+      try {
+        const roomId = await dispatch(createNewRoom(user.id));
+        onClose();
+        dispatch(setHideMessages(false));
+        dispatch(setRoomId(roomId));
+        if (roomId !== chatRoomId) dispatch(setActiveConvo());
+        setTimeout(() => {
+          dispatch(setActiveConvo(true));
+        }, 200);
+      } catch (err) {}
+    }
   };
 
   useEffect(() => {
@@ -80,8 +93,12 @@ function UserModal({ user, onClose }) {
           })}
         </div>
         <div className={styles.userFooter}>
-          <button onClick={handleMessageClick}>Message</button>
-          <button>Add Friend</button>
+          {!isOwner && (
+            <>
+              <button onClick={handleMessageClick}>Message</button>
+              <button>Add Friend</button>
+            </>
+          )}
         </div>
       </div>
     )

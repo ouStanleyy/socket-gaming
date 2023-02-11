@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, Link, useHistory } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Modal } from "../../context/Modal";
 import { ProfilePicture } from "../Elements";
 import EditModal from "./EditModal";
 import { getUserById } from "../../store/users";
-import { createNewRoom } from "../../store/rooms";
+import {
+  createNewRoom,
+  setActiveConvo,
+  setHideMessages,
+  setRoomId,
+} from "../../store/rooms";
 import styles from "./UserProfile.module.css";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
   const { userId } = useParams();
   const user = useSelector((state) => state.users[userId]);
   const isOwner = useSelector(
     (state) => state.session.user.id === parseInt(userId)
   );
+  const chatRoomId = useSelector((state) => state.rooms.chat.roomId);
   const bannerImage = user?.items.find(
     ({ id }) => id === user.banner_id
   )?.image;
@@ -40,9 +45,17 @@ const UserProfile = () => {
   // };
 
   const handleMessageClick = async () => {
-    try {
-      const roomId = await dispatch(createNewRoom(userId));
-    } catch (err) {}
+    if (!isOwner) {
+      try {
+        const roomId = await dispatch(createNewRoom(userId));
+        dispatch(setHideMessages(false));
+        dispatch(setRoomId(roomId));
+        if (roomId !== chatRoomId) dispatch(setActiveConvo());
+        setTimeout(() => {
+          dispatch(setActiveConvo(true));
+        }, 200);
+      } catch (err) {}
+    }
   };
 
   useEffect(() => {

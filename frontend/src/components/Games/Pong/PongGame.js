@@ -183,7 +183,7 @@ const PongGame = () => {
   }, [gameInstance]);
 
   useEffect(() => {
-    sio.on("start_game", (data) => {
+    const startGame = () => {
       const pongGame = new Pong();
       // const pongGame = new Pong(canvasRef?.current?.getContext("2d"));
       // setCtx(canvasRef?.current?.getContext("2d"));
@@ -194,21 +194,23 @@ const PongGame = () => {
         setTimeout(() => {
           setGameOver(false);
           pongGame.serve(1);
-        }, 2000);
-      gameRef?.current?.focus();
-    });
+        }, 4000);
+      setTimeout(() => gameRef?.current?.focus(), 4000);
+    };
 
-    return () => sio.off("start_game");
-  }, [sio, gameRef, player]);
+    sio.on("start_game", startGame);
+    return () => sio.off("start_game", startGame);
+  }, [sio.id, gameRef, player]);
 
   useEffect(() => {
-    sio.on("end_game", () => {
+    const endGame = () => {
       setGameOver(true);
       setGameInstance({ game: null });
-    });
+    };
 
-    return () => sio.off("end_game");
-  }, [sio]);
+    sio.on("end_game", endGame);
+    return () => sio.off("end_game", endGame);
+  }, [sio.id]);
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext("2d");
