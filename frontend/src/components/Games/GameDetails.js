@@ -98,6 +98,11 @@ const GameDetails = () => {
     }
   };
 
+  const leaveLobby = () => {
+    toggleCloseLobbyModal();
+    history.push("/games");
+  };
+
   const start = () => {
     dispatch(
       startGame(gameId, {
@@ -234,20 +239,16 @@ const GameDetails = () => {
         <div className={styles.header}>
           <h3 className={styles.title}>{game?.game_type}</h3>
           <div className={styles.closeLobbyBtn} onClick={toggleCloseLobbyModal}>
-            {game?.host_id === sessionId && (
-              <i
-                className="fa-solid fa-arrow-right-from-bracket fa-lg"
-                style={{
-                  color: "#86c232",
-                }}
-              />
-            )}
+            <i
+              className="fa-solid fa-arrow-right-from-bracket fa-lg"
+              style={{ color: "#86c232" }}
+            />
           </div>
           {closeLobbyModal && (
             <Modal onClose={toggleCloseLobbyModal}>
               <div className={styles.closeLobbyModal}>
-                <h3>Close game lobby?</h3>
-                <button onClick={closeLobby}>Yes</button>
+                <h3>{isHost ? "Close" : "Leave"} game lobby?</h3>
+                <button onClick={isHost ? closeLobby : leaveLobby}>Yes</button>
                 <button onClick={toggleCloseLobbyModal}>No</button>
               </div>
             </Modal>
