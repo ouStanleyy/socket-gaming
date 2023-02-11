@@ -26,6 +26,11 @@
   color: #aad179;
 }
 
+.infoBtn {
+  height: fit-content;
+  cursor: pointer;
+}
+
 .closeLobbyBtn {
   height: fit-content;
   cursor: pointer;
@@ -47,10 +52,6 @@
   border: 2px solid #2d3132;
   border-radius: 4px;
   overflow-x: scroll;
-}
-
-.user {
-  /* border: 1px solid; */
 }
 
 .seat {
